@@ -4,14 +4,13 @@ from Universe import Universe
     ### Create Universe, taking in input parameters from user
 
 universe = Universe()
-universe.timeTravel(20)
-a = 1
+universe.timeTravel(300)
 
-    ### Create Systems (from within Universe)
-    ### Create Leagues (from within Systems)
-    ### Create Clubs (from within Leagues)
-    ### Create Players (from within Clubs)
-    ### Schedule Fixtures
-    ### Simulate Season
-    ### Persist Data
-    ### Return Data to Front End
+import pickle
+import random
+import string
+
+letters = string.ascii_lowercase
+random_string = ''.join(random.choice(letters) for i in range(10))
+with open('universe_{}'.format(random_string), 'wb') as outfile:
+    pickle.dump(universe, outfile)
