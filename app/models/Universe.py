@@ -4,11 +4,15 @@ from Scheduler import Scheduler
 import datetime
 
 class _Universe:
-    def __init__(self):
+    def __init__(self, systemIds = None):
         self.currentDate = config.timeConfig['startDate']
         self.systems = []
-        for _ in range(config.systemConfig['numSystems']):
-            self.systems.append(System(self))
+        if systemIds is not None:
+            for systemId in systemIds:
+                self.systems.append(System(self, systemId))
+        else:
+            for _ in range(config.systemConfig['numSystems']):
+                self.systems.append(System(self))
         self.scheduleLeagues()
     
     def timeTravel(self, days):
@@ -40,8 +44,8 @@ class _Universe:
 
 _instance = None
 
-def Universe():
+def Universe(systemIds = None):
     global _instance
     if _instance is None:
-        _instance = _Universe()
+        _instance = _Universe(systemIds)
     return _instance

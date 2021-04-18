@@ -6,7 +6,9 @@ from Select import Select
 from Team import Team
 
 class Club:
-    def __init__(self, league):
+    def __init__(self, league, city):
+        self.id = city['_id']
+        self.name = city['city_name']
         self.league = league
         self.players = []
         for _ in range(config.systemConfig['numPlayersPerClub']):

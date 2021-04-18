@@ -1,6 +1,6 @@
-from goalProbability import goalProbability
+from goal_probability import goalProbability
 import numpy as np
-import Utils
+import utils
 import funcy
 from PlayerReportEngine import PlayerReportEngine
 
@@ -36,7 +36,7 @@ class Match:
             report['clubs'][club]['match'] = {}
             potential = report['clubs'][club]['potential']
             [mu, sigma] = [value for value in goalProbability[int(potential)].values()]
-            goalsFor = int(Utils.limitValue(np.random.normal(mu, sigma), mn = 0, mx = 100))
+            goalsFor = int(utils.limitValue(np.random.normal(mu, sigma), mn = 0, mx = 100))
             report['clubs'][club]['match']['goalsFor'] = goalsFor
             report['clubs'][club]['match']['goals'] = report['clubs'][club]['team'].getGoals(goalsFor)
         for club in self.clubs:

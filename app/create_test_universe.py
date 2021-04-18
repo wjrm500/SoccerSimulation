@@ -1,9 +1,13 @@
+import sys
+sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app\\models")
 from Universe import Universe
 
 # def simulate():
     ### Create Universe, taking in input parameters from user
 
-universe = Universe()
+systemIds = [1]
+
+universe = Universe(systemIds = systemIds)
 universe.timeTravel(300)
 
 import pickle

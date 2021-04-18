@@ -1,6 +1,7 @@
 from config import systemConfig
 from Club import Club
 import copy
+from Database import Database
 
 class League:   
     def __init__(self, system):
@@ -11,8 +12,16 @@ class League:
         self.matchReports = []
     
     def populateWithClubs(self):
-        for _ in range(systemConfig['numClubsPerLeague']):
-            club = Club(self)
+        db = Database.getInstance()
+        cities = db.cnx['soccersim']['cities'].aggregate([
+            {'$match': {'system_id': self.system.id}},
+            {'$sample': {'size': systemConfig['numClubsPerLeague']}}
+        ])
+        # cities = db.cnx['soccersim']['cities'].find({
+        #     'system_id': self.system.id
+        # }).limit(systemConfig['numClubsPerLeague'])
+        for city in cities:
+            club = Club(self, city)
             self.clubs.append(club)
             self.leagueTables[0][club] = {}
             for stat in ['GP', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts']:

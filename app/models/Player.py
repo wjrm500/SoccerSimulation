@@ -1,4 +1,4 @@
-import Utils
+import utils
 import config
 import random
 import numpy as np
@@ -8,7 +8,7 @@ from scipy import spatial
 class Player:
     def __init__(self, club):
         self.club = club
-        self.name = Utils.generatePlayerName()
+        self.name = utils.generatePlayerName()
         self.setBirthDate()
         self.setAge()
         self.retired = False
@@ -32,32 +32,32 @@ class Player:
     def setBirthDate(self):
         agMin, agMax = config.playerConfig['age']['min'], config.playerConfig['age']['max']
         age = random.randint(agMin, agMax)
-        self.birthDate = Utils.getBirthDate(config.timeConfig['startDate'], age)
+        self.birthDate = utils.getBirthDate(config.timeConfig['startDate'], age)
     
     def setAge(self):
         td = self.club.league.system.universe.currentDate - self.birthDate
         self.age = td.days / 365.25
 
     def setPeakAge(self):
-        self.peakAge = Utils.limitedRandNorm(config.playerConfig['peakAge'])
+        self.peakAge = utils.limitedRandNorm(config.playerConfig['peakAge'])
     
     def setGrowthSpeed(self):
-        randIncline = Utils.limitedRandNorm(config.playerConfig['growthSpeed']['incline'])
-        randDecline = Utils.limitedRandNorm(config.playerConfig['growthSpeed']['decline'])
+        randIncline = utils.limitedRandNorm(config.playerConfig['growthSpeed']['incline'])
+        randDecline = utils.limitedRandNorm(config.playerConfig['growthSpeed']['decline'])
         self.growthSpeed = {
             'incline': randIncline,
             'decline': randDecline
         }
 
     def setRetirementThreshold(self):
-        self.retirementThreshold = Utils.limitedRandNorm(config.playerConfig['retirementThreshold'])
+        self.retirementThreshold = utils.limitedRandNorm(config.playerConfig['retirementThreshold'])
 
     def setPeakRating(self):
-        self.peakRating = Utils.limitedRandNorm(config.playerConfig['peakRating'])
+        self.peakRating = utils.limitedRandNorm(config.playerConfig['peakRating'])
 
     def adjustPeakRating(self):
         mn, mx = config.playerConfig['peakRating']['min'], config.playerConfig['peakRating']['max']
-        self.peakRating = Utils.limitedRandNorm({'mu': self.peakRating, 'sigma': 50 / (self.age ** 2), 'mn': mn, 'mx': mx})
+        self.peakRating = utils.limitedRandNorm({'mu': self.peakRating, 'sigma': 50 / (self.age ** 2), 'mn': mn, 'mx': mx})
 
     def getRating(self):
         distanceFromPeakAge = abs(self.peakAge - self.age)
@@ -140,7 +140,7 @@ class Player:
         bestSkillDistribution = config.playerConfig['positions'][bestPosition]['skillDistribution']
         normalisingFactor = config.playerConfig['skill']['normalisingFactor']
         for skill, value in skillDistribution.items():
-            skillDistribution[skill] = skillDistribution[skill] + (bestSkillDistribution[skill] - skillDistribution[skill]) * Utils.limitedRandNorm(normalisingFactor)
+            skillDistribution[skill] = skillDistribution[skill] + (bestSkillDistribution[skill] - skillDistribution[skill]) * utils.limitedRandNorm(normalisingFactor)
 
         ### Centralise - restore mean to 1
         totalSkill = sum(skillDistribution.values())

@@ -1,7 +1,7 @@
 from config import matchConfig
 import numpy as np
-import Utils as Utils
-from goalProbability import goalProbability
+import utils
+from goal_probability import goalProbability
 
 class PlayerReportEngine:
     def __init__(self, match):
@@ -42,30 +42,30 @@ class PlayerReportEngine:
         select = clubReport['team'].getSelectFromPlayer(player)
         selectRating = clubReport['team'].getSelectRating(select)
         oppositionTeamRating = oppositionClubReport['team'].rating
-        # ratingDiff = Utils.limitValue(selectRating - oppositionTeamRating, mn = -17, mx = 17)
+        # ratingDiff = utils.limitValue(selectRating - oppositionTeamRating, mn = -17, mx = 17)
         # a = np.power(abs(ratingDiff) / 10, 2)
         # b = np.power(a, 3) / 25
         # if ratingDiff > 0:
         #     baseRating = 5 + a - b
         # else:
         #     baseRating = 5 - a + b
-        # modulatedBaseRating = Utils.limitedRandNorm({'mu': baseRating, 'sg': 0.5, 'mn': 3, 'mx': 7})
+        # modulatedBaseRating = utils.limitedRandNorm({'mu': baseRating, 'sg': 0.5, 'mn': 3, 'mx': 7})
 
         ratingAdvantage = selectRating - oppositionTeamRating
         x = ratingAdvantage
         baseRating = ((1 / (1 + np.power(np.e, (-x / 12.5)))) + 0.5) * 5
-        modulatedBaseRating = Utils.limitedRandNorm({'mu': baseRating, 'sg': 0.5, 'mn': 2.5, 'mx': 7.5})
+        modulatedBaseRating = utils.limitedRandNorm({'mu': baseRating, 'sg': 0.5, 'mn': 2.5, 'mx': 7.5})
 
         offensiveContribution = clubReport['team'].selectionOffensiveContributions[select]
         defensiveContribution = clubReport['team'].selectionDefensiveContributions[select]
-        teamPredictedGoalsFor = Utils.limitValue(goalProbability[int(clubReport['potential'])]['mu'], mn = 0) ### What if team predicted goals for was based on the individual's potential
+        teamPredictedGoalsFor = utils.limitValue(goalProbability[int(clubReport['potential'])]['mu'], mn = 0) ### What if team predicted goals for was based on the individual's potential
         teamActualGoalsFor = clubReport['match']['goalsFor']
         teamOffensiveOutperformance = teamActualGoalsFor - teamPredictedGoalsFor
-        teamPredictedGoalsAgainst = Utils.limitValue(goalProbability[int(oppositionClubReport['potential'])]['mu'], mn = 0)
+        teamPredictedGoalsAgainst = utils.limitValue(goalProbability[int(oppositionClubReport['potential'])]['mu'], mn = 0)
         teamActualGoalsAgainst = oppositionClubReport['match']['goalsFor']
         teamDefensiveOutperformance = teamPredictedGoalsAgainst - teamActualGoalsAgainst
-        offensiveBoost = Utils.limitValue(offensiveContribution * teamOffensiveOutperformance * 5, mn = -1.5, mx = 1.5)
-        defensiveBoost = Utils.limitValue(defensiveContribution * teamDefensiveOutperformance * 5, mn = -1.5, mx = 1.5)
+        offensiveBoost = utils.limitValue(offensiveContribution * teamOffensiveOutperformance * 5, mn = -1.5, mx = 1.5)
+        defensiveBoost = utils.limitValue(defensiveContribution * teamDefensiveOutperformance * 5, mn = -1.5, mx = 1.5)
 
         goalDifference = abs(clubReport['match']['goalsFor'] - oppositionClubReport['match']['goalsFor'])
         goalsScored = clubReport['match']['goalsFor'] + oppositionClubReport['match']['goalsFor']
@@ -79,7 +79,7 @@ class PlayerReportEngine:
         assistNegative = playerPredictedAssists * ratingBoostForAssist  / 5
         assistPositive = playerReport['assists'] * ratingBoostForAssist
 
-        performanceIndex = Utils.limitValue(
+        performanceIndex = utils.limitValue(
             modulatedBaseRating + offensiveBoost + defensiveBoost - goalNegative + goalPositive - assistNegative + assistPositive,
             mn = 0,
             mx = 10
@@ -88,14 +88,14 @@ class PlayerReportEngine:
 
         ### Handle fatigue
 
-        fitnessFromMean = Utils.limitValue(player.skillValues['fitness'] - meanFitness, mn = -35, mx = 35)
+        fitnessFromMean = utils.limitValue(player.skillValues['fitness'] - meanFitness, mn = -35, mx = 35)
         a = np.power(abs(fitnessFromMean) / 10, 2) / 25
         b = np.power(a, 1.5)
         if fitnessFromMean > 0:
             mu = 0.25 - a + b
         else:
             mu = 0.25 + a - b
-        fatigueIncrease = Utils.limitedRandNorm({'mu': mu, 'sg': 0.05, 'mn': 0.05, 'mx': 0.45})
+        fatigueIncrease = utils.limitedRandNorm({'mu': mu, 'sg': 0.05, 'mn': 0.05, 'mx': 0.45})
         playerReport['fatigueIncrease'] = fatigueIncrease
         
         ### Handle form

@@ -1,0 +1,6 @@
+.env
+test_universes/
+flask_session/
+app/__pycache__/
+app/models/__pycache__
+frontend/__pycache__

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+    <h1>Soccer Simulation</h1>
+    <form method="post">
+        <label>Enter Universe Key here:</label>
+        <input type="text" name="universe_key">
+        <input type="submit">
+    </form>
+    <!-- <select name="system">
+        {% for system in systems %}
+            <option value="{{ system['_id'] }}">
+                {{ system['system_name'] }}
+            </option>
+        {% endfor %}
+    </select> -->
+{% endblock %}
