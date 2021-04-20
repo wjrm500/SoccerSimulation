@@ -20,12 +20,13 @@ Session(app)
 @app.route('/', methods = ['GET'])
 def getHome():
     systems = db.cnx['soccersim']['systems'].find()
-    return render_template('home.html', systems = systems)
+    return render_template('home.html', cssFile = 'home.css', systems = systems)
 
 @app.route('/', methods = ['POST'])
 def postHome():
     universeKey = request.form['universe_key']
     if 'universe' not in session:
+        session['universeKey'] = universeKey
         session['universe'] = db.getUniverse(universeKey)
     return redirect(url_for('simulation'))
 
@@ -36,7 +37,7 @@ def simulation():
         leagueTable = universe.systems[0].leagues[0].getLeagueTable()
         leagueTableItems = list(leagueTable.items())
         leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
-        return render_template('simulation.html', leagueTableItems = leagueTableItems)
+        return render_template('simulation.html', cssFile = 'rest_of_website.css', universeKey = session['universeKey'], leagueTableItems = leagueTableItems)
     return render_template('error.html')
 
 @app.route('/player/<id>')

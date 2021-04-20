@@ -17,24 +17,6 @@ body {
     margin: 5px 0px;
 }
 
-#home-logo-title-container {
-    display: flex;
-}
-
-.home-logo-title-element {
-    margin: 5px;
-}
-
-#home-logo {
-    height: 45px;
-}
-
-#home-title {
-    font-size: 2em;
-    font-family: 'Quattrocento Sans', sans-serif;
-    font-weight: bold;
-}
-
 #home-buttons-container {
     display: flex;
 }

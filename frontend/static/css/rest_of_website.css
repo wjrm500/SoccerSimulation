@@ -1,0 +1,56 @@
+/* Nav */
+
+#nav {
+    align-items: center;
+    background-color: black;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    margin: 5px;
+}
+
+.nav-element {
+    flex: 1;
+    padding: 5px;
+}
+
+#simulation-key-container {
+    align-items: center;
+    border: 1px dashed white;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.simulation-key-element {
+    margin: 0px 5px;
+}
+
+#simulation-key-value input {
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    color: red;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+}
+
+#hyperlink-panel {
+    display: flex;
+}
+
+.nav-button {
+    background-color: black;
+    border: none;
+    color: white;
+    font-weight: 500;
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+}
+
+.nav-button:hover {
+    color: red;
+}

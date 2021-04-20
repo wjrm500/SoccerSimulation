@@ -1,0 +1,19 @@
+#logo-title-container {
+    display: flex;
+    text-decoration: none;
+}
+
+.logo-title-element {
+    margin: 5px;
+}
+
+#logo {
+    height: 45px;
+}
+
+#title {
+    color: white;
+    font-size: 2em;
+    font-family: 'Quattrocento Sans', sans-serif;
+    font-weight: bold;
+}
