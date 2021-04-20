@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import pickle
+import os
 
 class Database:
     __instance__ = None

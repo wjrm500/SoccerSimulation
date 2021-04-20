@@ -1,6 +1,7 @@
 import mysql.connector
 from dotenv import load_dotenv
 import os
+from app.models.Database import Database
 
 cnx = mysql.connector.connect(user = os.environ.get('MYSQL_USER'),
                               password = os.environ.get('MYSQL_PWD'),

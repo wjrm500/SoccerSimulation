@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 {% block body %}
-    <h1>Soccer Simulation</h1>
-    <form method="post">
-        <label>Enter Universe Key here:</label>
-        <input type="text" name="universe_key">
-        <input type="submit">
-    </form>
-    <!-- <select name="system">
-        {% for system in systems %}
-            <option value="{{ system['_id'] }}">
-                {{ system['system_name'] }}
-            </option>
-        {% endfor %}
-    </select> -->
+<div id="home-container">
+    <div id="home-logo-title-container" class="home-sub-container">
+        <img id="home-logo" class="home-logo-title-element" src="/static/images/soccersim_logo.png">
+        <div id="home-title" class="home-logo-title-element">Soccer Simulation</div>
+    </div>
+    <div id="home-buttons-container" class="home-sub-container">
+        <div id="left-button-container" class="button-container">
+            <button id="new-simulation-button" class="simulation-button">New Simulation</button>
+        </div>
+        <div id="right-button-container" class="button-container">
+            <form id="existing-simulation-form" method="post">
+                <input id="existing-simulation-button" class="simulation-button" type="text" name="universe_key" placeholder="Existing Simulation (Enter Key Here)">
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

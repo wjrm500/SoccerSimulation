@@ -8,6 +8,7 @@ from Universe import Universe
 from Database import Database
 import os
 import pickle
+import utils
 
 db = Database.getInstance()
 
@@ -43,6 +44,12 @@ def player(id):
     if session.universe:
         player = session.universe.getPlayerById(id)
     return player.name
+
+### For versioning CSS to prevent browser cacheing
+@app.context_processor
+def inject_dict_for_all_templates():
+    randomString = utils.generateRandomDigits(5)
+    return {'randomString': randomString}
 
 ### Dev methods for convenience
 @app.route('/clear', methods = ['GET'])

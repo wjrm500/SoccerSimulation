@@ -2,3 +2,82 @@ body {
     background-color: black;
     color: white;
 }
+
+#home-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    left: 50%;
+    position: fixed;
+    top: 45%;
+    transform: translate(-50%, -50%);
+}
+
+.home-sub-container {
+    margin: 5px 0px;
+}
+
+#home-logo-title-container {
+    display: flex;
+}
+
+.home-logo-title-element {
+    margin: 5px;
+}
+
+#home-logo {
+    height: 45px;
+}
+
+#home-title {
+    font-size: 2em;
+    font-family: 'Quattrocento Sans', sans-serif;
+    font-weight: bold;
+}
+
+#home-buttons-container {
+    display: flex;
+}
+
+.button-container {
+    height: 40px;
+    padding: 0px 25px;
+}
+
+#left-button-container {
+    border-right: 1.5px solid white;
+}
+
+#right-button-container {
+    border-left: 1.5px solid white;
+}
+
+.simulation-button {
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    height: 100%;
+    text-align: center;
+    width: 350px;
+}
+
+#new-simulation-button {
+    background-color: cornflowerblue;
+}
+
+#new-simulation-button:hover {
+    background-color: #4580e9;
+}
+
+#existing-simulation-button {
+    background-color: darkorchid;
+}
+
+#existing-simulation-button:hover, #existing-simulation-button:focus {
+    background-color: #892db7; /* 10% darker */
+}
+
+#existing-simulation-button::placeholder {
+    color: white;
+}
