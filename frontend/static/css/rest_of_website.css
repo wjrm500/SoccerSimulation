@@ -1,3 +1,9 @@
+#rest-of-website-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 /* Nav */
 
 #nav {
@@ -53,4 +59,110 @@
 
 .nav-button:hover {
     color: red;
+}
+
+/* Main */
+
+#main {
+    display: flex;
+    flex: 1;
+}
+
+.half-container {
+    flex: 1;
+    padding: 5px;
+}
+
+.data-container {
+    border: 2px solid black;
+    border-radius: 5px;
+    height: 100%;
+    padding: 10px;
+}
+
+#always-data-container {
+    background-color: #eeeeee;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-areas:
+        "standings results"
+        "performance results";
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 3fr 2fr;
+}
+
+#sometimes-data-container {
+    align-items: center;
+    background-color: #cccccc;
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+}
+
+#sometimes-data-initial-text {
+    color: #888888;
+    font-family: 'Quattrocento Sans', sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.grid-item {
+    background-color: white;
+    border: 2px solid #dddddd;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+#grid-item-standings {grid-area: standings;}
+#grid-item-performance {grid-area: performance;}
+#grid-item-results {grid-area: results;}
+
+.grid-item-title {
+    background-color: #888888;
+    color: white;
+    font-weight: 500;
+    padding: 5px;
+}
+
+.grid-item-content {
+    flex: 1;
+    overflow-y: scroll;
+    position: relative;
+}
+
+/* League table */
+
+#league-table {
+    left: 0px;
+    height: 100%;
+    padding: 5px;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+}
+
+#league-table tr:not(:nth-child(1)):nth-child(-n + 5) {
+    background-color: lightgreen;
+}
+
+#league-table tr:nth-child(5) {
+    border-bottom: 1px dashed black;
+}
+
+#league-table tr:nth-child(18) {
+    border-top: 1px dashed black;
+}
+
+#league-table tr:not(:nth-child(-n + 17)):nth-child(-n + 21) {
+    background-color: lightpink;
+}
+
+#league-table td {
+    padding: 2px;
+}
+
+#league-table td:nth-child(2) {
+    font-weight: 500;
 }

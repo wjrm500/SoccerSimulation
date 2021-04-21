@@ -1,30 +1,60 @@
 {% extends 'rest_of_website.html' %}
 {% block content %}
-    <h1>League Table</h1>
-    <table>
-        <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>W</th>
-            <th>D</th>
-            <th>L</th>
-            <th>GF</th>
-            <th>GA</th>
-            <th>GD</th>
-            <th>Pts</th>
-        </tr>
-        {% for leagueTableItem in leagueTableItems %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ leagueTableItem[0].name }}</td>
-                <td>{{ leagueTableItem[1]['W'] }}</td>
-                <td>{{ leagueTableItem[1]['D'] }}</td>
-                <td>{{ leagueTableItem[1]['L'] }}</td>
-                <td>{{ leagueTableItem[1]['GF'] }}</td>
-                <td>{{ leagueTableItem[1]['GA'] }}</td>
-                <td>{{ leagueTableItem[1]['GD'] }}</td>
-                <td>{{ leagueTableItem[1]['Pts'] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+<div id="main">
+    <div class="half-container">
+        <div id="always-data-container" class="data-container">
+            <div id="grid-item-standings" class="grid-item">
+                <div class="grid-item-title">
+                    Standings
+                </div>
+                <div class="grid-item-content">
+                    <table id="league-table">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>GD</th>
+                            <th>Pts</th>
+                        </tr>
+                        {% for leagueTableItem in leagueTableItems %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ leagueTableItem[0].name }}</td>
+                                <td>{{ leagueTableItem[1]['W'] }}</td>
+                                <td>{{ leagueTableItem[1]['D'] }}</td>
+                                <td>{{ leagueTableItem[1]['L'] }}</td>
+                                <td>{{ leagueTableItem[1]['GF'] }}</td>
+                                <td>{{ leagueTableItem[1]['GA'] }}</td>
+                                <td>{{ leagueTableItem[1]['GD'] }}</td>
+                                <td>{{ leagueTableItem[1]['Pts'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div id="grid-item-performance" class="grid-item">
+                <div class="grid-item-title">
+                    Player Performance
+                </div>
+            </div>
+            <div id="grid-item-results" class="grid-item">
+                <div class="grid-item-title">
+                    Results
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="half-container">
+        <div id="sometimes-data-container" class="data-container">
+            <div id="sometimes-data-initial-text">
+                Click on Standings, Results, Player Performance, or any Club, Result or Player to populate this panel with information
+            </div>
+        </div>
+    </div>
+</div>
+    
 {% endblock %}
