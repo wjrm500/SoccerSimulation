@@ -40,6 +40,37 @@
                 <div class="grid-item-title">
                     Player Performance
                 </div>
+                <div class="grid-item-content">
+                    <table id="player-performance-table">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Games</th>
+                            <th>Goals</th>
+                            <th>Assists</th>
+                            <th>Rating</th>
+                        </tr>
+                        {% for player, performanceIndices in playerPerformanceItems.items() %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <div class="player-row-top">
+                                        {{ player.getProperName() }}
+                                    </div>
+                                    <div class="player-row-bottom">
+                                        <span>{{ player.club.name }}</span>,
+                                        <span>{{ player.getAge() }}</span>,
+                                        <span>{{ player.getBestPosition() }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ performanceIndices['games'] }}</td>
+                                <td>{{ performanceIndices['goals'] }}</td>
+                                <td>{{ performanceIndices['assists'] }}</td>
+                                <td>{{ performanceIndices['performanceIndex'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
             <div id="grid-item-results" class="grid-item">
                 <div class="grid-item-title">

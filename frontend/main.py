@@ -34,10 +34,12 @@ def postHome():
 def simulation():
     if 'universe' in session:
         universe = pickle.loads(session['universe'])
-        leagueTable = universe.systems[0].leagues[0].getLeagueTable()
+        league = universe.systems[0].leagues[0]
+        leagueTable = league.getLeagueTable()
         leagueTableItems = list(leagueTable.items())
         leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
-        return render_template('simulation.html', cssFile = 'rest_of_website.css', universeKey = session['universeKey'], leagueTableItems = leagueTableItems)
+        playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+        return render_template('simulation.html', cssFile = 'rest_of_website.css', universeKey = session['universeKey'], leagueTableItems = leagueTableItems, playerPerformanceItems = playerPerformanceItems)
     return render_template('error.html')
 
 @app.route('/player/<id>')

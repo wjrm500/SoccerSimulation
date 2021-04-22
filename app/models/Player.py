@@ -34,6 +34,9 @@ class Player:
         age = random.randint(agMin, agMax)
         self.birthDate = utils.getBirthDate(config.timeConfig['startDate'], age)
     
+    def getAge(self, dp = None):
+        return round(self.age, dp) if dp is not None and dp > 0 else int(self.age)
+    
     def setAge(self):
         td = self.club.league.system.universe.currentDate - self.birthDate
         self.age = td.days / 365.25
@@ -238,3 +241,14 @@ class Player:
             self.playerReports.append(playerReport)
             self.fatigue += playerReport['fatigueIncrease']
             self.form += playerReport['gravitatedMatchForm']
+    
+    def getProperName(self, forenameStyle = 'Whole', surnameStyle = 'Whole'):
+        ### Both forenameStyle and surnameStyle arguments can be set to either 'Empty', 'Shortened' or 'Whole'
+        forename, surname = self.name[0], self.name[1]
+        properNameArray = []
+        for style, name in zip([forenameStyle, surnameStyle], [forename, surname]):
+            if style == 'Shortened':
+                properNameArray.append(name[0] + '.')
+            elif style == 'Whole':
+                properNameArray.append(name)
+        return ' '.join(properNameArray)

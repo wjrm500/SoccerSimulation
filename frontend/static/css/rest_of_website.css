@@ -134,7 +134,7 @@
 
 /* League table */
 
-#league-table {
+.grid-item-content table {
     left: 0px;
     height: 100%;
     padding: 5px;
@@ -165,4 +165,23 @@
 
 #league-table td:nth-child(2) {
     font-weight: 500;
+}
+
+/* Player performance table */
+
+#player-performance-table tr:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+#player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
+    text-align: center;
+}
+
+#player-performance-table td:not(:nth-child(-n + 2)):nth-child(-n + 6) {
+    text-align: center;
+}
+
+.player-row-bottom {
+    color: grey;
+    font-size: 0.8em;
 }

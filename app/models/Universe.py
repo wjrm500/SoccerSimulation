@@ -41,6 +41,12 @@ class _Universe:
         for system in self.systems:
             for league in system.leagues:
                 Scheduler.scheduleLeagueFixtures(self.currentDate.year, league)
+    
+    def getClubByName(self, clubName):
+        for system in self.systems:
+            for club in system.clubs:
+                if club.name == clubName:
+                    return club
 
 _instance = None
 
