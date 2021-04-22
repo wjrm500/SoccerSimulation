@@ -88,7 +88,7 @@
         "standings results"
         "performance results";
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: 3fr 2fr;
+    grid-template-rows: 1fr 1fr;
 }
 
 #sometimes-data-container {
@@ -184,4 +184,71 @@
 .player-row-bottom {
     color: grey;
     font-size: 0.8em;
+}
+
+/* Results */
+
+#results {
+    border-collapse: separate;
+    border-spacing: 0px 10px;
+    font-size: 0.9em;
+    height: 100%;
+    table-layout: fixed;
+    top: -25px;
+}
+
+.result-date {
+    background-image: linear-gradient(to right, white, #eeeeee, white);
+    text-align: center;
+}
+
+.middle-bit {
+    width: 15px;
+}
+
+td.result-club-score {
+    background-color: #eeeeee;
+    text-align: center;
+}
+
+.result-home-club-score {
+    border-bottom: 1px solid #aaaaaa;
+    border-left: 1px solid #aaaaaa;
+    border-top: 1px solid #aaaaaa;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.result-score-dash {
+    border-bottom: 1px solid #aaaaaa;
+    border-top: 1px solid #aaaaaa;
+}
+
+.result-away-club-score {
+    border-bottom: 1px solid #aaaaaa;
+    border-right: 1px solid #aaaaaa;
+    border-top: 1px solid #aaaaaa;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.winner {
+    font-weight: bold;
+}
+
+td.result-club-name {
+    font-size: 0.75em;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+td.result-home-club-name {
+    padding-right: 10px;
+    text-align: right;
+}
+
+td.result-away-club-name {
+    padding-left: 10px;
+    text-align: left;
 }

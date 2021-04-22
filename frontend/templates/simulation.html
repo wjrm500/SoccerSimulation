@@ -23,7 +23,9 @@
                         {% for leagueTableItem in leagueTableItems %}
                             <tr>
                                 <td>{{ loop.index }}</td>
-                                <td>{{ leagueTableItem[0].name }}</td>
+                                <td>
+                                    <!-- <span style="color:#aaaaaa; display:inline-block; font-size:0.9em; font-weight:normal; width:40px">({{ leagueTableItem[0].getShortName() }})</span> -->
+                                    {{ leagueTableItem[0].name}}</td>
                                 <td>{{ leagueTableItem[1]['W'] }}</td>
                                 <td>{{ leagueTableItem[1]['D'] }}</td>
                                 <td>{{ leagueTableItem[1]['L'] }}</td>
@@ -75,6 +77,42 @@
             <div id="grid-item-results" class="grid-item">
                 <div class="grid-item-title">
                     Results
+                </div>
+                <div class="grid-item-content">
+                    <table id="results">
+                        <tr>
+                            <td></td>
+                            <td class="middle-bit""></td>
+                            <td class="middle-bit"></td>
+                            <td class="middle-bit"></td>
+                            <td></td>
+                        </tr>
+                        {% for key, value in dates.items() %}
+                            <tr>
+                                <td class="result-date" colspan="5">{{ key.strftime('%d %B %Y') }}</td>
+                            </tr>
+                            {% for result in value %}
+                                <tr class="result">
+                                    <td class="result-home-club-name result-club-name {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
+                                        {{ result['homeClub'].name }}
+                                    </td>
+                                    <td class="middle-bit result-home-club-score result-club-score {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
+                                        {{ result['homeScore'] }}
+                                    </td>
+                                    <td class="middle-bit result-score-dash result-club-score">-</td>
+                                    <td class="middle-bit result-away-club-score result-club-score {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
+                                        {{ result['awayScore'] }}
+                                    </td>
+                                    <td class="result-away-club-name result-club-name {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
+                                        {{ result['awayClub'].name }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="5"></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         </div>

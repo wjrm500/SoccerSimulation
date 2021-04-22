@@ -4,6 +4,7 @@ import numpy as np
 import copy
 from Select import Select
 from Team import Team
+import re
 
 class Club:
     def __init__(self, league, city):
@@ -14,6 +15,30 @@ class Club:
         for _ in range(config.systemConfig['numPlayersPerClub']):
             self.players.append(Player(self))
         self.favouriteFormation = self.setFavouriteFormation()
+    
+    def getProvisionalShortName(self, precedence = 0):
+        ### If precedence = 0, use all available consonants
+        ### If precedence = 1, ignore third consonant
+        ### If precedence = 2, ignore third and fourth consonants
+        ### Etc.
+        firstLetterAndConsonantsOnly = self.name[0] + re.sub('(?i)[aeiou -\.,]', '', self.name[1:])
+        provisionalShortName = (firstLetterAndConsonantsOnly[:precedence + 3] if len(firstLetterAndConsonantsOnly) >= precedence + 3 else self.name[:3]).upper()
+        provisionalShortName = provisionalShortName[:2] + provisionalShortName[-1:]
+        return provisionalShortName
+
+    def getShortName(self):
+        ### Need to ensure no short name clashes with clubs in same league
+        ### Basic idea is that clubs with higher ratings receive higher precedence when it comes to "naming rights"
+        ### So we find all clubs in league whose provisional short names clash initially
+        ### Then we see where this particular club ranks amongst this set of clashing clubs
+        ### We then feed this rank as the argument to precedence in the getProvisionalShortName method
+        shortName = self.getProvisionalShortName()
+        clashingClubs = []
+        for club in self.league.clubs:
+            if shortName == club.getProvisionalShortName():
+                clashingClubs.append(club)
+        selfRankAmongClashingClubs = sorted(clashingClubs, key = lambda x: x.getRating(), reverse = True).index(self)
+        return self.getProvisionalShortName(precedence = selfRankAmongClashingClubs)
     
     def setFavouriteFormation(self):
         formations, weights = [], []
@@ -47,3 +72,6 @@ class Club:
             return Team(self, chosenFormation, selection, homeAway)
         except:
             return None
+    
+    def getRating(self, decimalPlaces = 2):
+        return round(np.mean([player.rating for player in self.players]), decimalPlaces)

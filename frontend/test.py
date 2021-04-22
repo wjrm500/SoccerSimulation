@@ -11,5 +11,17 @@ universeKey = 'rdiqgqvycm'
 universe = db.getUniverse(universeKey)
 universe = pickle.loads(universe)
 league = universe.systems[0].leagues[0]
-a = league.getPerformanceIndices(sortBy = 'performanceIndex')
-b = 1
+# a = league.getPerformanceIndices(sortBy = 'performanceIndex')
+scores = []
+for matchReport in league.matchReports:
+    clubA, clubB = matchReport['clubs'].keys()
+    match = list(matchReport['clubs'].values())[0]['match']
+    scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
+    scores.append({
+        'date': matchReport['date'].strftime('%d-%m-%Y'),
+        'homeClub': clubA,
+        'awayClub': clubB,
+        'homeScore': scoreA,
+        'awayScore': scoreB
+    })
+a = 1
