@@ -1,0 +1,28 @@
+<table id="league-table">
+    <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>W</th>
+        <th>D</th>
+        <th>L</th>
+        <th>GF</th>
+        <th>GA</th>
+        <th>GD</th>
+        <th>Pts</th>
+    </tr>
+    {% for leagueTableItem in leagueTableItems %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>
+                <!-- <span style="color:#aaaaaa; display:inline-block; font-size:0.9em; font-weight:normal; width:40px">({{ leagueTableItem[0].getShortName() }})</span> -->
+                {{ leagueTableItem[0].name}}</td>
+            <td>{{ leagueTableItem[1]['W'] }}</td>
+            <td>{{ leagueTableItem[1]['D'] }}</td>
+            <td>{{ leagueTableItem[1]['L'] }}</td>
+            <td>{{ leagueTableItem[1]['GF'] }}</td>
+            <td>{{ leagueTableItem[1]['GA'] }}</td>
+            <td>{{ leagueTableItem[1]['GD'] }}</td>
+            <td>{{ leagueTableItem[1]['Pts'] }}</td>
+        </tr>
+    {% endfor %}
+</table>

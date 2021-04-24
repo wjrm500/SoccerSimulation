@@ -70,6 +70,10 @@ def simulation():
             )
     return render_template('error.html')
 
+@app.route('/simulation/default-iframe')
+def default():
+    return render_template('default_iframe.html', cssFile = 'rest_of_website.css')
+
 @app.route('/player/<id>')
 def player(id):
     if session.universe:

@@ -13,7 +13,9 @@ class Club:
         self.league = league
         self.players = []
         for _ in range(config.systemConfig['numPlayersPerClub']):
-            self.players.append(Player(self))
+            player = self.league.system.universe.playerController.createPlayer()
+            self.players.append(player)
+            player.club = self
         self.favouriteFormation = self.setFavouriteFormation()
     
     def getProvisionalShortName(self, precedence = 0):

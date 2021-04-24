@@ -6,8 +6,9 @@ import copy
 from scipy import spatial
 
 class Player:
-    def __init__(self, club):
-        self.club = club
+    def __init__(self, controller, id):
+        self.controller = controller
+        self.id = id
         self.name = utils.generatePlayerName()
         self.setBirthDate()
         self.setAge()
@@ -38,7 +39,7 @@ class Player:
         return round(self.age, dp) if dp is not None and dp > 0 else int(self.age)
     
     def setAge(self):
-        td = self.club.league.system.universe.currentDate - self.birthDate
+        td = self.controller.universe.currentDate - self.birthDate
         self.age = td.days / 365.25
 
     def setPeakAge(self):
@@ -252,3 +253,10 @@ class Player:
             elif style == 'Whole':
                 properNameArray.append(name)
         return ' '.join(properNameArray)
+    
+    def retire(self):
+        self.retired = True
+        self.controller.retirePlayer(self)
+        if hasattr(self, 'club') and self.club:
+            self.club.squad.remove(self)
+            self.club = None

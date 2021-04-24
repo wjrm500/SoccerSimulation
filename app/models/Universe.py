@@ -2,10 +2,12 @@ import config
 from System import System
 from Scheduler import Scheduler
 import datetime
+from PlayerController import PlayerController
 
 class _Universe:
     def __init__(self, systemIds = None):
         self.currentDate = config.timeConfig['startDate']
+        self.playerController = PlayerController(self)
         self.systems = []
         if systemIds is not None:
             for systemId in systemIds:
@@ -14,7 +16,7 @@ class _Universe:
             for _ in range(config.systemConfig['numSystems']):
                 self.systems.append(System(self))
         self.scheduleLeagues()
-    
+        
     def timeTravel(self, days):
         for i in range(days):
             print(i)
@@ -31,11 +33,12 @@ class _Universe:
     
     def advanceOneDay(self):
         self.currentDate += datetime.timedelta(days = 1)
-        for system in self.systems:
-            for league in system.leagues:
-                for club in league.clubs:
-                    for player in club.players:
-                        player.advance()
+        self.playerController.advance()
+        # for system in self.systems:
+        #     for league in system.leagues:
+        #         for club in league.clubs:
+        #             for player in club.players:
+        #                 player.advance()
     
     def scheduleLeagues(self):
         for system in self.systems:

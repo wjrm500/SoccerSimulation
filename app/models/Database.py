@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import pickle
 import os
+from dotenv import load_dotenv
 
 class Database:
     __instance__ = None
@@ -26,6 +27,7 @@ class Database:
         return Database.__instance__
     
     def connect(self):
+        load_dotenv()
         url = 'mongodb+srv://{user}:{pwd}@cluster0.tfn03.mongodb.net/{db}?retryWrites=true&w=majority'.format(
             user = os.environ.get('MONGO_USER'),
             pwd = os.environ.get('MONGO_PWD'),

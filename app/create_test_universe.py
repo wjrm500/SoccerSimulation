@@ -8,7 +8,7 @@ from Universe import Universe
 systemIds = [1]
 
 universe = Universe(systemIds = systemIds)
-universe.timeTravel(300)
+universe.timeTravel(10)
 
 import pickle
 import random

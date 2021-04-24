@@ -77,7 +77,6 @@
     border: 2px solid black;
     border-radius: 5px;
     height: 100%;
-    padding: 10px;
 }
 
 #always-data-container {
@@ -89,6 +88,7 @@
         "performance results";
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 1fr 1fr;
+    padding: 10px;
 }
 
 #sometimes-data-container {
@@ -251,4 +251,15 @@ td.result-home-club-name {
 td.result-away-club-name {
     padding-left: 10px;
     text-align: left;
+}
+
+
+
+#player-performance-table .clickable-row {
+    cursor: pointer;
+}
+
+#sometimes-iframe {
+    height: 100%;
+    width: 100%;
 }
