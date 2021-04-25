@@ -216,7 +216,7 @@ class Player:
         self.form -= self.form / 25
     
     def injure(self):
-        if self.injured is False:
+        if self.club is not None and self.injured is False:
             injury = True if np.random.normal(self.fatigue, 0.02) > 0.25 else False
             if injury:
                 x, itemArray, probabilityArray = 1, [], []

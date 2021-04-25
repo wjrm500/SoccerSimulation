@@ -7,21 +7,22 @@ import os
 import pickle
 
 db = Database.getInstance()
-universeKey = 'rdiqgqvycm'
+universeKey = 'ilujjtkncm'
 universe = db.getUniverse(universeKey)
 universe = pickle.loads(universe)
-league = universe.systems[0].leagues[0]
+# league = universe.systems[0].leagues[0]
 # a = league.getPerformanceIndices(sortBy = 'performanceIndex')
-scores = []
-for matchReport in league.matchReports:
-    clubA, clubB = matchReport['clubs'].keys()
-    match = list(matchReport['clubs'].values())[0]['match']
-    scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
-    scores.append({
-        'date': matchReport['date'].strftime('%d-%m-%Y'),
-        'homeClub': clubA,
-        'awayClub': clubB,
-        'homeScore': scoreA,
-        'awayScore': scoreB
-    })
+# scores = []
+# for matchReport in league.matchReports:
+#     clubA, clubB = matchReport['clubs'].keys()
+#     match = list(matchReport['clubs'].values())[0]['match']
+#     scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
+#     scores.append({
+#         'date': matchReport['date'].strftime('%d-%m-%Y'),
+#         'homeClub': clubA,
+#         'awayClub': clubB,
+#         'homeScore': scoreA,
+#         'awayScore': scoreB
+#     })
+player = universe.playerController.getPlayerById(11)
 a = 1

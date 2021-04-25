@@ -341,3 +341,25 @@ td.result-away-club-name {
     object-fit: contain;
     width: 100%;
 }
+
+.match-icon {
+    height: 15px;
+}
+
+#player-game-table tr:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+.player-game-home-away {
+    color: #cccccc;
+    display: inline-block;
+    width: 15px;
+}
+
+.player-game-opposition-name {
+    font-size: 0.8em;
+}
+
+.player-game-result.win {color: limegreen;}
+.player-game-result.draw {color: darkorange;}
+.player-game-result.loss {color: crimson;}

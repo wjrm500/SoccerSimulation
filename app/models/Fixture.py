@@ -1,7 +1,8 @@
 from Match import Match
 
 class Fixture:
-    def __init__(self, tournament, date = None, clubX = None, clubY = None):
+    def __init__(self, fixtureId, tournament, date = None, clubX = None, clubY = None):
+        self.id = fixtureId
         self.tournament = tournament
         self.date = date
         self.addClubs(clubX, clubY)

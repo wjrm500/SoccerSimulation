@@ -23,7 +23,7 @@
             <td>{{ performanceIndices['games'] }}</td>
             <td>{{ performanceIndices['goals'] }}</td>
             <td>{{ performanceIndices['assists'] }}</td>
-            <td>{{ performanceIndices['performanceIndex'] }}</td>
+            <td>{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
         </tr>
     {% endfor %}
 </table>

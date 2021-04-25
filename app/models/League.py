@@ -72,7 +72,7 @@ class League:
         clubs = clubs if type(clubs) == list else [clubs]
         upToGameweek = len(self.clubs) * 2 - 1 if upToGameweek is None else upToGameweek
         for club in clubs:
-            club = self.universe.getClubByName(club) if type(club) == str else club
+            club = self.system.universe.getClubByName(club) if type(club) == str else club
             for player in club.players:
                 gamesPlayed = np.sum([1 for playerReport in player.playerReports if playerReport['tournament'] == self and playerReport['gameweek'] <= upToGameweek])
                 performanceIndices[player] = {}

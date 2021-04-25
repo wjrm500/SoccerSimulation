@@ -6,6 +6,7 @@ from goal_probability import goalProbability
 class PlayerReportEngine:
     def __init__(self, match):
         self.match = match
+        self.manOfTheMatch = None
     
     def generatePlayerReports(self, report):
         meanFitness = np.mean([select.player.skillValues['fitness'] for club in self.match.clubs for select in report['clubs'][club]['team'].selection])
@@ -16,12 +17,22 @@ class PlayerReportEngine:
                 player = select.player
                 report['clubs'][club]['players'][player] = self.getPlayerReport(club, team, select, meanFitness)
 
+        ### Tag man of the match
+        manOfTheMatch = self.manOfTheMatch['player']
+        for club in self.match.clubs:
+            team = report['clubs'][club]['team']
+            for select in team.selection:
+                player = select.player
+                report['clubs'][club]['players'][player]['manOfTheMatch'] = player == manOfTheMatch
+
     def getPlayerReport(self, club, team, select, meanFitness):
         player = select.player
         position = select.position
         playerReport = {}
         playerGoalLikelihood = team.goalFactors[player]
         playerAssistLikelihood = team.assistFactors[player]
+        playerReport['fixtureId'] = self.match.fixture.id
+        playerReport['homeAway'] = 'H' if self.match.clubX == player.club else 'A'
         playerReport['tournament'] = self.match.tournament.tournament if type(self.match.tournament).__name__ == 'Group' else self.match.tournament
         playerReport['date'] = self.match.date
         playerReport['gameweek'] = self.match.fixture.gameweek
@@ -36,6 +47,8 @@ class PlayerReportEngine:
         goals = clubReport['match']['goals']
         playerReport['goals'] = sum([1 for goal in goals if goal['scorer'] == player]) if goals is not None else 0
         playerReport['assists'] = sum([1 for goal in goals if goal['assister'] == player]) if goals is not None else 0
+
+        playerReport['oppositionClub'] = oppositionClub
 
         ### Get player performance index
 
@@ -85,6 +98,9 @@ class PlayerReportEngine:
             mx = 10
         )
         playerReport['performanceIndex'] = performanceIndex
+
+        if self.manOfTheMatch is None or performanceIndex > self.manOfTheMatch['performanceIndex']:
+            self.manOfTheMatch = {'player': player, 'performanceIndex': performanceIndex}
 
         ### Handle fatigue
 
