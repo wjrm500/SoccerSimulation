@@ -99,10 +99,15 @@
 }
 
 #sometimes-data-initial-text {
+    align-items: center;
+    background-color: #cccccc;
     color: #888888;
+    display: flex;
     font-family: 'Quattrocento Sans', sans-serif;
     font-size: 2em;
     font-weight: bold;
+    height: 100%;
+    justify-content: center;
     padding: 25px;
     text-align: center;
 }
@@ -269,6 +274,15 @@ td.result-away-club-name {
 
 #player-performance-table .clickable-row {
     cursor: pointer;
+}
+
+#player-performance-table .clickable-row:hover {
+    background-color: #888888;
+    color: white;
+}
+
+#player-performance-table .clickable-row:hover .player-row-bottom {
+    color: white;
 }
 
 #sometimes-iframe {
