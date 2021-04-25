@@ -29,7 +29,7 @@ def getHome():
 def postHome():
     universeKey = request.form['universe_key']
     session['universeKey'] = universeKey
-    session['universe'] = db.getUniverse(universeKey)
+    session['universe'] = db.getUniverseGridFile(universeKey)
     return redirect(url_for('simulation'))
 
 @app.route('/simulation')
@@ -89,6 +89,16 @@ def playerRadar(id):
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
         fig = player_utils.showSkillDistribution(player, projection = True)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
+
+@app.route('/simulation/player/<id>/form-graph')
+def playerFormGraph(id):
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        player = universe.playerController.getPlayerById(id)
+        fig = player_utils.showPlayerForm(player)
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')

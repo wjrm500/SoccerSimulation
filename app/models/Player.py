@@ -237,6 +237,7 @@ class Player:
         self.setRating()
         self.setSkillDistribution()
         self.setSkillValues()
+        self.storeRatingsAndForm()
     
     def handlePlayerReport(self, playerReport):
         if playerReport not in self.playerReports: ### Prevent duplication from Universal Tournament group stage matches, which are handled by both the group and the wider tournament
@@ -261,3 +262,8 @@ class Player:
         if hasattr(self, 'club') and self.club:
             self.club.players.remove(self)
             self.club = None
+    
+    def storeRatingsAndForm(self):
+        currentDate = self.controller.universe.currentDate
+        self.ratings[currentDate] = self.rating
+        self.forms[currentDate] = self.form

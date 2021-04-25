@@ -7,8 +7,8 @@ import os
 import pickle
 
 db = Database.getInstance()
-universeKey = 'ilujjtkncm'
-universe = db.getUniverse(universeKey)
+universeKey = 'dvfwjndaes'
+universe = db.getUniverseGridFile(universeKey)
 universe = pickle.loads(universe)
 # league = universe.systems[0].leagues[0]
 # a = league.getPerformanceIndices(sortBy = 'performanceIndex')
@@ -24,5 +24,14 @@ universe = pickle.loads(universe)
 #         'homeScore': scoreA,
 #         'awayScore': scoreB
 #     })
-player = universe.playerController.getPlayerById(11)
+player = universe.playerController.getPlayerById(599)
 a = 1
+
+from matplotlib import pyplot as plt
+import matplotlib.dates as mdates
+
+x = list(player.forms.keys())
+y = list(player.forms.values())
+x = mdates.date2num(x)
+plt.plot_date(x, y, 'b-')
+plt.show()

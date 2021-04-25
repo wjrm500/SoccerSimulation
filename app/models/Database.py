@@ -1,7 +1,9 @@
 from pymongo import MongoClient
+import gridfs
 import pickle
 import os
 from dotenv import load_dotenv
+import gridfs
 
 class Database:
     __instance__ = None
@@ -18,6 +20,13 @@ class Database:
             collection = self.cnx['soccersim']['universes']
             result = collection.find_one({'_id': universeKey})
             self.universe = result['value']
+        return self.universe
+    
+    def getUniverseGridFile(self, universeKey):
+        if not hasattr(self, 'universe'):
+            fs = gridfs.GridFS(self.cnx.grid_file)
+            result = fs.find_one({'filename': 'universe_' + universeKey})
+            self.universe = result.read()
         return self.universe
 
     @staticmethod

@@ -145,7 +145,7 @@
 .grid-item-content {
     flex: 1;
     height: 1; /* Not really sure why this works but it sorts out player grid */
-    overflow-y: scroll;
+    overflow-y: auto;
     position: relative;
 }
 
@@ -185,6 +185,41 @@
 }
 
 /* Player performance table */
+
+#player-performance-table th {
+    cursor: pointer;
+    padding: 5px;
+}
+
+#player-performance-table th:hover .table-arrow {
+    color: black;
+}
+
+#player-performance-table {
+    text-align: left;
+}
+
+#player-performance-table th img {
+    height: 20px;
+}
+
+#player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
+    width: 75px;
+}
+
+.table-arrow {
+    color: #aaaaaa;
+    font-size: 0.75em;
+    padding-left: 3px;
+}
+
+.table-arrow:not(.table-unsorted-arrow) {
+    display: none;
+}
+
+.table-unsorted-arrow {
+    display: inline;
+}
 
 #player-performance-table tr:nth-child(odd) {
     background-color: #eeeeee;
@@ -351,7 +386,7 @@ td.result-away-club-name {
 }
 
 .player-game-home-away {
-    color: #cccccc;
+    color: #bbbbbb;
     display: inline-block;
     width: 15px;
 }
@@ -363,3 +398,9 @@ td.result-away-club-name {
 .player-game-result.win {color: limegreen;}
 .player-game-result.draw {color: darkorange;}
 .player-game-result.loss {color: crimson;}
+
+#player-form-graph-image {
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+}

@@ -5,9 +5,9 @@ from bson.binary import Binary
 
 db = Database.getInstance()
 collection = db.cnx['soccersim']['universes']
-f = open('universe_bellqprldx', 'rb')
+f = open('universe_dvfwjndaes', 'rb')
 universe = f.read()
 collection.insert_one({
-    '_id': 'bellqprldx',
+    '_id': 'dvfwjndaes',
     'value': universe
 })

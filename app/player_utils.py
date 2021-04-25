@@ -2,6 +2,7 @@ import sys
 sys.path.append('.')
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import dates as mdates
 from models.Player import Player
 from config import playerConfig
 from types import SimpleNamespace
@@ -240,4 +241,13 @@ def showSkillDistribution(players, labels = None, projection = False, scaleForOv
 
     # ### Show plot
     # plt.show()
+    return fig
+
+def showPlayerForm(player):
+    fig = plt.figure()
+    fig.add_subplot(111)
+    x = list(player.forms.keys())
+    y = list(player.forms.values())
+    x = mdates.date2num(x)
+    plt.plot_date(x, y, 'b-')
     return fig
