@@ -63,9 +63,10 @@ class Player:
         mn, mx = config.playerConfig['peakRating']['min'], config.playerConfig['peakRating']['max']
         self.peakRating = utils.limitedRandNorm({'mu': self.peakRating, 'sigma': 50 / (self.age ** 2), 'mn': mn, 'mx': mx})
 
-    def getRating(self):
-        distanceFromPeakAge = abs(self.peakAge - self.age)
-        direction = 'incline' if self.peakAge > self.age else 'decline'
+    def getRating(self, age = None):
+        age = self.age if age is None else age
+        distanceFromPeakAge = abs(self.peakAge - age)
+        direction = 'incline' if self.peakAge > age else 'decline'
         growthSpeedFactor = self.growthSpeed[direction]
         peakRatingFulfillment = 1 - (distanceFromPeakAge ** 1.5 * 0.01 * growthSpeedFactor)
         rating = self.peakRating * peakRatingFulfillment
@@ -258,5 +259,5 @@ class Player:
         self.retired = True
         self.controller.retirePlayer(self)
         if hasattr(self, 'club') and self.club:
-            self.club.squad.remove(self)
+            self.club.players.remove(self)
             self.club = None

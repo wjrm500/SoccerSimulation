@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div id="sometimes-data-container" class="data-container">
+    <div class="stretched-grid-item">
+        <div class="grid-item-title">
+            <span style="color:lightgrey; font-weight:normal;">{{ player.club.name }} ||</span>
+            <span>{{ player.getProperName() }}</span>
+        </div>
+        <div id="player-grid" class="grid-item-content">
+            <div id="grid-item-summary" class="grid-item">
+                <div class="grid-item-content">
+                    {% include 'player/player_summary.html' %}
+                </div>
+            </div>
+            <div id="grid-item-stats-radar" class="grid-item">
+                <div class="grid-item-content">
+                    {% include 'player/player_stats_radar.html' %}
+                </div>
+            </div>
+            <div id="grid-item-games" class="grid-item">
+                <div class="grid-item-content">
+                    {% include 'player/player_games.html' %}
+                </div>
+            </div>
+            <div id="grid-item-form" class="grid-item">
+                <div class="grid-item-content">
+                    {% include 'player/player_form.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

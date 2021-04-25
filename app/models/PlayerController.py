@@ -9,6 +9,7 @@ class PlayerController:
         self.activePlayers, self.retiredPlayers, self.freeAgentPlayers = [], [], []
 
     def getPlayerById(self, id):
+        id = int(id)
         for player in self.players:
             if player.id == id:
                 return player
@@ -26,9 +27,9 @@ class PlayerController:
             player.advance()
     
     def createPlayer(self):
+        self.playersCreated += 1
         player = Player(self, id = copy.copy(self.playersCreated))
         self.players.append(player)
-        self.playersCreated += 1
         if hasattr(player, 'retired') and player.retired is False:
             self.activePlayers.append(player)
             self.freeAgentPlayers.append(player)

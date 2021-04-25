@@ -1,7 +1,5 @@
 $(document).ready(function() {
-    // $('#existing-simulation-button').keypress(function(e) {
-    //     if (e.which === 13) {
-    //         $(this).closest('form').submit();
-    //     }
-    // })
+    $('.clickable-row').click(function() {
+        $('#sometimes-iframe').attr('src', '/simulation/player/' + $(this).data('playerId'));
+    });
 });

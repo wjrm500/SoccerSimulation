@@ -2,13 +2,16 @@ import sys
 sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app")
 sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app\\models")
 
-from flask import Flask, session, render_template, request, url_for, redirect
+from flask import Flask, session, render_template, request, url_for, redirect, Response
 from flask_session import Session
 from Universe import Universe
 from Database import Database
 import os
 import pickle
 import utils
+import player_utils
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 db = Database.getInstance()
 
@@ -25,9 +28,8 @@ def getHome():
 @app.route('/', methods = ['POST'])
 def postHome():
     universeKey = request.form['universe_key']
-    if 'universe' not in session:
-        session['universeKey'] = universeKey
-        session['universe'] = db.getUniverse(universeKey)
+    session['universeKey'] = universeKey
+    session['universe'] = db.getUniverse(universeKey)
     return redirect(url_for('simulation'))
 
 @app.route('/simulation')
@@ -74,11 +76,22 @@ def simulation():
 def default():
     return render_template('default_iframe.html', cssFile = 'rest_of_website.css')
 
-@app.route('/player/<id>')
+@app.route('/simulation/player/<id>')
 def player(id):
-    if session.universe:
-        player = session.universe.getPlayerById(id)
-    return player.name
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        player = universe.playerController.getPlayerById(id)
+    return render_template('player.html', cssFile = 'rest_of_website.css', player = player)
+
+@app.route('/simulation/player/<id>/radar')
+def playerRadar(id):
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        player = universe.playerController.getPlayerById(id)
+        fig = player_utils.showSkillDistribution(player, projection = True)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor
