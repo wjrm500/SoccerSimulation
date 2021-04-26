@@ -249,5 +249,6 @@ def showPlayerForm(player):
     x = list(player.forms.keys())
     y = list(player.forms.values())
     x = mdates.date2num(x)
+    plt.axis('off')
     plt.plot_date(x, y, 'b-')
     return fig

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('.clickable-row').click(function() {
-        $('#sometimes-iframe').attr('src', '/simulation/player/' + $(this).data('playerId'));
+        $('#sometimes-iframe').attr('src', '/simulation/player/' + this.dataset.playerId);
     });
 
     $('#player-performance-table th').hover(
@@ -56,8 +56,8 @@ $(document).ready(function() {
         let data = [];
         let metric = $(this).data('metric');
         $('#player-performance-table tr:not(:nth-child(1))').each(function() {
-            debugger;
             let datum = {
+                'playerId': this.dataset.playerId,
                 'rank': $(this).find('td:eq(0)').text(),
                 'name': $(this).find('td:eq(1)').html(),
                 'games': $(this).find('td:eq(2)').text(),
@@ -81,6 +81,7 @@ $(document).ready(function() {
         for (let i = 0; i < data.length; i++) {
             let datum = data[i];
             let tr = $('#player-performance-table tr:eq(' + (i + 1) + ')');
+            tr.get(0).dataset.playerId = datum['playerId'];
             tr.find('td:eq(0)').html(datum['rank']);
             tr.find('td:eq(1)').html(datum['name']);
             tr.find('td:eq(2)').text(datum['games']);
