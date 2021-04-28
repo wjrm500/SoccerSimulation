@@ -23,7 +23,7 @@ Session(app)
 @app.route('/', methods = ['GET'])
 def getHome():
     systems = db.cnx['soccersim']['systems'].find()
-    return render_template('home.html', cssFile = 'home.css', systems = systems)
+    return render_template('home.html', cssFiles = ['home.css'], systems = systems)
 
 @app.route('/', methods = ['POST'])
 def postHome():
@@ -64,7 +64,8 @@ def simulation():
             dates[matchReport['date']].append(result)
 
         return render_template('simulation.html',
-            cssFile = 'rest_of_website.css',
+            cssFiles = ['rest_of_website.css'],
+            jsFiles = ['script.js'],
             universeKey = session['universeKey'],
             leagueTableItems = leagueTableItems,
             playerPerformanceItems = playerPerformanceItems,
@@ -74,14 +75,14 @@ def simulation():
 
 @app.route('/simulation/default-iframe')
 def default():
-    return render_template('default_iframe.html', cssFile = 'rest_of_website.css')
+    return render_template('default_iframe.html', cssFiles = ['rest_of_website.css'])
 
 @app.route('/simulation/player/<id>')
 def player(id):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
-    return render_template('player.html', cssFile = 'rest_of_website.css', player = player)
+    return render_template('player/player.html', cssFiles = ['rest_of_website.css'], jsFiles = ['iframe.js'], player = player)
 
 @app.route('/simulation/player/<id>/radar')
 def playerRadar(id):
@@ -102,6 +103,13 @@ def playerFormGraph(id):
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
+
+@app.route('/simulation/fixture/<id>')
+def fixture(id):
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        fixture = universe.getFixtureById(id)
+    return render_template('fixture/fixture.html', cssFiles = ['rest_of_website.css'], fixture = fixture)
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor

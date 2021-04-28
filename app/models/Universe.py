@@ -34,11 +34,6 @@ class _Universe:
     def advanceOneDay(self):
         self.currentDate += datetime.timedelta(days = 1)
         self.playerController.advance()
-        # for system in self.systems:
-        #     for league in system.leagues:
-        #         for club in league.clubs:
-        #             for player in club.players:
-        #                 player.advance()
     
     def scheduleLeagues(self):
         for system in self.systems:
@@ -50,6 +45,13 @@ class _Universe:
             for club in system.clubs:
                 if club.name == clubName:
                     return club
+    
+    def getFixtureById(self, fixtureId):
+        for system in self.systems:
+            for league in system.leagues:
+                for fixture in league.fixtures:
+                    if fixture.id == fixtureId:
+                        return fixture
 
 _instance = None
 

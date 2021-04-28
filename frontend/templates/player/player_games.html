@@ -6,7 +6,7 @@
         <th>Rating</th>
     </tr>
     {% for playerReport in player.playerReports %}
-        <tr class="clickable-row" data-match-id="1">
+        <tr class="clickable-row" data-fixture-id="{{ playerReport['fixtureId'] }}">
             <td>{{ playerReport['gameweek'] }}</td>
             <td>
                 <span class="player-game-result {{ 'draw' if playerReport['extraData']['teamActualGoalsFor'] == playerReport['extraData']['teamActualGoalsAgainst'] else 'win' if playerReport['extraData']['teamActualGoalsFor'] > playerReport['extraData']['teamActualGoalsAgainst'] else 'loss' }}"> {{

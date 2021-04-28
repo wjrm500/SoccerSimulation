@@ -385,6 +385,15 @@ td.result-away-club-name {
     background-color: #eeeeee;
 }
 
+#player-game-table .clickable-row {
+    cursor: pointer;
+}
+
+#player-game-table .clickable-row:hover {
+    background-color: #888888;
+    color: white;
+}
+
 .player-game-home-away {
     color: #bbbbbb;
     display: inline-block;

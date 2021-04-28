@@ -1,6 +1,14 @@
 $(document).ready(function() {
-    $('.clickable-row').click(function() {
+    $('#player-performance-table .clickable-row').click(function() {
         $('#sometimes-iframe').attr('src', '/simulation/player/' + this.dataset.playerId);
+        let iframe = document.getElementById('sometimes-iframe');
+        let innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        let playerGamesTable = innerDoc.getElementById('player-games-table');
+        playerGamesTable.querySelectorAll('.clickable-row').forEach(item => {
+            item.addEventListener('click', () => {
+                $('#sometimes-iframe').attr('src', '/simulation/fixture/' + this.dataset.fixtureId);
+            });
+        });
     });
 
     $('#player-performance-table th').hover(

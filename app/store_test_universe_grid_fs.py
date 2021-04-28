@@ -8,7 +8,7 @@ db = Database.getInstance()
 cnx = db.cnx.grid_file
 fs = gridfs.GridFS(cnx)
 
-f = open('universe_dvfwjndaes', 'rb')
+f = open('universe_viwlvbwztv', 'rb')
 universe = f.read()
 
-fs.put(universe, filename = 'universe_dvfwjndaes')
+fs.put(universe, filename = 'universe_viwlvbwztv')

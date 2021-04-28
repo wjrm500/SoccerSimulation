@@ -1,0 +1,3 @@
+{% for key, value in fixture.match.report['clubs'].items() %}
+    {{ '{} - {}'.format(key.name, value['match']['goalsFor']) }}
+{% endfor %}
