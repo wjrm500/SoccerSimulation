@@ -28,9 +28,30 @@
 }
 
 #history-back {
-    color: red;
+    color: #cc0000;
 }
 
 #history-forward {
-    color: limegreen;
+    color: #00cc00;
+}
+
+.history-button:hover {
+    background-color: #dddddd;
+}
+
+#history-back:hover {
+    color: #aa0000;
+}
+
+#history-forward:hover {
+    color: #00aa00;
+}
+
+.history-button-disabled {
+    border: 1px solid #aaaaaa;
+    color: #dddddd !important;
+}
+
+.history-button-disabled:hover {
+    background-color: white;
 }

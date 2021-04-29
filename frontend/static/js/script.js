@@ -1,24 +1,15 @@
 $(document).ready(function() {
+    window.iframeHistoryPointer = 0;
+    window.iframeHistory = [];
     $('#player-performance-table .clickable-row').click(function() {
         let iframe = document.getElementById('sometimes-iframe');
-        iframe.src = '/simulation/player/' + this.dataset.playerId;
-    //     iframe.onload = function() {
-    //         let innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-    //         let playerGameTable = innerDoc.getElementById('player-game-table');
-    //         playerGameTable.querySelectorAll('.clickable-row').forEach(item => {
-    //             item.addEventListener('click', () => {
-    //                 iframe.src = '/simulation/fixture/' + item.dataset.fixtureId;
-    //                 iframe.onload = function() {
-    //                     iframe.contentDocument.querySelector('#history-back').onclick = function() {
-    //                         iframe.contentWindow.history.back(); 
-    //                     }
-    //                     iframe.contentDocument.querySelector('#history-forward').onclick = function() {
-    //                         iframe.contentWindow.history.forward(); 
-    //                     }
-    //                 }
-    //             });
-    //         });
-    //     }
+        console.log(window.iframeHistoryPointer);
+        console.log(window.iframeHistory);
+        console.log(document.getElementById('sometimes-iframe').getAttribute('src'))
+        let url = '/simulation/player/' + this.dataset.playerId;
+        window.iframeHistory.push(url);
+        window.iframeHistoryPointer = window.iframeHistory.length - 1;
+        iframe.src = url;
     });
 
     $('#player-performance-table th').hover(
