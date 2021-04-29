@@ -1,3 +1,22 @@
-{% for key, value in fixture.match.report['clubs'].items() %}
-    {{ '{} - {}'.format(key.name, value['match']['goalsFor']) }}
-{% endfor %}
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="stretched-grid-item">
+    <div id="iframe-header">
+        <div id="iframe-title">
+            <span>Fixture ID {{ fixture.id }}</span>
+        </div>
+        <div id="history-buttons">
+            <button id="history-back" class="history-button">
+                <i class="fas fa-arrow-circle-left"></i>
+            </button>
+            <button id="history-forward" class="history-button">
+                <i class="fas fa-arrow-circle-right"></i>
+            </button>
+        </div>
+    </div>
+    {% for key, value in fixture.match.matchReport['clubs'].items() %}
+        {{ '{} - {}'.format(key.name, value['match']['goalsFor']) }}
+    {% endfor %}
+</div>
+{% endblock %}

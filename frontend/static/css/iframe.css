@@ -1,0 +1,36 @@
+#iframe-header {
+    align-items: center;
+    background-color: #888888;
+    display: flex;
+}
+
+#iframe-title {
+    color: white;
+    flex: 1;
+    font-weight: 500;
+    padding: 5px;
+}
+
+#history-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: auto;
+}
+
+.history-button {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 1.2em;
+    margin: 0px 5px;
+    padding: 3px;
+    width: 75px;
+}
+
+#history-back {
+    color: red;
+}
+
+#history-forward {
+    color: limegreen;
+}

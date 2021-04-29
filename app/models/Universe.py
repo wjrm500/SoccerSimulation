@@ -50,7 +50,7 @@ class _Universe:
         for system in self.systems:
             for league in system.leagues:
                 for fixture in league.fixtures:
-                    if fixture.id == fixtureId:
+                    if fixture.id == int(fixtureId):
                         return fixture
 
 _instance = None

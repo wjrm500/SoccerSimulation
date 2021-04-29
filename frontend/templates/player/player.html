@@ -2,9 +2,19 @@
 
 {% block body %}
 <div class="stretched-grid-item">
-    <div class="grid-item-title">
-        <span style="color:lightgrey; font-weight:normal;">{{ player.club.name }} ||</span>
+    <div id="iframe-header">
+        <div id="iframe-title">
+            <span style="color:lightgrey; font-weight:normal;">{{ player.club.name }} ||</span>
         <span>{{ player.getProperName() }}</span>
+        </div>
+        <div id="history-buttons">
+            <button id="history-back" class="history-button">
+                <i class="fas fa-arrow-circle-left"></i>
+            </button>
+            <button id="history-forward" class="history-button">
+                <i class="fas fa-arrow-circle-right"></i>
+            </button>
+        </div>
     </div>
     <div id="player-grid" class="grid-item-content">
         <div id="grid-item-summary" class="grid-item">

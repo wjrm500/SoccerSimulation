@@ -1,14 +1,24 @@
 $(document).ready(function() {
     $('#player-performance-table .clickable-row').click(function() {
-        $('#sometimes-iframe').attr('src', '/simulation/player/' + this.dataset.playerId);
         let iframe = document.getElementById('sometimes-iframe');
-        let innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        let playerGamesTable = innerDoc.getElementById('player-games-table');
-        playerGamesTable.querySelectorAll('.clickable-row').forEach(item => {
-            item.addEventListener('click', () => {
-                $('#sometimes-iframe').attr('src', '/simulation/fixture/' + this.dataset.fixtureId);
+        iframe.src = '/simulation/player/' + this.dataset.playerId;
+        iframe.onload = function() {
+            let innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+            let playerGameTable = innerDoc.getElementById('player-game-table');
+            playerGameTable.querySelectorAll('.clickable-row').forEach(item => {
+                item.addEventListener('click', () => {
+                    iframe.src = '/simulation/fixture/' + item.dataset.fixtureId;
+                    iframe.onload = function() {
+                        iframe.contentDocument.querySelector('#history-back').onclick = function() {
+                            iframe.contentWindow.history.back(); 
+                        }
+                        iframe.contentDocument.querySelector('#history-forward').onclick = function() {
+                            iframe.contentWindow.history.forward(); 
+                        }
+                    }
+                });
             });
-        });
+        }
     });
 
     $('#player-performance-table th').hover(

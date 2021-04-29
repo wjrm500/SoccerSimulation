@@ -82,34 +82,34 @@ def player(id):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
-    return render_template('player/player.html', cssFiles = ['rest_of_website.css'], jsFiles = ['iframe.js'], player = player)
+    return render_template('player/player.html', cssFiles = ['rest_of_website.css', 'iframe.css'], player = player)
 
-@app.route('/simulation/player/<id>/radar')
-def playerRadar(id):
+@app.route('/simulation/player/<playerId>/radar')
+def playerRadar(playerId):
     if session['universe']:
         universe = pickle.loads(session['universe'])
-        player = universe.playerController.getPlayerById(id)
+        player = universe.playerController.getPlayerById(playerId)
         fig = player_utils.showSkillDistribution(player, projection = True)
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
 
-@app.route('/simulation/player/<id>/form-graph')
-def playerFormGraph(id):
+@app.route('/simulation/player/<playerId>/form-graph')
+def playerFormGraph(playerId):
     if session['universe']:
         universe = pickle.loads(session['universe'])
-        player = universe.playerController.getPlayerById(id)
+        player = universe.playerController.getPlayerById(playerId)
         fig = player_utils.showPlayerForm(player)
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
 
-@app.route('/simulation/fixture/<id>')
-def fixture(id):
+@app.route('/simulation/fixture/<fixtureId>')
+def fixture(fixtureId):
     if session['universe']:
         universe = pickle.loads(session['universe'])
-        fixture = universe.getFixtureById(id)
-    return render_template('fixture/fixture.html', cssFiles = ['rest_of_website.css'], fixture = fixture)
+        fixture = universe.getFixtureById(int(fixtureId))
+    return render_template('fixture/fixture.html', cssFiles = ['rest_of_website.css', 'iframe.css'], fixture = fixture)
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor

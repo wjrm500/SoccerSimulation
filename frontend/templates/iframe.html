@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div id="history-buttons">
+        <button id="history-back">
+            <i class="fas fa-arrow-circle-left"></i>
+        </button>
+        <button id="history-forward">
+            <i class="fas fa-arrow-circle-right"></i>
+        </button>
+    </div>
+    {% block content %}
+    {% endblock %}
+{% endblock %}
