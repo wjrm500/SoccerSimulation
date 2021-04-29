@@ -82,7 +82,7 @@ def player(id):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
-    return render_template('player/player.html', cssFiles = ['rest_of_website.css', 'iframe.css'], player = player)
+    return render_template('player/player.html', cssFiles = ['rest_of_website.css', 'iframe.css'], jsFiles = ['iframe.js'], player = player)
 
 @app.route('/simulation/player/<playerId>/radar')
 def playerRadar(playerId):
@@ -109,7 +109,7 @@ def fixture(fixtureId):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         fixture = universe.getFixtureById(int(fixtureId))
-    return render_template('fixture/fixture.html', cssFiles = ['rest_of_website.css', 'iframe.css'], fixture = fixture)
+    return render_template('fixture/fixture.html', cssFiles = ['rest_of_website.css', 'iframe.css'], jsFiles = ['iframe.js'], fixture = fixture)
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor
