@@ -24,14 +24,16 @@ universe = pickle.loads(universe)
 #         'homeScore': scoreA,
 #         'awayScore': scoreB
 #     })
-player = universe.playerController.getPlayerById(599)
+# player = universe.playerController.getPlayerById(599)
+# a = 1
+
+# from matplotlib import pyplot as plt
+# import matplotlib.dates as mdates
+
+# x = list(player.forms.keys())
+# y = list(player.forms.values())
+# x = mdates.date2num(x)
+# plt.plot_date(x, y, 'b-')
+# plt.show()
+fixture = universe.systems[0].leagues[0].fixtures[0]
 a = 1
-
-from matplotlib import pyplot as plt
-import matplotlib.dates as mdates
-
-x = list(player.forms.keys())
-y = list(player.forms.values())
-x = mdates.date2num(x)
-plt.plot_date(x, y, 'b-')
-plt.show()

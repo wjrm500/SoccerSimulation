@@ -15,8 +15,25 @@
             </button>
         </div>
     </div>
-    {% for key, value in fixture.match.matchReport['clubs'].items() %}
+    <!-- {% for key, value in fixture.match.matchReport['clubs'].items() %}
         {{ '{} - {}'.format(key.name, value['match']['goalsFor']) }}
-    {% endfor %}
+    {% endfor %} -->
+    <div id="fixture-grid" class="grid-item-content">
+        <div id="grid-item-summary" class="grid-item">
+            <div class="grid-item-content">
+                {% include 'fixture/fixture_summary.html' %}
+            </div>
+        </div>
+        <div id="grid-item-statistics" class="grid-item">
+            <div class="grid-item-content">
+                {% include 'fixture/fixture_statistics.html' %}
+            </div>
+        </div>
+        <div id="grid-item-performance" class="grid-item">
+            <div class="grid-item-content">
+                {% include 'fixture/fixture_player_performance.html' %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

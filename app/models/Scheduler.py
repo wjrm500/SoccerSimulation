@@ -10,8 +10,8 @@ class Scheduler:
     def scheduleFixture(cls, date, gameweek, tournament, clubX, clubY):
         if not hasattr(tournament, 'fixtures'):
             tournament.fixtures = []
-        fixture = Fixture(copy.copy(cls.fixturesCreated), tournament, date, clubX, clubY)
         cls.fixturesCreated += 1
+        fixture = Fixture(copy.copy(cls.fixturesCreated), tournament, date, clubX, clubY)
         fixture.setGameweek(gameweek)
         tournament.fixtures.append(fixture)
 

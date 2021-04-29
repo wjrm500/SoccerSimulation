@@ -335,19 +335,19 @@ td.result-away-club-name {
     grid-template-rows: 1fr 1fr;
 }
 
-#grid-item-summary {
+#player-grid #grid-item-summary {
     grid-area: summary;
 }
 
-#grid-item-stats-radar {
+#player-grid #grid-item-stats-radar {
     grid-area: radar;
 }
 
-#grid-item-games {
+#player-grid #grid-item-games {
     grid-area: games;
 }
 
-#grid-item-form {
+#player-grid #grid-item-form {
     grid-area: form;
 }
 
@@ -412,4 +412,66 @@ td.result-away-club-name {
     height: 100%;
     object-fit: contain;
     width: 100%;
+}
+
+/* Fixtures */
+
+#fixture-grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-areas:
+        "summary stats"
+        "performance performance";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+#fixture-grid #grid-item-summary {
+    grid-area: summary;
+}
+
+#fixture-grid #grid-item-stats {
+    grid-area: stats;
+}
+
+#fixture-grid #grid-item-performance {
+    grid-area: performance;
+}
+
+#fixture-summary-result {
+    display: flex;
+    justify-content: space-around;
+}
+
+.fixture-summary-team {
+    flex: 4;
+}
+
+.fixture-summary-team-name {
+    border: 1px solid #cccccc;
+}
+
+#fixture-summary-score {
+    color: white;
+    background-color: #555555;
+    flex: 1;
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: center;
+}
+
+.fixture-summary-goals {
+    list-style-type: none;
+}
+
+.fixture-summary-goal {
+    font-size: 0.8em;
+}
+
+.fixture-summary-goal-scorer {
+    font-weight: 500;
+}
+
+.fixture-summary-goal-assister {
+    color: #999999;
 }

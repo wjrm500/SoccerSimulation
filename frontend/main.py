@@ -109,7 +109,34 @@ def fixture(fixtureId):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         fixture = universe.getFixtureById(int(fixtureId))
-    return render_template('fixture/fixture.html', cssFiles = ['rest_of_website.css', 'iframe.css'], jsFiles = ['iframe.js'], fixture = fixture)
+        clubData = []
+        for club, data in fixture.match.matchReport['clubs'].items():
+            clubDatum = data
+            clubDatum['name'] = club.name
+            clubData.append(clubDatum)
+        homeClubData, awayClubData = clubData
+        # def get_reverse_fixture(fixture):
+        #     for otherFixture in fixture.tournament.fixtures:
+        #         if fixture.clubX == otherFixture.clubY and fixture.clubY == otherFixture.clubX:
+        #             return otherFixture
+
+        # reverseFixtureData = {}
+        # reverseFixture = get_reverse_fixture(fixture)
+        # reverseFixtureData['fixtureId'] = reverseFixture.id
+        # reverseFixtureData['homeTeam'] = reverseFixture.clubX.name
+        # reverseFixtureData['homeGoals'] = reverseFixture.match.matchReport[reverseFixture.clubX]['match']['goalsFor']
+        # reverseFixtureData['awayTeam'] = reverseFixture.clubY.name
+        # reverseFixtureData['awayGoals'] = reverseFixture.match.matchReport[reverseFixture.clubY]['match']['goalsFor']
+
+    return render_template(
+        'fixture/fixture.html',
+        cssFiles = ['rest_of_website.css', 'iframe.css'],
+        jsFiles = ['iframe.js'],
+        fixture = fixture,
+        homeClubData = homeClubData,
+        awayClubData = awayClubData
+        # reverseFixtureData = reverseFixtureData
+    )
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor
