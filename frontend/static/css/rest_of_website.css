@@ -68,7 +68,7 @@
 }
 
 .clickable-row:hover {
-    background-color: #888888;
+    background-color: #888888 !important;
     color: white;
 }
 
@@ -516,6 +516,16 @@ td.result-away-club-name {
     flex: 5;
 }
 
+.fixture-summary-goal-player {
+    padding: 0px 5px;
+}
+
+.fixture-summary-goal-player:hover {
+    background-color: #888888;
+    color: white;
+    cursor: pointer;
+}
+
 .fixture-summary-goal-scorer {
     font-weight: 500;
 }
@@ -523,4 +533,5 @@ td.result-away-club-name {
 .fixture-summary-goal-assister {
     color: #bbbbbb;
     font-size: 0.9em;
+    padding: 0px 5px;
 }

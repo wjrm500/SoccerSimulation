@@ -83,7 +83,8 @@ def player(id):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
-    return render_template('player/player.html', cssFiles = ['rest_of_website.css', 'iframe.css'], jsFiles = ['iframe.js'], player = player)
+        performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex')[player]
+    return render_template('player/player.html', cssFiles = ['rest_of_website.css', 'iframe.css'], jsFiles = ['iframe.js'], player = player, performanceIndices = performanceIndices)
 
 @app.route('/simulation/player/<playerId>/radar')
 def playerRadar(playerId):

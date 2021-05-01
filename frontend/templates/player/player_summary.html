@@ -23,4 +23,20 @@
         <td class="table-label">Best position</td>
         <td class="table-value">{{ player.getBestPosition() }}</td>
     </tr>
+    <tr>
+        <td class="table-label">Games</td>
+        <td class="table-value">{{ performanceIndices['games'] }}</td>
+    </tr>
+    <tr>
+        <td class="table-label">Goals</td>
+        <td class="table-value">{{ performanceIndices['goals'] }}</td>
+    </tr>
+    <tr>
+        <td class="table-label">Assists</td>
+        <td class="table-value">{{ performanceIndices['assists'] }}</td>
+    </tr>
+    <tr>
+        <td class="table-label">Average Performance Index</td>
+        <td class="table-value">{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+    </tr>
 </table>

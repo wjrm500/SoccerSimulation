@@ -25,14 +25,14 @@
                             {{ goal['minute'] }}'
                         </div>
                         <div class="fixture-summary-goal-players">
-                            <div class="fixture-summary-goal-scorer">
+                            <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal['scorer'].id }}">
                                 {{ goal['scorer'].getProperName() }}
                             </div>
-                            <div class="fixture-summary-goal-assister">
-                                {% if goal['assister'] is not none %}
-                                    {{ goal['assister'].getProperName() }}
-                                {% endif %}
-                            </div>
+                            {% if goal['assister'] is not none %}
+                                <div class="fixture-summary-goal-assister fixture-summary-goal-player" data-player-id="{{ goal['assister'].id }}">
+                                        {{ goal['assister'].getProperName() }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
@@ -44,14 +44,14 @@
                 {% for goal in awayClubData['match']['goals'] %}
                     <div class="fixture-summary-goal">
                         <div class="fixture-summary-goal-players">
-                            <div class="fixture-summary-goal-scorer">
+                            <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal['scorer'].id }}">
                                 {{ goal['scorer'].getProperName() }}
                             </div>
-                            <div class="fixture-summary-goal-assister">
-                                {% if goal['assister'] is not none %}
-                                    {{ goal['assister'].getProperName() }}
-                                {% endif %}
-                            </div>
+                            {% if goal['assister'] is not none %}
+                                <div class="fixture-summary-goal-assister fixture-summary-goal-player" data-player-id="{{ goal['assister'].id }}">
+                                        {{ goal['assister'].getProperName() }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="fixture-summary-goal-minute">
                             {{ goal['minute'] }}'

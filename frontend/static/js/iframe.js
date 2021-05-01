@@ -22,6 +22,18 @@ $(document).ready(function() {
         document.location.href = parent.iframeHistory[parent.iframeHistoryPointer];
     });
 
+    $('.fixture-summary-goal-player').click(function() {
+        let url = '/simulation/player/' + this.dataset.playerId;
+        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+            parent.iframeHistory.pop();
+            parent.iframeHistory.push(url);
+        } else {
+            parent.iframeHistory.push(url);
+        }
+        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+        document.location.href = url;
+    })
+
     $('#player-game-table .clickable-row').click(function() {
         let url = '/simulation/fixture/' + this.dataset.fixtureId;
         if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
