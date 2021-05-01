@@ -27,6 +27,10 @@
     width: 75px;
 }
 
+#refresh {
+    color: #00aaff;
+}
+
 #history-back {
     color: #cc0000;
 }
@@ -37,6 +41,10 @@
 
 .history-button:hover {
     background-color: #dddddd;
+}
+
+#refresh:hover {
+    color: #0088dd
 }
 
 #history-back:hover {

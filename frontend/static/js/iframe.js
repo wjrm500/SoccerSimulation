@@ -6,6 +6,10 @@ $(document).ready(function() {
         forwardButton.disable();
     }
 
+    $('#refresh').click(function() {
+        window.frameElement.contentWindow.location.reload();
+    });
+
     $('#history-back').click(function() {
         parent.iframeHistoryPointer -= 1;
         document.location.href = parent.iframeHistory[parent.iframeHistoryPointer];

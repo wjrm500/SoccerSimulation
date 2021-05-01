@@ -1,62 +1,65 @@
-<div class="fixture-summary-header-container">
+<div class="fixture-summary-header-container fixture-summary-container">
     {{ '{} · Division {}'.format(fixture['match']['matchReport'].tournament.system.name, 1)  }}
 </div>
-<div class="fixture-summary-header-container">
+<div class="fixture-summary-header-container fixture-summary-container">
     {{ 'Gameweek {} · {}'.format(fixture['match']['matchReport'].gameweek, fixture['match']['matchReport'].date.strftime('%Y-%m-%d'))  }}
 </div>
 <div id="fixture-summary-result" class="fixture-summary-container">
-    <div id="fixture-summary-home-team" class="fixture-summary-team">
+    <div id="fixture-summary-result-headline">
         <div id="fixture-summary-home-team-name" class="fixture-summary-team-name">
             {{ homeClubData['name'] }}
         </div>
-        <ul id="fixture-summary-home-team-goals" class="fixture-summary-goals">
-            {% if homeClubData['match']['goals'] is not none %}
-                {% for goal in homeClubData['match']['goals'] %}
-                    <li class="fixture-summary-goal">
-                        <span class="fixture-summary-goal-minute">
-                            {{ goal['minute'] }}'
-                        </span>
-                        <span class="fixture-summary-goal-scorer">
-                            {{ goal['scorer'].getProperName() }}
-                        </span>
-                        {% if goal['assister'] is not none %}
-                            <span class="fixture-summary-goal-assister">
-                                ({{ goal['assister'].getProperName() }})
-                            </span>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            {% endif %}
-        </ul>
-    </div>
-    
-    <div id="fixture-summary-score">
-        {{ '{} - {}'.format(homeClubData['match']['goalsFor'], awayClubData['match']['goalsFor']) }}
-    </div>
-
-    <div id="fixture-summary-away-team" class="fixture-summary-team">
+        <div id="fixture-summary-score">
+            {{ '{} - {}'.format(homeClubData['match']['goalsFor'], awayClubData['match']['goalsFor']) }}
+        </div>
         <div id="fixture-summary-away-team-name" class="fixture-summary-team-name">
             {{ awayClubData['name'] }}
         </div>
-        <ul id="fixture-summary-away-team-goals" class="fixture-summary-goals">
-            {% if awayClubData['match']['goals'] is not none %}
-                {% for goal in awayClubData['match']['goals'] %}
-                    <li class="fixture-summary-goal">
-                        <span class="fixture-summary-goal-minute">
+    </div>
+    <div id="fixture-summary-goals">
+        <div id="fixture-summary-home-team-goals" class="fixture-summary-team-goals">
+            {% if homeClubData['match']['goals'] is not none %}
+                {% for goal in homeClubData['match']['goals'] %}
+                    <div class="fixture-summary-goal">
+                        <div class="fixture-summary-goal-minute">
                             {{ goal['minute'] }}'
-                        </span>
-                        <span class="fixture-summary-goal-scorer">
-                            {{ goal['scorer'].getProperName() }}
-                        </span>
-                        {% if goal['assister'] is not none %}
-                            <span class="fixture-summary-goal-assister">
-                                ({{ goal['assister'].getProperName() }})
-                            </span>
-                        {% endif %}
-                    </li>
+                        </div>
+                        <div class="fixture-summary-goal-players">
+                            <div class="fixture-summary-goal-scorer">
+                                {{ goal['scorer'].getProperName() }}
+                            </div>
+                            <div class="fixture-summary-goal-assister">
+                                {% if goal['assister'] is not none %}
+                                    {{ goal['assister'].getProperName() }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             {% endif %}
-        </ul>
+        </div>
+        <div id="fixture-summary-goals-divider"></div>
+        <div id="fixture-summary-away-team-goals" class="fixture-summary-team-goals">
+            {% if awayClubData['match']['goals'] is not none %}
+                {% for goal in awayClubData['match']['goals'] %}
+                    <div class="fixture-summary-goal">
+                        <div class="fixture-summary-goal-players">
+                            <div class="fixture-summary-goal-scorer">
+                                {{ goal['scorer'].getProperName() }}
+                            </div>
+                            <div class="fixture-summary-goal-assister">
+                                {% if goal['assister'] is not none %}
+                                    {{ goal['assister'].getProperName() }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="fixture-summary-goal-minute">
+                            {{ goal['minute'] }}'
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 </div>
 <!-- <a href="/simulation/fixture/{# reverseFixture.fixtureId #}" id="fixture-summary-footer-container">

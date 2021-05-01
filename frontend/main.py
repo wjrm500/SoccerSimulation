@@ -53,6 +53,7 @@ def simulation():
             match = list(matchReport['clubs'].values())[0]['match']
             scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
             result = {
+                'fixtureId': matchReport['fixture'],
                 'homeClub': clubA,
                 'awayClub': clubB,
                 'homeScore': scoreA,

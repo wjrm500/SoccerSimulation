@@ -12,7 +12,7 @@ class Match:
         self.clubX, self.clubY = clubX, clubY
         self.clubs = [self.clubX, self.clubY]
         self.neutralVenue = neutralVenue
-        self.matchReport = {'tournament': self.tournament, 'gameweek': self.fixture.gameweek, 'date': self.date, 'clubs': {club: {} for club in self.clubs}}
+        self.matchReport = {'fixtureId': self.fixture.id, 'tournament': self.tournament, 'gameweek': self.fixture.gameweek, 'date': self.date, 'clubs': {club: {} for club in self.clubs}}
         report = self.matchReport
         homeAwayTuple = (None, None) if self.neutralVenue else ('Home', 'Away')
         for club, homeAway in zip(self.clubs, homeAwayTuple):

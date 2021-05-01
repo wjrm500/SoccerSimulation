@@ -8,6 +8,9 @@
         <span>{{ player.getProperName() }}</span>
         </div>
         <div id="history-buttons">
+            <button id="refresh" class="history-button">
+                <i class="fas fa-sync-alt"></i>
+            </button>
             <button id="history-back" class="history-button">
                 <i class="fas fa-arrow-circle-left"></i>
             </button>
@@ -24,7 +27,7 @@
         </div>
         <div id="grid-item-stats-radar" class="grid-item">
             <div class="grid-item-content">
-                {% include 'player/player_stats_radar.html' %}
+                {# include 'player/player_stats_radar.html' #}
             </div>
         </div>
         <div id="grid-item-games" class="grid-item">
@@ -34,7 +37,7 @@
         </div>
         <div id="grid-item-form" class="grid-item">
             <div class="grid-item-content">
-                {% include 'player/player_form.html' %}
+                {# include 'player/player_form.html' #}
             </div>
         </div>
     </div>

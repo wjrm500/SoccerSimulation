@@ -2,25 +2,27 @@
     <tr>
         <td></td>
         <td class="middle-bit""></td>
-        <td class="middle-bit"></td>
-        <td class="middle-bit"></td>
         <td></td>
     </tr>
     {% for key, value in dates.items() %}
         <tr>
-            <td class="result-date" colspan="5">{{ key.strftime('%d %B %Y') }}</td>
+            <td class="result-date" colspan="3">{{ key.strftime('%d %B %Y') }}</td>
         </tr>
         {% for result in value %}
-            <tr class="result">
+            <tr class="result clickable-row" data-fixture-id="{{ result['fixtureId'] }}">
                 <td class="result-home-club-name result-club-name {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
                     {{ result['homeClub'].name }}
                 </td>
-                <td class="middle-bit result-home-club-score result-club-score {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
-                    {{ result['homeScore'] }}
-                </td>
-                <td class="middle-bit result-score-dash result-club-score">-</td>
-                <td class="middle-bit result-away-club-score result-club-score {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
-                    {{ result['awayScore'] }}
+                <td class="middle-bit">
+                    <div class="score-container">
+                        <span class="{% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
+                            {{ result['homeScore'] }}
+                        </span>
+                        <span>-</span>
+                        <span class="{% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
+                            {{ result['awayScore'] }}
+                        </span>
+                    </div>
                 </td>
                 <td class="result-away-club-name result-club-name {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
                     {{ result['awayClub'].name }}
@@ -28,7 +30,7 @@
             </tr>
         {% endfor %}
         <tr>
-            <td colspan="5"></td>
+            <td colspan="3"></td>
         </tr>
     {% endfor %}
 </table>

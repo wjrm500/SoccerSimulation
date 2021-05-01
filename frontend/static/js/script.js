@@ -3,10 +3,15 @@ $(document).ready(function() {
     window.iframeHistory = [];
     $('#player-performance-table .clickable-row').click(function() {
         let iframe = document.getElementById('sometimes-iframe');
-        console.log(window.iframeHistoryPointer);
-        console.log(window.iframeHistory);
-        console.log(document.getElementById('sometimes-iframe').getAttribute('src'))
         let url = '/simulation/player/' + this.dataset.playerId;
+        window.iframeHistory.push(url);
+        window.iframeHistoryPointer = window.iframeHistory.length - 1;
+        iframe.src = url;
+    });
+
+    $('#results .clickable-row').click(function() {
+        let iframe = document.getElementById('sometimes-iframe');
+        let url = '/simulation/fixture/' + this.dataset.fixtureId;
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
         iframe.src = url;

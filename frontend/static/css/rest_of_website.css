@@ -63,6 +63,15 @@
 
 /* Main */
 
+.clickable-row {
+    cursor: pointer;
+}
+
+.clickable-row:hover {
+    background-color: #888888;
+    color: white;
+}
+
 #main {
     display: flex;
     flex: 1;
@@ -255,15 +264,26 @@
 }
 
 .middle-bit {
-    width: 15px;
+    width: 45px;
 }
 
-td.result-club-score {
+.score-container {
+    background-color: #eeeeee;
+    border: 1px solid #aaaaaa;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#results .clickable-row:hover .score-container {
+    background-color: black;
+}
+
+/* td.result-club-score {
     background-color: #eeeeee;
     text-align: center;
 }
 
-.result-home-club-score {
+ .result-home-club-score {
     border-bottom: 1px solid #aaaaaa;
     border-left: 1px solid #aaaaaa;
     border-top: 1px solid #aaaaaa;
@@ -282,7 +302,7 @@ td.result-club-score {
     border-top: 1px solid #aaaaaa;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-}
+} */
 
 .winner {
     font-weight: bold;
@@ -303,17 +323,6 @@ td.result-home-club-name {
 td.result-away-club-name {
     padding-left: 10px;
     text-align: left;
-}
-
-
-
-#player-performance-table .clickable-row {
-    cursor: pointer;
-}
-
-#player-performance-table .clickable-row:hover {
-    background-color: #888888;
-    color: white;
 }
 
 #player-performance-table .clickable-row:hover .player-row-bottom {
@@ -385,15 +394,6 @@ td.result-away-club-name {
     background-color: #eeeeee;
 }
 
-#player-game-table .clickable-row {
-    cursor: pointer;
-}
-
-#player-game-table .clickable-row:hover {
-    background-color: #888888;
-    color: white;
-}
-
 .player-game-home-away {
     color: #bbbbbb;
     display: inline-block;
@@ -438,34 +438,82 @@ td.result-away-club-name {
     grid-area: performance;
 }
 
-#fixture-summary-result {
-    display: flex;
-    justify-content: space-around;
+.fixture-summary-container {
+    margin: 5px;
 }
 
-.fixture-summary-team {
-    flex: 4;
+.fixture-summary-header-container {
+    padding: 5px;
+    text-align: center;
+}
+
+#fixture-summary-result-headline {
+    display: flex;
+    margin-bottom: 5px;
 }
 
 .fixture-summary-team-name {
     border: 1px solid #cccccc;
+    flex: 4;
+    font-weight: 500;
+    padding: 5px;
 }
 
 #fixture-summary-score {
+    align-items: center;
     color: white;
     background-color: #555555;
+    display: flex;
     flex: 1;
     font-size: 1.2em;
     font-weight: 500;
+    justify-content: center;
     text-align: center;
 }
 
-.fixture-summary-goals {
-    list-style-type: none;
+#fixture-summary-away-team-name {
+    text-align: right;
+}
+
+#fixture-summary-goals {
+    display: flex;
+    height: 40%;
+    overflow-y: auto;
+}
+
+.fixture-summary-team-goals {
+    flex: 4;
+}
+
+#fixture-summary-goals-divider {
+    flex: 1;
 }
 
 .fixture-summary-goal {
+    display: flex;
     font-size: 0.8em;
+}
+
+.fixture-summary-goal:not(:last-child) {
+    border-bottom: 1px dashed #cccccc;
+}
+
+.fixture-summary-goal-minute {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    font-size: 1em;
+    padding: 0px 5px;
+}
+
+#fixture-summary-away-team-goals .fixture-summary-goal-minute {
+    justify-content: flex-end;
+}
+
+.fixture-summary-goal-players {
+    display: flex;
+    flex-direction: column;
+    flex: 5;
 }
 
 .fixture-summary-goal-scorer {
@@ -473,5 +521,6 @@ td.result-away-club-name {
 }
 
 .fixture-summary-goal-assister {
-    color: #999999;
+    color: #bbbbbb;
+    font-size: 0.9em;
 }
