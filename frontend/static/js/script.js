@@ -1,6 +1,87 @@
 $(document).ready(function() {
     window.iframeHistoryPointer = 0;
     window.iframeHistory = [];
+
+    let controlPressed = true;
+    let clubsPressed = [];
+
+    $(document).keydown(function(e){
+        if (e.which == 17) {
+            controlPressed = true;
+        }
+    });
+    
+    $(document).keyup(function(){
+        controlPressed = false;
+    });
+
+    $('#league-table tr').click(function() {
+        // Reset CSS
+        $('#league-table tr').each(function() {
+            $(this).find('td:nth-child(2)').css({'color': 'black', 'font-style': 'normal'});
+        })
+        $('#results tr').css('display', 'table-row');
+        $('#results .gap-row').data('gap-row-remove', false);
+
+        if (controlPressed && !$(this).data('controlClicked')) {
+            $(this).data('controlClicked', true);
+
+            // Add / remove clubs from clubsPressed array, keeping a maximum length of 2
+            if (clubsPressed.length === 2) {
+                let unpressedClub = clubsPressed.shift();
+                unpressedClub.data('controlClicked', false);
+            }
+            clubsPressed.push($(this));
+            
+            // Style league table
+            for (let club of clubsPressed) {
+                club.find('td:nth-child(2)').css({'color': 'blue', 'font-style': 'italic'});
+            }
+
+            // Highlight relevant results
+            let clubIdsPressed = clubsPressed.map(x => x.data('clubId'));
+            let matchFoundInGameweek;
+            $('#results .result').each(function() {
+                if ($(this).prev('tr').hasClass('date-row')) {
+                    matchFoundInGameweek = false;
+                }
+                if ($(this).css('display') === 'none') {
+                    return true;
+                }
+                let homeClubId = $(this).find('.result-home-club-name').data('clubId');
+                let awayClubId = $(this).find('.result-away-club-name').data('clubId');
+                let checker = (arr, target) => target.every(v => arr.includes(v));
+                if (!checker([homeClubId, awayClubId], clubIdsPressed)) {
+                    $(this).closest('tr').css('display', 'none');
+                } else {
+                    matchFoundInGameweek = true;
+                    return true;
+                }
+                if ($(this).nextAll('tr:visible:first').hasClass('gap-row') && !matchFoundInGameweek) {
+                    $(this).nextAll('.gap-row:first').data('gap-row-remove', true);
+                    $(this).prevAll('.date-row:first').css('display', 'none');
+                }
+            });
+            if (clubsPressed.length < 2) {
+                $('#results .gap-row').css('display', 'table-row');
+            } else {
+                $('#results').css('height', 'auto');
+                $('#results .gap-row').each(function() {
+                    if ($(this).data('gap-row-remove')) {
+                        $(this).css('display', 'none');
+                    }
+                });
+            }
+        } else {
+            $(this).data('controlClicked', false);
+            $(this).siblings().each(function() {
+                $(this).data('controlClicked', false);
+            })
+            clubsPressed = [];
+        }
+    })
+
+
     $('#player-performance-table .clickable-row').click(function() {
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/player/' + this.dataset.playerId;

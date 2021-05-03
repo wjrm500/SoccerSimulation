@@ -117,18 +117,18 @@ def fixture(fixtureId):
             clubDatum['name'] = club.name
             clubData.append(clubDatum)
         homeClubData, awayClubData = clubData
-        # def get_reverse_fixture(fixture):
-        #     for otherFixture in fixture.tournament.fixtures:
-        #         if fixture.clubX == otherFixture.clubY and fixture.clubY == otherFixture.clubX:
-        #             return otherFixture
+        def get_reverse_fixture(fixture):
+            for otherFixture in fixture.tournament.fixtures:
+                if fixture.clubX == otherFixture.clubY and fixture.clubY == otherFixture.clubX:
+                    return otherFixture
 
-        # reverseFixtureData = {}
-        # reverseFixture = get_reverse_fixture(fixture)
-        # reverseFixtureData['fixtureId'] = reverseFixture.id
-        # reverseFixtureData['homeTeam'] = reverseFixture.clubX.name
-        # reverseFixtureData['homeGoals'] = reverseFixture.match.matchReport[reverseFixture.clubX]['match']['goalsFor']
-        # reverseFixtureData['awayTeam'] = reverseFixture.clubY.name
-        # reverseFixtureData['awayGoals'] = reverseFixture.match.matchReport[reverseFixture.clubY]['match']['goalsFor']
+        reverseFixtureData = {}
+        reverseFixture = get_reverse_fixture(fixture)
+        reverseFixtureData['fixtureId'] = reverseFixture.id
+        reverseFixtureData['homeTeam'] = reverseFixture.clubX.name
+        reverseFixtureData['homeGoals'] = reverseFixture.match.matchReport['clubs'][reverseFixture.clubX]['match']['goalsFor']
+        reverseFixtureData['awayTeam'] = reverseFixture.clubY.name
+        reverseFixtureData['awayGoals'] = reverseFixture.match.matchReport['clubs'][reverseFixture.clubY]['match']['goalsFor']
 
     return render_template(
         'fixture/fixture.html',
@@ -136,8 +136,8 @@ def fixture(fixtureId):
         jsFiles = ['iframe.js'],
         fixture = fixture,
         homeClubData = homeClubData,
-        awayClubData = awayClubData
-        # reverseFixtureData = reverseFixtureData
+        awayClubData = awayClubData,
+        reverseFixture = reverseFixtureData
     )
 
 ### For versioning CSS to prevent browser cacheing

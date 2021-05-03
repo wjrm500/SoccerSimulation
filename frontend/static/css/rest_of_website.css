@@ -169,6 +169,11 @@
     width: 100%;
 }
 
+.league-table-number-icon {
+    display: none;
+    height: 15px;
+}
+
 #league-table tr:not(:nth-child(1)):nth-child(-n + 5) {
     background-color: lightgreen;
 }
@@ -468,6 +473,7 @@ td.result-away-club-name {
     font-size: 1.2em;
     font-weight: 500;
     justify-content: center;
+    padding: 5px;
     text-align: center;
 }
 
@@ -534,4 +540,20 @@ td.result-away-club-name {
     color: #bbbbbb;
     font-size: 0.9em;
     padding: 0px 5px;
+}
+
+#fixture-summary-footer-container {
+    background-color: #cccccc;
+    border: 1px solid black;
+    border-radius: 5px;
+    bottom: 0;
+    margin: 5px;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+}
+
+#fixture-summary-footer-container:hover {
+    background-color: #aaaaaa;
 }

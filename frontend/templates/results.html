@@ -5,12 +5,12 @@
         <td></td>
     </tr>
     {% for key, value in dates.items() %}
-        <tr>
+        <tr class="date-row">
             <td class="result-date" colspan="3">{{ key.strftime('%d %B %Y') }}</td>
         </tr>
         {% for result in value %}
             <tr class="result clickable-row" data-fixture-id="{{ result['fixtureId'] }}">
-                <td class="result-home-club-name result-club-name {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
+                <td class="result-home-club-name result-club-name {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}" data-club-id="{{ result['homeClub'].id }}">
                     {{ result['homeClub'].name }}
                 </td>
                 <td class="middle-bit">
@@ -24,12 +24,12 @@
                         </span>
                     </div>
                 </td>
-                <td class="result-away-club-name result-club-name {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
+                <td class="result-away-club-name result-club-name {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}" data-club-id="{{ result['awayClub'].id }}">
                     {{ result['awayClub'].name }}
                 </td>
             </tr>
         {% endfor %}
-        <tr>
+        <tr class="gap-row">
             <td colspan="3"></td>
         </tr>
     {% endfor %}
