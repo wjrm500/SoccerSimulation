@@ -174,8 +174,18 @@
     height: 15px;
 }
 
+#league-table tr:hover {
+    background-color: #888888;
+    color: white;
+    cursor: pointer;
+}
+
 #league-table tr:not(:nth-child(1)):nth-child(-n + 5) {
     background-color: lightgreen;
+}
+
+#league-table tr:not(:nth-child(1)):nth-child(-n + 5):hover {
+    background-color: #19a519 !important;
 }
 
 #league-table tr:nth-child(5) {
@@ -188,6 +198,10 @@
 
 #league-table tr:not(:nth-child(-n + 17)):nth-child(-n + 21) {
     background-color: lightpink;
+}
+
+#league-table tr:not(:nth-child(-n + 17)):nth-child(-n + 21):hover {
+    background-color: #ff5e76 !important;
 }
 
 #league-table td {
@@ -386,7 +400,7 @@ td.result-away-club-name {
 }
 
 #player-radar-image {
-    height: 100%;
+    /* height: 100%; */
     object-fit: contain;
     width: 100%;
 }
@@ -543,17 +557,21 @@ td.result-away-club-name {
 }
 
 #fixture-summary-footer-container {
-    background-color: #cccccc;
+    background-color: #999999;
     border: 1px solid black;
     border-radius: 5px;
     bottom: 0;
+    color: white;
+    font-size: 0.8em;
+    font-weight: 500;
     margin: 5px;
     padding: 5px;
     position: absolute;
     text-align: center;
     text-decoration: none;
+    width: -webkit-fill-available;
 }
 
 #fixture-summary-footer-container:hover {
-    background-color: #aaaaaa;
+    background-color: #777777;
 }
