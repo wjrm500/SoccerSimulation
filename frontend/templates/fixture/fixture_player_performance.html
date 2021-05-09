@@ -1,0 +1,31 @@
+<div id="fixture-players-main">
+    {% for clubData in [homeClubData, awayClubData] %}
+        <div class="fixture-players-club">
+            <div class="fixture-players-club-title">
+                {{ clubData['team']['club'].name }}
+            </div>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th><i class="fas fa-crosshairs"></i></th> <!-- Position -->
+                    <th><i class="fas fa-chart-bar"></i></th> <!-- Rating -->
+                    <th><i class="fas fa-chart-line"></i></th> <!-- Form-->
+                    <th><i class="fas fa-futbol"></i><!-- <img class="match-icon" src="/static/images/goal_icon.png"> --></th>
+                    <th><i class="fab fa-angular"></i><!--<img class="match-icon" src="/static/images/assist_icon.png"> --></th>
+                    <th><i class="fas fa-star"></i><!-- <img class="match-icon" src="/static/images/motm_icon.png"> --></th>
+                </tr>
+                {% for player, data in clubData['players'].items() %}
+                    <tr data-man-of-the-match="{{ data['manOfTheMatch'] }}">
+                        <td data-player-id="{{ player.id }}">{{ player.getProperName() }}</td>
+                        <td>{{ data['position'] }}</td>
+                        <td>{{ data['extraData']['selectRating'] }}</td>
+                        <td>N/A</td> <!-- Don't appear to currently have pre-match form available -->
+                        <td>{{ data['goals'] }}</td>
+                        <td>{{ data['assists'] }}</td>
+                        <td>{{ data['performanceIndex'] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
+</div>

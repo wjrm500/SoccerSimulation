@@ -126,7 +126,6 @@
     border: 2px solid #dddddd;
     display: flex;
     flex-direction: column;
-    padding: 5px;
 }
 
 .stretched-grid-item {
@@ -481,7 +480,7 @@ td.result-away-club-name {
 #fixture-summary-score {
     align-items: center;
     color: white;
-    background-color: #555555;
+    background-color: #888888;
     display: flex;
     flex: 1;
     font-size: 1.2em;
@@ -574,4 +573,65 @@ td.result-away-club-name {
 
 #fixture-summary-footer-container:hover {
     background-color: #777777;
+}
+
+#fixture-players-main {
+    display: flex;
+    height: 100%;
+}
+
+.fixture-players-club {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 5px;
+    overflow-y: auto;
+}
+
+.fixture-players-club-title {
+    align-items: center;
+    background-color: #888888;
+    color: white;
+    display: flex;
+    flex: 1;
+    font-weight: 500;
+    padding: 0px 5px;
+}
+
+.fixture-players-club table {
+    flex: 9;
+    font-size: 0.8em;
+    position: initial;
+}
+
+.fixture-players-club table td:first-child {
+    padding: 0px 5px;
+    width: 40%;
+}
+
+.fixture-players-club table th:not(:first-child) {
+    text-align: center;
+}
+
+.fixture-players-club table td:not(:first-child) {
+    text-align: center;
+    width: 10%;
+}
+
+.fixture-players-club table td:last-child {
+    font-weight: 500;
+}
+
+.fixture-players-club table th:first-child {
+    padding: 0px 5px;
+}
+
+.fixture-players-club table td:first-child:hover {
+    background-color: #888888;
+    color: white;
+    cursor: pointer;
+}
+
+.fixture-players-club table tr:nth-child(odd) {
+    background-color: #eeeeee;
 }

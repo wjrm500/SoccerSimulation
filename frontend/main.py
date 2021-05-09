@@ -122,6 +122,14 @@ def fixture(fixtureId):
                 if fixture.clubX == otherFixture.clubY and fixture.clubY == otherFixture.clubX:
                     return otherFixture
 
+        positions = ['CF', 'WF', 'COM', 'WM', 'CM', 'CDM', 'WB', 'FB', 'CB']
+        for clubData in [homeClubData, awayClubData]:
+            reorderedPlayers = sorted(clubData['players'].items(), key = lambda x: positions.index(x[1]['position']))
+            clubData['players'] = {k: v for k, v in reorderedPlayers}
+            for player, data in clubData['players'].items():
+                clubData['players'][player]['extraData']['selectRating'] = '{:.2f}'.format(data['extraData']['selectRating'])
+                clubData['players'][player]['performanceIndex'] = '{:.2f}'.format(data['performanceIndex'])
+
         reverseFixtureData = {}
         reverseFixture = get_reverse_fixture(fixture)
         reverseFixtureData['fixtureId'] = reverseFixture.id
@@ -133,7 +141,7 @@ def fixture(fixtureId):
     return render_template(
         'fixture/fixture.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
-        jsFiles = ['iframe.js'],
+        jsFiles = ['fixture.js', 'iframe.js'],
         fixture = fixture,
         homeClubData = homeClubData,
         awayClubData = awayClubData,
