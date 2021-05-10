@@ -10,15 +10,24 @@ $(document).ready(function() {
         })
     });
 
-$('.fixture-players-club table td:first-child').click(function() {
-        let url = '/simulation/player/' + this.dataset.playerId;
-        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-            parent.iframeHistory.pop();
-            parent.iframeHistory.push(url);
-        } else {
-            parent.iframeHistory.push(url);
-        }
-        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-        document.location.href = url;
-    });
+    $('.fixture-players-club table td:first-child').click(function() {
+            let url = '/simulation/player/' + this.dataset.playerId;
+            if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+                parent.iframeHistory.pop();
+                parent.iframeHistory.push(url);
+            } else {
+                parent.iframeHistory.push(url);
+            }
+            parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+            document.location.href = url;
+        });
+
+    // $('a.recent-result').hover(
+    //     function() {
+    //         $(this).data('score')
+    //     },
+    //     function() {
+
+    //     }
+    // )
 })

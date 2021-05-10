@@ -1,6 +1,6 @@
 <div id="fixture-statistics">
     <div id="club-recent-results-title">
-        Recent form
+        Pre-match form
     </div>
     {% for club, data in recentResults.items() %}
         <div class="club-recent-results">
@@ -9,11 +9,14 @@
             </div>
             <div class="club-recent-results-results">
                 {% for result in data['results'] %}
-                    <span>
+                    <div class="my-tooltip">
                         <a href="/simulation/fixture/{{ result['fixtureId'] }}" class="recent-result recent-result-{{ result['result'] }}">
                             {{ result['result'] }}
                         </a>
-                    </span>
+                        <span class="my-tooltiptext">
+                            {{ result['score'] }}
+                        </span>
+                    </div>
                 {% endfor %}
             </div>
             <div class="recent-results-points-container">
