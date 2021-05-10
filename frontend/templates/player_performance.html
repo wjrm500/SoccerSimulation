@@ -2,10 +2,22 @@
     <tr>
         <th>#</th>
         <th>Name</th>
-        <th data-sort="unsorted" data-metric="games"><img src="/static/images/apps_icon.png"><span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span></th>
-        <th data-sort="unsorted" data-metric="goals"><img src="/static/images/goal_icon.png"><span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span></th>
-        <th data-sort="unsorted" data-metric="assists"><img src="/static/images/assist_icon_2.png"><span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span></th>
-        <th data-sort="unsorted" data-metric="rating"><img src="/static/images/rating_icon.png"><span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span></th>
+        <th data-sort="unsorted" data-metric="games">
+            <i class="fas fa-tshirt"></i><!-- <img src="/static/images/apps_icon.png"> -->
+            <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+        </th>
+        <th data-sort="unsorted" data-metric="goals">
+            <i class="fas fa-futbol"></i><!-- <img src="/static/images/goal_icon.png"> -->
+            <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+        </th>
+        <th data-sort="unsorted" data-metric="assists">
+            <i class="fab fa-angular"></i><!-- <img src="/static/images/assist_icon_2.png"> -->
+            <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+        </th>
+        <th data-sort="unsorted" data-metric="rating">
+            <i class="fas fa-star"></i><!-- <img src="/static/images/rating_icon.png"> -->
+            <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+        </th>
     </tr>
     {% for player, performanceIndices in playerPerformanceItems.items() %}
         <tr class="clickable-row" data-player-id="{{ player.id }}">

@@ -590,8 +590,8 @@ td.result-away-club-name {
 
 .fixture-players-club-title {
     align-items: center;
-    background-color: #888888;
-    color: white;
+    background-color: #eeeeee;
+    color: black;
     display: flex;
     flex: 1;
     font-weight: 500;
@@ -634,4 +634,97 @@ td.result-away-club-name {
 
 .fixture-players-club table tr:nth-child(odd) {
     background-color: #eeeeee;
+}
+
+#club-recent-results-title {
+    align-items: center;
+    background-color: #eeeeee;
+    color: black;
+    display: flex;
+    flex: 1;
+    font-weight: 500;
+    padding: 0px 5px;
+}
+
+.club-recent-results {
+    border: 1px dashed #aaaaaa;
+    display: flex;
+    margin: 5px;
+}
+
+.club-recent-results-label, .club-recent-results-results {
+    flex: 1;
+}
+
+.club-recent-results-label {
+    padding: 5px;
+}
+
+.club-recent-results-results {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
+
+.recent-result {
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black;
+    display: flex;
+    font-weight: bold;
+    height: 25px;
+    justify-content: center;
+    text-decoration: none;
+    width: 25px;
+}
+
+a.recent-result:hover {
+    text-decoration: none;
+}
+
+a.recent-result-W {
+    background-color: lightgreen;
+}
+
+a.recent-result-W:hover {
+    background-color: #19a519;
+}
+
+a.recent-result-D {
+    background-color: lemonchiffon;
+}
+
+a.recent-result-D:hover {
+    background-color: #fff071;
+}
+
+a.recent-result-L {
+    background-color: lightpink;
+}
+
+a.recent-result-L:hover {
+    background-color: #ff5e76;
+}
+
+.recent-results-points-container {
+    align-items: center;
+    border-left: 1px dashed lightgrey;
+    display: flex;
+    justify-content: center;
+    width: 45px;
+}
+
+.recent-results-points {
+    align-items: center;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    display: flex;
+    font-weight: bold;
+    height: 25px;
+    justify-content: center;
+    text-decoration: none;
+    width: 25px;
 }

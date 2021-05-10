@@ -138,6 +138,31 @@ def fixture(fixtureId):
         reverseFixtureData['awayTeam'] = reverseFixture.clubY.name
         reverseFixtureData['awayGoals'] = reverseFixture.match.matchReport['clubs'][reverseFixture.clubY]['match']['goalsFor']
 
+        recentResults = {}
+        for club in fixture.match.matchReport['clubs']:
+            recentResults[club] = {
+                'points': 0,
+                'results': []
+            }
+            fixturesInvolvingClub = list(filter(lambda x: club in x.clubs, fixture.tournament.fixtures))
+            fixtureIndex = fixturesInvolvingClub.index(fixture)
+            fixturesOfInterest = fixturesInvolvingClub[fixtureIndex - min(fixtureIndex, 6):fixtureIndex]
+            for fixtureOfInterest in fixturesOfInterest:
+                result = 'D' if 'winner' not in fixtureOfInterest.match.matchReport else 'W' if fixtureOfInterest.match.matchReport['winner'] == club else 'L'
+                recentResults[club]['points'] += 3 if result == 'W' else 1 if result == 'D' else 0
+                score = '{} {} - {} {}'.format(
+                    fixtureOfInterest.clubX.name,
+                    fixtureOfInterest.match.matchReport['clubs'][fixtureOfInterest.clubX]['match']['goalsFor'],
+                    fixtureOfInterest.match.matchReport['clubs'][fixtureOfInterest.clubY]['match']['goalsFor'],
+                    fixtureOfInterest.clubY.name,
+                )
+                fixtureId = fixtureOfInterest.id
+                recentResults[club]['results'].append({
+                    'result': result,
+                    'score': score,
+                    'fixtureId': fixtureId
+                })
+
     return render_template(
         'fixture/fixture.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
@@ -145,7 +170,8 @@ def fixture(fixtureId):
         fixture = fixture,
         homeClubData = homeClubData,
         awayClubData = awayClubData,
-        reverseFixture = reverseFixtureData
+        reverseFixture = reverseFixtureData,
+        recentResults = recentResults
     )
 
 ### For versioning CSS to prevent browser cacheing

@@ -1,0 +1,26 @@
+<div id="fixture-statistics">
+    <div id="club-recent-results-title">
+        Recent form
+    </div>
+    {% for club, data in recentResults.items() %}
+        <div class="club-recent-results">
+            <div class="club-recent-results-label">
+                {{ club.name }}
+            </div>
+            <div class="club-recent-results-results">
+                {% for result in data['results'] %}
+                    <span>
+                        <a href="/simulation/fixture/{{ result['fixtureId'] }}" class="recent-result recent-result-{{ result['result'] }}">
+                            {{ result['result'] }}
+                        </a>
+                    </span>
+                {% endfor %}
+            </div>
+            <div class="recent-results-points-container">
+                <div class="recent-results-points">
+                    {{ data['points'] }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
