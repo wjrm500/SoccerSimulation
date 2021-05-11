@@ -139,6 +139,8 @@ def fixture(fixtureId):
         reverseFixtureData['awayGoals'] = reverseFixture.match.matchReport['clubs'][reverseFixture.clubY]['match']['goalsFor']
 
         recentResults = {}
+        preMatchLeagueTables = {}
+        postMatchLeagueTables = {}
         for club in fixture.match.matchReport['clubs']:
             recentResults[club] = {
                 'points': 0,
@@ -146,6 +148,47 @@ def fixture(fixtureId):
             }
             fixturesInvolvingClub = list(filter(lambda x: club in x.clubs, fixture.tournament.fixtures))
             fixtureIndex = fixturesInvolvingClub.index(fixture)
+            
+            preMatchLeagueTable = fixture.tournament.getLeagueTable(fixtureIndex) if fixtureIndex > 0 else None
+            leagueTableItems = list(preMatchLeagueTable.items())
+            leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
+            for i, leagueTableItem in enumerate(leagueTableItems):
+                leagueTableItem[1]['#'] = i + 1
+                if leagueTableItem[0] == club:
+                    leagueTableItem['this'] = True
+                    tableIndex = i
+            if tableIndex < 1:
+                startTableIndex = 0
+                endTableIndex = 3
+            elif tableIndex > (len(leagueTableItems) - 2):
+                startTableIndex = len(leagueTableItems) - 3
+                endTableIndex = len(leagueTableItems)
+            else:
+                startTableIndex = tableIndex - 1
+                endTableIndex = tableIndex + 2
+            preMatchLeagueTable = leagueTableItems[startTableIndex:endTableIndex]
+            preMatchLeagueTables[club] = preMatchLeagueTable
+
+            ### This bit is almost a duplicate of above, combine
+            postMatchLeagueTable = fixture.tournament.getLeagueTable(fixtureIndex + 1)
+            leagueTableItems = list(postMatchLeagueTable.items())
+            leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
+            for i, leagueTableItem in enumerate(leagueTableItems):
+                if leagueTableItem[0] == club:
+                    tableIndex = i
+                    break
+            if tableIndex < 2:
+                startTableIndex = 0
+                endTableIndex = 5
+            elif tableIndex > (len(leagueTableItems) - 2):
+                startTableIndex = len(leagueTableItems) - 5
+                endTableIndex = len(leagueTableItems)
+            else:
+                startTableIndex = tableIndex - 2
+                endTableIndex = tableIndex + 3
+            postMatchLeagueTable = leagueTableItems[startTableIndex:endTableIndex]
+            postMatchLeagueTables[club] = postMatchLeagueTable
+
             fixturesOfInterest = fixturesInvolvingClub[fixtureIndex - min(fixtureIndex, 6):fixtureIndex]
             for fixtureOfInterest in fixturesOfInterest:
                 result = 'D' if 'winner' not in fixtureOfInterest.match.matchReport else 'W' if fixtureOfInterest.match.matchReport['winner'] == club else 'L'
@@ -171,7 +214,9 @@ def fixture(fixtureId):
         homeClubData = homeClubData,
         awayClubData = awayClubData,
         reverseFixture = reverseFixtureData,
-        recentResults = recentResults
+        recentResults = recentResults,
+        preMatchLeagueTables = preMatchLeagueTables,
+        postMatchLeagueTables = postMatchLeagueTables
     )
 
 ### For versioning CSS to prevent browser cacheing

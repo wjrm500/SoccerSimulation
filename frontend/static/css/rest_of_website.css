@@ -730,6 +730,15 @@ a.recent-result-L:hover {
     width: 25px;
 }
 
+.fixture-league-table {
+    height: auto !important;
+    position: initial !important;
+}
+
+.fixture-league-table th:not(:nth-child(2)) {
+    width: 35px;
+}
+
 /* Generic tooltip styling */
 
 .my-tooltip {
