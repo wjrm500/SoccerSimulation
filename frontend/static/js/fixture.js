@@ -21,13 +21,17 @@ $(document).ready(function() {
             parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
             document.location.href = url;
         });
-
-    // $('a.recent-result').hover(
-    //     function() {
-    //         $(this).data('score')
-    //     },
-    //     function() {
-
-    //     }
-    // )
+    
+    // The below is just a hacky fix for the fact that the "color-param-this" class for some reason doesn't get applied to the away team tables
+    $('.form-table:nth-child(1) td:nth-child(2), .form-table:nth-child(3) td:nth-child(2)').each(function() {
+        if ($(this).html().trim() === $('#fixture-summary-home-team-name').html().trim()) {
+            $(this).closest('tr').addClass('color-param-this');
+        }
+    });
+    // The below was supposed to be a hacky fix as above but doesn't work, so have left in Python code for adding "color-param-this" for away tables. Future me, help
+    $('.form-table:nth-child(2) td:nth-child(2), .form-table:nth-child(4) td:nth-child(2)').each(function() {
+        if ($(this).html().trim() === $('#fixture-summary-away-team-name').html().trim()) {
+            $(this).closest('tr').addClass('color-param-this');
+        }
+    });
 })

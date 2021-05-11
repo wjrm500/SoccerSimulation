@@ -52,7 +52,7 @@
                                 <th>Pts</th>
                             </tr>
                             {% for item in table %}
-                                <tr class="{{ 'this' if item[1]['this'] else '' }}">
+                                <tr class="{{ item[1]['colorParams'] }}">
                                     <td>{{ item[1]['#'] }}</td>
                                     <td>{{ item[0].name }}</td>
                                     <td>{{ item[1]['GD'] }}</td>

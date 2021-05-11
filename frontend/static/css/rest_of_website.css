@@ -640,6 +640,7 @@ td.result-away-club-name {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow-x: hidden;
 }
 
 .fixture-statistics-title {
@@ -756,6 +757,8 @@ a.result-L:hover {
 
 .form-tables-minor-title {
     flex: 1;
+    font-size: 0.9em;
+    font-weight: 500;
 }
 
 #form-tables-grid {
@@ -784,6 +787,10 @@ a.result-L:hover {
     table-layout: fixed;
 }
 
+.form-table th {
+    font-weight: normal;
+}
+
 .form-table th,
 .form-table td {
     overflow-x: hidden;
@@ -795,8 +802,36 @@ a.result-L:hover {
     width: 30px;
 }
 
-.form-table tr.this {
+.form-table tr.color-param-this {
     background-color: #eeeeee;
+}
+
+.form-table tr.color-param-top4-border {
+    border-bottom: 1px dashed black;
+}
+
+.form-table tr.color-param-bottom4-border {
+    border-top: 1px dashed black;
+}
+
+.form-table tr.color-param-top4 {
+    background-color: lightgreen;
+}
+
+.form-table tr.color-param-bottom4 {
+    background-color: lightpink;
+}
+
+.form-table tr.color-param-this.color-param-top4 {
+    background-color: #2cde2c !important;
+}
+
+.form-table tr.color-param-this.color-param-bottom4 {
+    background-color: #ff8a9b !important;
+}
+
+.form-table td:nth-child(2) {
+    padding-right: 10px;
 }
 
 /* Generic tooltip styling */
