@@ -604,6 +604,10 @@ td.result-away-club-name {
     position: initial;
 }
 
+.fixture-players-club table th {
+    font-size: 13px;
+}
+
 .fixture-players-club table td:first-child {
     padding: 0px 5px;
     width: 40%;
@@ -757,8 +761,8 @@ a.result-L:hover {
 
 .form-tables-minor-title {
     flex: 1;
-    font-size: 0.9em;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 #form-tables-grid {
@@ -804,6 +808,7 @@ a.result-L:hover {
 
 .form-table tr.color-param-this {
     background-color: #eeeeee;
+    font-weight: bold;
 }
 
 .form-table tr.color-param-top4-border {
