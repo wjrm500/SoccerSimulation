@@ -139,8 +139,8 @@ def fixture(fixtureId):
         reverseFixtureData['awayGoals'] = reverseFixture.match.matchReport['clubs'][reverseFixture.clubY]['match']['goalsFor']
 
         recentResults = {}
-        preMatchLeagueTables = {}
-        postMatchLeagueTables = {}
+        preMatchLeagueTables = {'name': 'Pre-match', 'data': {}}
+        postMatchLeagueTables = {'name': 'Post-match', 'data': {}}
         for club in fixture.match.matchReport['clubs']:
             recentResults[club] = {
                 'points': 0,
@@ -149,45 +149,47 @@ def fixture(fixtureId):
             fixturesInvolvingClub = list(filter(lambda x: club in x.clubs, fixture.tournament.fixtures))
             fixtureIndex = fixturesInvolvingClub.index(fixture)
             
-            preMatchLeagueTable = fixture.tournament.getLeagueTable(fixtureIndex) if fixtureIndex > 0 else None
-            leagueTableItems = list(preMatchLeagueTable.items())
-            leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
-            for i, leagueTableItem in enumerate(leagueTableItems):
-                leagueTableItem[1]['#'] = i + 1
-                if leagueTableItem[0] == club:
-                    leagueTableItem['this'] = True
-                    tableIndex = i
-            if tableIndex < 1:
-                startTableIndex = 0
-                endTableIndex = 3
-            elif tableIndex > (len(leagueTableItems) - 2):
-                startTableIndex = len(leagueTableItems) - 3
-                endTableIndex = len(leagueTableItems)
-            else:
-                startTableIndex = tableIndex - 1
-                endTableIndex = tableIndex + 2
-            preMatchLeagueTable = leagueTableItems[startTableIndex:endTableIndex]
-            preMatchLeagueTables[club] = preMatchLeagueTable
+            for i, leagueTables in enumerate([preMatchLeagueTables, postMatchLeagueTables]):
+                leagueTable = fixture.tournament.getLeagueTable(fixtureIndex + i) if fixtureIndex > 0 else None
+                if leagueTable:
+                    leagueTableItems = list(leagueTable.items())
+                    leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
+                    for j, leagueTableItem in enumerate(leagueTableItems):
+                        leagueTableItem[1]['#'] = j + 1
+                        if leagueTableItem[0] == club:
+                            leagueTableItem[1]['this'] = True
+                            tableIndex = j
+                    if tableIndex < 1:
+                        startTableIndex = 0
+                        endTableIndex = 3
+                    elif tableIndex > (len(leagueTableItems) - 2):
+                        startTableIndex = len(leagueTableItems) - 3
+                        endTableIndex = len(leagueTableItems)
+                    else:
+                        startTableIndex = tableIndex - 1
+                        endTableIndex = tableIndex + 2
+                    leagueTable = leagueTableItems[startTableIndex:endTableIndex]
+                    leagueTables['data'][club] = leagueTable
 
             ### This bit is almost a duplicate of above, combine
-            postMatchLeagueTable = fixture.tournament.getLeagueTable(fixtureIndex + 1)
-            leagueTableItems = list(postMatchLeagueTable.items())
-            leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
-            for i, leagueTableItem in enumerate(leagueTableItems):
-                if leagueTableItem[0] == club:
-                    tableIndex = i
-                    break
-            if tableIndex < 2:
-                startTableIndex = 0
-                endTableIndex = 5
-            elif tableIndex > (len(leagueTableItems) - 2):
-                startTableIndex = len(leagueTableItems) - 5
-                endTableIndex = len(leagueTableItems)
-            else:
-                startTableIndex = tableIndex - 2
-                endTableIndex = tableIndex + 3
-            postMatchLeagueTable = leagueTableItems[startTableIndex:endTableIndex]
-            postMatchLeagueTables[club] = postMatchLeagueTable
+            # postMatchLeagueTable = fixture.tournament.getLeagueTable(fixtureIndex + 1)
+            # leagueTableItems = list(postMatchLeagueTable.items())
+            # leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
+            # for i, leagueTableItem in enumerate(leagueTableItems):
+            #     if leagueTableItem[0] == club:
+            #         tableIndex = i
+            #         break
+            # if tableIndex < 2:
+            #     startTableIndex = 0
+            #     endTableIndex = 5
+            # elif tableIndex > (len(leagueTableItems) - 2):
+            #     startTableIndex = len(leagueTableItems) - 5
+            #     endTableIndex = len(leagueTableItems)
+            # else:
+            #     startTableIndex = tableIndex - 2
+            #     endTableIndex = tableIndex + 3
+            # postMatchLeagueTable = leagueTableItems[startTableIndex:endTableIndex]
+            # postMatchLeagueTables[club] = postMatchLeagueTable
 
             fixturesOfInterest = fixturesInvolvingClub[fixtureIndex - min(fixtureIndex, 6):fixtureIndex]
             for fixtureOfInterest in fixturesOfInterest:

@@ -636,38 +636,47 @@ td.result-away-club-name {
     background-color: #eeeeee;
 }
 
-#club-recent-results-title {
+#fixture-statistics {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.fixture-statistics-title {
     align-items: center;
     background-color: #eeeeee;
     color: black;
     display: flex;
-    flex: 1;
     font-weight: 500;
     padding: 0px 5px;
 }
 
-.club-recent-results {
+#form-results-container {
+    flex: 1;
+}
+
+.form-results-row {
     border: 1px dashed #aaaaaa;
     display: flex;
     margin: 5px;
 }
 
-.club-recent-results-label, .club-recent-results-results {
+.form-results-club-name, .form-results-boxes {
     flex: 1;
 }
 
-.club-recent-results-label {
+.form-results-club-name {
     padding: 5px;
 }
 
-.club-recent-results-results {
+.form-results-boxes {
     align-items: center;
     display: flex;
     justify-content: space-between;
     padding: 0px 10px;
 }
 
-.recent-result {
+.form-results-box {
     align-items: center;
     border: 1px solid black;
     border-radius: 5px;
@@ -680,36 +689,36 @@ td.result-away-club-name {
     width: 25px;
 }
 
-a.recent-result:hover {
+.form-results-box:hover {
     color: black;
     text-decoration: none;
 }
 
-a.recent-result-W {
+a.result-W {
     background-color: lightgreen;
 }
 
-a.recent-result-W:hover {
+a.result-W:hover {
     background-color: #19a519;
 }
 
-a.recent-result-D {
+a.result-D {
     background-color: lemonchiffon;
 }
 
-a.recent-result-D:hover {
+a.result-D:hover {
     background-color: #fff071;
 }
 
-a.recent-result-L {
+a.result-L {
     background-color: lightpink;
 }
 
-a.recent-result-L:hover {
+a.result-L:hover {
     background-color: #ff5e76;
 }
 
-.recent-results-points-container {
+.form-results-points-container {
     align-items: center;
     border-left: 1px dashed lightgrey;
     display: flex;
@@ -717,7 +726,7 @@ a.recent-result-L:hover {
     width: 45px;
 }
 
-.recent-results-points {
+.form-results-points {
     align-items: center;
     background-color: black;
     border: 1px solid black;
@@ -730,13 +739,64 @@ a.recent-result-L:hover {
     width: 25px;
 }
 
-.fixture-league-table {
-    height: auto !important;
-    position: initial !important;
+#form-tables-container {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
 }
 
-.fixture-league-table th:not(:nth-child(2)) {
-    width: 35px;
+#form-tables-master-title {
+    height: 24px;
+}
+
+#form-tables-minor-titles-container {
+    display: flex;
+    height: 24px;
+}
+
+.form-tables-minor-title {
+    flex: 1;
+}
+
+#form-tables-grid {
+    display: grid;
+    flex: 1;
+    grid-template-areas:
+        "prehome posthome"
+        "preaway postaway";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.form-table-container {
+    padding: 5px;
+}
+
+.form-table-container:nth-child(1) {grid-area: prehome;}
+.form-table-container:nth-child(2) {grid-area: preaway;}
+.form-table-container:nth-child(3) {grid-area: posthome;}
+.form-table-container:nth-child(4) {grid-area: postaway;}
+
+.form-table {
+    font-size: 0.75em;
+    height: auto !important; 
+    position: initial !important;
+    table-layout: fixed;
+}
+
+.form-table th,
+.form-table td {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.form-table th:not(:nth-child(2)) {
+    width: 30px;
+}
+
+.form-table tr.this {
+    background-color: #eeeeee;
 }
 
 /* Generic tooltip styling */
