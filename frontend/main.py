@@ -165,7 +165,7 @@ def fixture(fixtureId):
                         if j > len(leagueTableItems) - 5:
                             colorParams.append('color-param-bottom4')
                         if leagueTableItem[0] == club:
-                            colorParams.append('color-param-this')
+                            # colorParams.append('color-param-this') ### Overwritten for some reason for away teams, no idea why, so have used JS for this
                             tableIndex = j
                         leagueTableItem[1]['colorParams'] = ' '.join(colorParams)
                     if tableIndex < 1:
