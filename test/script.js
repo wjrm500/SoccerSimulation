@@ -79,7 +79,7 @@ ctx.drawImage(image, 0, 0, 362, 500);
 //     ]
 // };
 
-function calculateCoords(formation) {
+function calculateCoords(formation, customXCoords, customYCoords) {
     const minY = 7;
     const maxY = 25;
     const minX = 4;
@@ -88,7 +88,14 @@ function calculateCoords(formation) {
     let formationArr = formation.split('-');
     let numGroups = formationArr.length;
     for (let i = 0; i < numGroups; i++) {
+        let numInGroup = parseInt(formationArr[i]);
         let y;
+        if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
+            var yArr = [];
+            for (let j of customYCoords[i]) {
+                yArr.push(j);
+            }
+        }
         if (i === 0) {
             y = maxY;
         } else if (i === (numGroups - 1)) {
@@ -96,21 +103,39 @@ function calculateCoords(formation) {
         } else {
             y = maxY - ((maxY - minY) / (numGroups - 1) * i)
         }
-        let numInGroup = parseInt(formationArr[i]);
-        let idealGap = numInGroup > 4 ? 6 : 8;
-        let midX = (minX +  maxX) / 2;
-        let distFromCenter = (idealGap * (numInGroup - 1)) / 2
-        let realMinX = midX - distFromCenter;
-        let x = realMinX;
-        for (let j = 0; j < numInGroup; j++) {
-            res.push({x: x, y: y});
-            x += idealGap;
-        }
+        if (customXCoords && i in customXCoords && customXCoords[i].length === numInGroup) {
+            for (let j = 0; j < numInGroup; j++) {
+                let customXCoord = customXCoords[i][j];
+                if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
+                    y = yArr[j];
+                }
+                res.push({x: customXCoord, y: y});
+            }
+        } else {
+            let idealGap = Math.min(8, (maxX - minX) / (numInGroup - 1));
+            let midX = (minX +  maxX) / 2;
+            let distFromCenter = (idealGap * (numInGroup - 1)) / 2
+            let realMinX = midX - distFromCenter;
+            let x = realMinX;
+            for (let j = 0; j < numInGroup; j++) {
+                if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
+                    y = yArr[j];
+                }
+                res.push({x: x, y: y});
+                x += idealGap;
+            }
+        }   
     }
     return res;
 }
 
-let coords = calculateCoords('4-1-2-1-2');
+let coords = calculateCoords(
+    '3-5-2',
+    null,
+    {
+        1: [14, 17, 18, 17, 14]
+    }
+);
 
 
 for (let position of coords) {
