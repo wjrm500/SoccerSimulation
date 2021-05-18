@@ -90,12 +90,6 @@ function calculateCoords(formation, customXCoords, customYCoords) {
     for (let i = 0; i < numGroups; i++) {
         let numInGroup = parseInt(formationArr[i]);
         let y;
-        if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
-            var yArr = [];
-            for (let j of customYCoords[i]) {
-                yArr.push(j);
-            }
-        }
         if (i === 0) {
             y = maxY;
         } else if (i === (numGroups - 1)) {
@@ -103,37 +97,36 @@ function calculateCoords(formation, customXCoords, customYCoords) {
         } else {
             y = maxY - ((maxY - minY) / (numGroups - 1) * i)
         }
-        if (customXCoords && i in customXCoords && customXCoords[i].length === numInGroup) {
-            for (let j = 0; j < numInGroup; j++) {
-                let customXCoord = customXCoords[i][j];
-                if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
-                    y = yArr[j];
-                }
-                res.push({x: customXCoord, y: y});
+        let idealGap = Math.min(8, (maxX - minX) / (numInGroup - 1));
+        let midX = (minX +  maxX) / 2;
+        let distFromCenter = (idealGap * (numInGroup - 1)) / 2
+        let realMinX = midX - distFromCenter;
+        let x = realMinX;
+        let rollingX = x;
+        let rollingY = y;
+        for (let j = 0; j < numInGroup; j++) {
+            x = rollingX;
+            y = rollingY;
+            if (customXCoords && i in customXCoords && customXCoords[i].length === numInGroup) {
+                x += customXCoords[i][j] ?? 0;
             }
-        } else {
-            let idealGap = Math.min(8, (maxX - minX) / (numInGroup - 1));
-            let midX = (minX +  maxX) / 2;
-            let distFromCenter = (idealGap * (numInGroup - 1)) / 2
-            let realMinX = midX - distFromCenter;
-            let x = realMinX;
-            for (let j = 0; j < numInGroup; j++) {
-                if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
-                    y = yArr[j];
-                }
-                res.push({x: x, y: y});
-                x += idealGap;
+            if (customYCoords && i in customYCoords && customYCoords[i].length === numInGroup) {
+                y -= customYCoords[i][j] ?? 0;
             }
-        }   
+            res.push({x: x, y: y});
+            rollingX += idealGap;
+        }
     }
     return res;
 }
 
 let coords = calculateCoords(
     '3-5-2',
-    null,
     {
-        1: [14, 17, 18, 17, 14]
+        1: [null, 2, null, -2, null]
+    },
+    {
+        1: [1, -1, -2, -1, 1]
     }
 );
 
