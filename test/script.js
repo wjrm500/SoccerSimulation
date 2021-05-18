@@ -80,6 +80,7 @@ ctx.drawImage(image, 0, 0, 362, 500);
 // };
 
 function calculateCoords(formation, customXCoords, customYCoords) {
+    // For custom co-ordinates, pass an object where the key represents the index of the formation group, and the value is an array representing the offset for each circle in that group
     const minY = 7;
     const maxY = 25;
     const minX = 4;
@@ -121,12 +122,14 @@ function calculateCoords(formation, customXCoords, customYCoords) {
 }
 
 let coords = calculateCoords(
-    '3-5-2',
+    '3-5-1-1',
     {
+        0: [2, null, -2],
         1: [null, 2, null, -2, null]
     },
     {
-        1: [1, -1, -2, -1, 1]
+        1: [5, -1, 2, -1, 5],
+        2: [1]
     }
 );
 
