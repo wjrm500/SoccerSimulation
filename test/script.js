@@ -46,7 +46,7 @@ function calculateCoords(formation, customXCoords, customYCoords) {
 }
 
 let coords = calculateCoords(
-    '3-5-3-3',
+    '4-3-3',
     // {
     //     0: [2, null, -2],
     //     1: [null, 2, null, -2, null]
@@ -58,7 +58,6 @@ let coords = calculateCoords(
 );
 
 for (let position of coords) {
-    console.log(position);
     const centerX = canvas.width / 32 * position.x;
     const centerY = canvas.height / 32 * position.y;
     const radius = 8;
@@ -74,10 +73,50 @@ for (let position of coords) {
 
 const positions = {
     WF: {
-        bgColor: {r: 200, g: 200, b: 150},
+        bgColor: {r: 255, g: 100, b: 100},
         size: {h: 10, w: 10},
         startPositions: [{x: 0, y: 0}, {x: 22, y:0}]
-    }
+    },
+    CF: {
+        bgColor: {r: 255, g: 50, b: 50},
+        size: {h: 10, w: 12},
+        startPositions: [{x: 10, y: 0}]
+    },
+    WM: {
+        bgColor: {r: 189, g: 183, b: 107},
+        size: {h: 8, w: 8},
+        startPositions: [{x: 0, y: 10}, {x: 24, y: 10}]
+    },
+    COM: {
+        bgColor: {r: 255, g: 255, b: 0},
+        size: {h: 4, w: 16},
+        startPositions: [{x: 8, y: 10}]
+    },
+    CM: {
+        bgColor: {r: 240, g: 230, b: 140},
+        size: {h: 4, w: 16},
+        startPositions: [{x: 8, y: 14}]
+    },
+    CDM: {
+        bgColor: {r: 255, g: 215, b: 0},
+        size: {h: 4, w: 16},
+        startPositions: [{x: 8, y: 18}]
+    },
+    WB: {
+        bgColor: {r: 25, g: 25, b: 112},
+        size: {h: 4, w: 8},
+        startPositions: [{x: 0, y: 18}, {x: 24, y: 18}]
+    },
+    FB: {
+        bgColor: {r: 30, g: 144, b: 255},
+        size: {h: 10, w: 6},
+        startPositions: [{x: 0, y: 22}, {x: 26, y: 22}]
+    },
+    CB: {
+        bgColor: {r: 0, g: 0, b: 255},
+        size: {h: 10, w: 20},
+        startPositions: [{x: 6, y: 22}]
+    },
 }
 // ctx.fillStyle = 'rgba(200, 200, 150, 0.5)';
 // ctx.fillRect(canvas.width / 32 * 0, canvas.height / 32 * 0, canvas.width / 32 * 10, canvas.height / 32 * 10);
@@ -95,4 +134,6 @@ function createPositionRects(position) {
     }
 }
 
-createPositionRects(positions['WF']);
+for (let position of Object.values(positions)) {
+    createPositionRects(position);
+}
