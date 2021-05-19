@@ -1,83 +1,7 @@
 const canvas = document.getElementById('football-pitch');
 const ctx = canvas.getContext('2d');
 const image = document.getElementById('football-pitch-image');
-
 ctx.drawImage(image, 0, 0, 362, 500);
-
-// const formations = {
-//     '3-4-1-2':  [
-//         {x: 8, y: 25},
-//         {x: 16, y: 25},
-//         {x: 24, y: 25},
-//         {x: 4, y: 19},
-//         {x: 12, y: 19},
-//         {x: 20, y: 19},
-//         {x: 28, y: 19},
-//         {x: 16, y: 13},
-//         {x: 12, y: 7},
-//         {x: 20, y: 7},
-//     ],
-//     '3-4-2-1': [
-//         {x: 8, y: 25},
-//         {x: 16, y: 25},
-//         {x: 24, y: 25},
-//         {x: 4, y: 19},
-//         {x: 12, y: 19},
-//         {x: 20, y: 19},
-//         {x: 28, y: 19},
-//         {x: 12, y: 13},
-//         {x: 20, y: 13},
-//         {x: 16, y: 7},
-//     ],
-//     '3-4-3': [
-//         {x: 8, y: 25},
-//         {x: 16, y: 25},
-//         {x: 24, y: 25},
-//         {x: 4, y: 16},
-//         {x: 12, y: 16},
-//         {x: 20, y: 16},
-//         {x: 28, y: 16},
-//         {x: 8, y: 7},
-//         {x: 16, y: 7},
-//         {x: 24, y: 7}
-//     ],
-//     '3-5-1-1': [
-//         {x: 8, y: 25},
-//         {x: 16, y: 25},
-//         {x: 24, y: 25},
-//         {x: 4, y: 19},
-//         {x: 10, y: 19},
-//         {x: 16, y: 19},
-//         {x: 22, y: 19},
-//         {x: 28, y: 19},
-//         {x: 16, y: 13},
-//         {x: 16, y: 7}
-//     ],
-//     '3-5-2': [
-//         {x: 8, y: 25},
-//         {x: 16, y: 25},
-//         {x: 24, y: 25},
-//         {x: 4, y: 16},
-//         {x: 10, y: 16},
-//         {x: 16, y: 16},
-//         {x: 22, y: 16},
-//         {x: 28, y: 16},
-//         {x: 12, y: 7},
-//         {x: 20, y: 7}
-//     ],
-//     '4-4-2': [
-//         {x: 4, y: 25},
-//         {x: 12, y: 25},
-//         {x: 20, y: 25},
-//         {x: 28, y: 25},
-//         {x: 4, y: 16},
-//         {x: 12, y: 16},
-//         {x: 20, y: 16},
-//         {x: 28, y: 16},
-//         {x: 12, y: 7},
-//         {x: 20, y: 7}
-//     ]
-// };
 
 function calculateCoords(formation, customXCoords, customYCoords) {
     // For custom co-ordinates, pass an object where the key represents the index of the formation group, and the value is an array representing the offset for each circle in that group
@@ -122,17 +46,16 @@ function calculateCoords(formation, customXCoords, customYCoords) {
 }
 
 let coords = calculateCoords(
-    '3-5-1-1',
-    {
-        0: [2, null, -2],
-        1: [null, 2, null, -2, null]
-    },
-    {
-        1: [5, -1, 2, -1, 5],
-        2: [1]
-    }
+    '3-5-3-3',
+    // {
+    //     0: [2, null, -2],
+    //     1: [null, 2, null, -2, null]
+    // },
+    // {
+    //     1: [5, -1, 2, -1, 5],
+    //     2: [1]
+    // }
 );
-
 
 for (let position of coords) {
     console.log(position);
@@ -147,3 +70,29 @@ for (let position of coords) {
     ctx.strokeStyle = '#000000';
     ctx.stroke();
 }
+
+
+const positions = {
+    WF: {
+        bgColor: {r: 200, g: 200, b: 150},
+        size: {h: 10, w: 10},
+        startPositions: [{x: 0, y: 0}, {x: 22, y:0}]
+    }
+}
+// ctx.fillStyle = 'rgba(200, 200, 150, 0.5)';
+// ctx.fillRect(canvas.width / 32 * 0, canvas.height / 32 * 0, canvas.width / 32 * 10, canvas.height / 32 * 10);
+// ctx.fillRect(canvas.width / 32 * 22, canvas.height / 32 * 0, canvas.width / 32 * 10, canvas.height / 32 * 10);
+
+function createPositionRects(position) {
+    ctx.fillStyle = `rgba(${position.bgColor.r}, ${position.bgColor.g}, ${position.bgColor.b}, 0.5)`;
+    for (let startPosition of position.startPositions) {
+        ctx.fillRect(
+            canvas.width / 32 * startPosition.x,
+            canvas.height / 32 * startPosition.y,
+            canvas.width / 32 * position.size.w,
+            canvas.height / 32 * position.size.h
+        );
+    }
+}
+
+createPositionRects(positions['WF']);
