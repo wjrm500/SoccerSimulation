@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 const image = document.getElementById('football-pitch-image');
 ctx.drawImage(image, 0, 0, 362, 500);
 
-function calculateCoords(formation, customXCoords, customYCoords) {
+function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
     // For custom co-ordinates, pass an object where the key represents the index of the formation group, and the value is an array representing the offset for each circle in that group
     const minY = 7;
     const maxY = 25;
@@ -45,31 +45,20 @@ function calculateCoords(formation, customXCoords, customYCoords) {
     return res;
 }
 
-let coords = calculateCoords(
-    '4-3-3',
-    // {
-    //     0: [2, null, -2],
-    //     1: [null, 2, null, -2, null]
-    // },
-    // {
-    //     1: [5, -1, 2, -1, 5],
-    //     2: [1]
-    // }
-);
-
-for (let position of coords) {
-    const centerX = canvas.width / 32 * position.x;
-    const centerY = canvas.height / 32 * position.y;
-    const radius = 8;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = 'red';
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#000000';
-    ctx.stroke();
+function plotCoords(coords) {
+    for (let position of coords) {
+        const centerX = canvas.width / 32 * position.x;
+        const centerY = canvas.height / 32 * position.y;
+        const radius = 8;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+        ctx.stroke();
+    }
 }
-
 
 const positions = {
     WF: {
@@ -118,9 +107,6 @@ const positions = {
         startPositions: [{x: 6, y: 22}]
     },
 }
-// ctx.fillStyle = 'rgba(200, 200, 150, 0.5)';
-// ctx.fillRect(canvas.width / 32 * 0, canvas.height / 32 * 0, canvas.width / 32 * 10, canvas.height / 32 * 10);
-// ctx.fillRect(canvas.width / 32 * 22, canvas.height / 32 * 0, canvas.width / 32 * 10, canvas.height / 32 * 10);
 
 function createPositionRects(position) {
     ctx.fillStyle = `rgba(${position.bgColor.r}, ${position.bgColor.g}, ${position.bgColor.b}, 0.5)`;
@@ -134,6 +120,27 @@ function createPositionRects(position) {
     }
 }
 
-for (let position of Object.values(positions)) {
-    createPositionRects(position);
+function getPositionFromCoords(coords) {
+    let x = coords.x;
+    let y = coords.y;
+    let prospectives = [];
+    for (let key in positions) {
+        let value = positions[key];
+        for (let startPosition of value.startPositions) {
+            let startX = startPosition.x;
+            let endX = startX + value.size.w;
+            let startY = startPosition.y;
+            let endY = startY + value.size.h;
+            if (x >= startX && x <= endX && y >= startY && y <= endY) {
+                prospectives.push(key);
+            }
+        }
+    }
+    const priority = ['WF', 'CF', 'CM', 'CDM', 'WM', 'COM', 'WB', 'FB', 'CB'];
+    let selected = prospectives.map(x => [x, priority.indexOf(x)]).reduce((prev, cur) => (prev[1] < cur[1]) ? prev : cur)[0];
+    return selected;
 }
+
+let coords = calculateCoordsFromFormation('4-1-4-1', null, {2: [null, -3, -3, null]});
+plotCoords(coords);
+console.log(coords.map(i => getPositionFromCoords(i)))
