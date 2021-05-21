@@ -191,15 +191,15 @@
     border-bottom: 1px dashed black;
 }
 
-#league-table tr:nth-child(18) {
+#league-table tr:nth-last-child(4) {
     border-top: 1px dashed black;
 }
 
-#league-table tr:not(:nth-child(-n + 17)):nth-child(-n + 21) {
+#league-table tr:nth-last-child(-n + 4) {
     background-color: lightpink;
 }
 
-#league-table tr:not(:nth-child(-n + 17)):nth-child(-n + 21):hover {
+#league-table tr:nth-last-child(-n + 4):hover {
     background-color: #ff5e76 !important;
 }
 
@@ -837,6 +837,30 @@ a.result-L:hover {
 
 .form-table td:nth-child(2) {
     padding-right: 10px;
+}
+
+/* Club */
+
+#club-grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-areas:
+        "players progress"
+        "players results";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+#club-grid #grid-item-players {
+    grid-area: players;
+}
+
+#club-grid #grid-item-progress {
+    grid-area: progress;
+}
+
+#club-grid #grid-item-results {
+    grid-area: results;
 }
 
 /* Generic tooltip styling */

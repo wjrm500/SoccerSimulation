@@ -1,8 +1,3 @@
-const canvas = document.getElementById('football-pitch');
-const ctx = canvas.getContext('2d');
-const image = document.getElementById('football-pitch-image');
-ctx.drawImage(image, 0, 0, 362, 500);
-
 function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
     // For custom co-ordinates, pass an object where the key represents the index of the formation group, and the value is an array representing the offset for each circle in that group
     const minY = 7;
@@ -45,10 +40,12 @@ function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
     return res;
 }
 
-function plotCoords(coords) {
-    for (let position of coords) {
-        const centerX = canvas.width / 32 * position.x;
-        const centerY = canvas.height / 32 * position.y;
+function plotCoords(ctx, zip) {
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    for (let zipItem of zip) {
+        const centerX = ctx.canvas.width / 32 * zipItem.coords.x;
+        const centerY = ctx.canvas.height / 32 * zipItem.coords.y;
         const radius = 8;
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -57,6 +54,8 @@ function plotCoords(coords) {
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#000000';
         ctx.stroke();
+        ctx.fillStyle = 'black';
+        ctx.fillText(zipItem.name, centerX, centerY + 30);
     }
 }
 
@@ -141,8 +140,30 @@ function getPositionFromCoords(coords) {
     return selected;
 }
 
-// let coords = calculateCoordsFromFormation('5-4-1');//, null, {0: [3, 0, 0, 3], 2: [0, -3, -3, 0]});
-// plotCoords(coords);
+$(document).ready(function() {
+    const canvas = document.getElementById('football-pitch');
+    const ctx = canvas.getContext('2d');
+    const image = document.getElementById('football-pitch-image');
+    ctx.drawImage(image, 0, 0, 362, 500);
+    let coords = calculateCoordsFromFormation(canvas.dataset.formation);//, null, {0: [3, 0, 0, 3], 2: [0, -3, -3, 0]});
+    let players = JSON.parse(canvas.dataset.players);
+    let playerPositions = {};
+    for (let player of players) {
+        if (!(player.position in playerPositions)) {
+            playerPositions[player.position] = [];
+        }
+        playerPositions[player.position].push(player.name);
+    }
+    let names = coords.map(crd => getPositionFromCoords(crd)).map(pos => playerPositions[pos].shift());
+    let zip = [];
+    for (let i = 0; i < players.length; i++) {
+        zip.push({
+            coords: coords[i],
+            name: names[i]
+        });
+    }
+    plotCoords(ctx, zip);
+});
 // let formationPositions = coords.map(i => getPositionFromCoords(i));
 // function Counter(array) {
 //     let count = {};

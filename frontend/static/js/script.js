@@ -2,7 +2,7 @@ $(document).ready(function() {
     window.iframeHistoryPointer = 0;
     window.iframeHistory = [];
 
-    let controlPressed = true;
+    let controlPressed = false;
     let clubsPressed = [];
 
     $(document).keydown(function(e){
@@ -22,6 +22,14 @@ $(document).ready(function() {
         })
         $('#results tr').css('display', 'table-row');
         $('#results .gap-row').data('gap-row-remove', false);
+
+        if (!controlPressed && !$(this).data('controlClicked')) {
+            let iframe = document.getElementById('sometimes-iframe');
+            let url = '/simulation/club/' + this.dataset.clubId;
+            window.iframeHistory.push(url);
+            window.iframeHistoryPointer = window.iframeHistory.length - 1;
+            iframe.src = url;
+        }
 
         if (controlPressed && !$(this).data('controlClicked')) {
             $(this).data('controlClicked', true);
@@ -79,8 +87,7 @@ $(document).ready(function() {
             })
             clubsPressed = [];
         }
-    })
-
+    });
 
     $('#player-performance-table .clickable-row').click(function() {
         let iframe = document.getElementById('sometimes-iframe');

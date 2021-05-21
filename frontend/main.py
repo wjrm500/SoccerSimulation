@@ -12,6 +12,7 @@ import utils
 import player_utils
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import json
 
 db = Database.getInstance()
 
@@ -53,7 +54,7 @@ def simulation():
             match = list(matchReport['clubs'].values())[0]['match']
             scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
             result = {
-                'fixtureId': matchReport['fixture'],
+                'fixtureId': matchReport['fixtureId'],
                 'homeClub': clubA,
                 'awayClub': clubB,
                 'homeScore': scoreA,
@@ -208,6 +209,24 @@ def fixture(fixtureId):
         recentResults = recentResults,
         preMatchLeagueTables = preMatchLeagueTables,
         postMatchLeagueTables = postMatchLeagueTables
+    )
+
+@app.route('/simulation/club/<clubId>')
+def club(clubId):
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        club = universe.getClubById(clubId)
+        team = club.selectTeam()
+        selection = team.selection
+        formation = team.formation
+        players = json.dumps([{'name': select.player.getProperName('Shortened'), 'position': select.position} for select in selection])
+    return render_template(
+        'club/club.html',
+        cssFiles = ['rest_of_website.css', 'iframe.css'],
+        jsFiles = ['club.js', 'iframe.js'],
+        club = club,
+        formation = formation,
+        players = players
     )
 
 ### For versioning CSS to prevent browser cacheing

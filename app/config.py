@@ -3,7 +3,7 @@ import datetime
 systemConfig = {
     'numSystems': 1,
     'numLeaguesPerSystem': 1,
-    'numClubsPerLeague': 20,
+    'numClubsPerLeague': 24,
     'numPlayersPerClub': 40
 }
 
@@ -14,105 +14,71 @@ timeConfig = {
 formationConfig = {
     '3-4-1-2': {
         'popularity': 0.0105,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 1, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"CB":3,"WB":2,"CDM":2,"COM":1,"CF":2}
     },
     '3-4-2-1': {
         'popularity': 0.0596,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 2, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"CB":3,"WB":2,"CDM":2,"COM":2,"CF":1}
     },
     '3-4-3': {
         'popularity': 0.0589,
-        'personnel': {
-            'CF': 1, 'WF': 2, 'COM': 0, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"CB":3,"WM":2,"CM":2,"WF":2,"CF":1}
     },
     '3-5-1-1': {
         'popularity': 0.0081,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 1, 'WM': 2, 'CM': 3, 'CDM': 0, 'WB': 0, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"CB":3,"WB":2,"CDM":3,"COM":1,"CF":1}
     },
     '3-5-2': {
         'popularity': 0.0520,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 0, 'WM': 2, 'CM': 3, 'CDM': 0, 'WB': 0, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"CB":3,"WM":2,"CM":3,"CF":2}
     },
     '4-1-3-2': {
         'popularity': 0.0014,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 1, 'WM': 2, 'CM': 0, 'CDM': 1, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CDM":1,"WM":2,"COM":1,"CF":2}
     },
     '4-1-4-1': {
         'popularity': 0.0826,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 0, 'WM': 2, 'CM': 2, 'CDM': 1, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CDM":1,"WM":2,"COM":2,"CF":1}
     },
     '4-2-2-2': {
         'popularity': 0.0056,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 2, 'WM': 0, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CDM":2,"COM":2,"CF":2}
     },
     '4-2-3-1': {
         'popularity': 0.2121,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 1, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CDM":2,"WM":2,"COM":1,"CF":1}
     },
     '4-3-1-2': {
         'popularity': 0.0323,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 1, 'WM': 0, 'CM': 3, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CDM":3,"COM":1,"CF":2}
     },
     '4-3-2-1': {
         'popularity': 0.0019,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 2, 'WM': 0, 'CM': 3, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CDM":3,"COM":2,"CF":1}
     },
     '4-3-3': {
         'popularity': 0.1320,
-        'personnel': {
-            'CF': 1, 'WF': 2, 'COM': 0, 'WM': 0, 'CM': 3, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"CM":3,"WF":2,"CF":1}
     },
     '4-4-1-1': {
         'popularity': 0.0602,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 1, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"WB":2,"CDM":2,"COM":1,"CF":1}
     },
     '4-4-2': {
         'popularity': 0.2216,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 0, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"WM":2,"CM":2,"CF":2}
     },
     '4-5-1': {
         'popularity': 0.0101,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 0, 'WM': 2, 'CM': 3, 'CDM': 0, 'WB': 0, 'FB': 2, 'CB': 2
-        }
+        'personnel': {"FB":2,"CB":2,"WM":2,"CM":3,"CF":1}
     },
     '5-3-2': {
         'popularity': 0.0273,
-        'personnel': {
-            'CF': 2, 'WF': 0, 'COM': 0, 'WM': 0, 'CM': 3, 'CDM': 0, 'WB': 2, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"FB":2,"CB":3,"CM":3,"CF":2}
     },
     '5-4-1': {
         'popularity': 0.0238,
-        'personnel': {
-            'CF': 1, 'WF': 0, 'COM': 0, 'WM': 2, 'CM': 2, 'CDM': 0, 'WB': 2, 'FB': 0, 'CB': 3
-        }
+        'personnel': {"FB":2,"CB":3,"WM":2,"CM":2,"CF":1}
     }
 }
 

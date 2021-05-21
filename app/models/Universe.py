@@ -39,12 +39,20 @@ class _Universe:
         for system in self.systems:
             for league in system.leagues:
                 Scheduler.scheduleLeagueFixtures(self.currentDate.year, league)
+
+    def getClubById(self, clubId):
+        for system in self.systems:
+            for league in system.leagues:
+                for club in league.clubs:
+                    if club.id == int(clubId):
+                        return club
     
     def getClubByName(self, clubName):
         for system in self.systems:
-            for club in system.clubs:
-                if club.name == clubName:
-                    return club
+            for league in system.leagues:
+                for club in league.clubs:
+                    if club.name == clubName:
+                        return club
     
     def getFixtureById(self, fixtureId):
         for system in self.systems:

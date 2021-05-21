@@ -56,7 +56,9 @@ class League:
             elif clubReport['match']['outcome'] == 'loss':
                 self.leagueTables[currentGameweek][club]['L'] += 1
     
-    def getLeagueTable(self, gameweek = 38):
+    def getLeagueTable(self, gameweek = None):
+        if gameweek is None:
+            gameweek = (len(self.clubs) - 1) * 2
         return self.leagueTables[gameweek]
     
     def getPerformanceIndices(

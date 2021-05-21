@@ -5,10 +5,10 @@ from Universe import Universe
 # def simulate():
     ### Create Universe, taking in input parameters from user
 
-systemIds = [1]
+systemIds = [2]
 
 universe = Universe(systemIds = systemIds)
-universe.timeTravel(300)
+universe.timeTravel(325)
 
 import pickle
 import random
