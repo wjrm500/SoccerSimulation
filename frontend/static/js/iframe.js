@@ -43,7 +43,7 @@ $(document).ready(function() {
         }
         parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
         document.location.href = url;
-    })
+    });
 
     $('#player-game-table .clickable-row').click(function() {
         let url = '/simulation/fixture/' + this.dataset.fixtureId;
@@ -55,7 +55,16 @@ $(document).ready(function() {
         }
         parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
         document.location.href = url;
-    })
+    });
+
+    $('.rating-span').each(function() {
+        let val = 100 - $(this).html();
+        let hue = Math.floor((100 - val) * 120 / 100);
+        let saturation = Math.abs(val - 50) / 50 * 100;
+        $(this).css({
+            'backgroundColor': `hsl(${hue}, ${saturation}%, 50%)`,
+        });
+    });
 })
 
 const backButton = {

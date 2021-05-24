@@ -69,7 +69,7 @@
 
 .clickable-row:hover {
     background-color: #888888 !important;
-    color: white;
+    color: white !important;
 }
 
 #main {
@@ -157,9 +157,7 @@
     position: relative;
 }
 
-/* League table */
-
-.grid-item-content table {
+.full-table {
     left: 0px;
     height: 100%;
     padding: 5px;
@@ -167,6 +165,8 @@
     top: 0px;
     width: 100%;
 }
+
+/* League table */
 
 .league-table-number-icon {
     display: none;
@@ -224,6 +224,12 @@
 
 #player-performance-table {
     text-align: left;
+    left: 0px;
+    height: 100%;
+    padding: 5px;
+    position: absolute;
+    top: 0px;
+    width: 100%;
 }
 
 #player-performance-table th img {
@@ -274,6 +280,11 @@
     height: 100%;
     table-layout: fixed;
     top: -25px;
+    left: 0px;
+    height: 100%;
+    padding: 5px;
+    position: absolute;
+    width: 100%;
 }
 
 .result-date {
@@ -861,6 +872,34 @@ a.result-L:hover {
 
 #club-grid #grid-item-results {
     grid-area: results;
+}
+
+#football-pitch-container {
+    align-items: center;
+    display: flex;
+    height: 0;
+    justify-content: center;
+}
+
+#club-player-performance-table {
+    width: 100%;
+}
+
+#club-player-performance-table tr:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+#club-player-performance-table tr:hover .player-row-bottom {
+    color: white !important;
+}
+
+#club-player-performance-table tr:hover {
+    cursor: pointer;
+}
+
+.rating-span {
+    color: white;
+    padding: 0px 2px;
 }
 
 /* Generic tooltip styling */

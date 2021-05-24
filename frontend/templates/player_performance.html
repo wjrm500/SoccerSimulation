@@ -1,4 +1,4 @@
-<table id="player-performance-table">
+<table id="player-performance-table" class="full-table">
     <tr>
         <th>#</th>
         <th>Name</th>
@@ -24,12 +24,12 @@
             <td>{{ loop.index }}</td>
             <td>
                 <div class="player-row-top">
-                    {{ player.getProperName() }}
+                    {{ player.getProperName() }} <span style="color: darkgrey; font-size: 0.75em; font-style: italic;">{{ player.club.name }}</span>
                 </div>
                 <div class="player-row-bottom">
-                    <span>{{ player.club.name }}</span>,
-                    <span>{{ player.getAge() }}</span>,
-                    <span>{{ player.getBestPosition() }}</span>
+                    <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.getRating()) }}</span> ·
+                    <span>Age: {{ player.getAge() }}</span> ·
+                    <span>Pos: {{ player.getBestPosition() }}</span>
                 </div>
             </td>
             <td>{{ performanceIndices['games'] }}</td>

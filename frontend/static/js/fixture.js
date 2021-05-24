@@ -11,16 +11,16 @@ $(document).ready(function() {
     });
 
     $('.fixture-players-club table td:first-child').click(function() {
-            let url = '/simulation/player/' + this.dataset.playerId;
-            if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-                parent.iframeHistory.pop();
-                parent.iframeHistory.push(url);
-            } else {
-                parent.iframeHistory.push(url);
-            }
-            parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-            document.location.href = url;
-        });
+        let url = '/simulation/player/' + this.dataset.playerId;
+        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+            parent.iframeHistory.pop();
+            parent.iframeHistory.push(url);
+        } else {
+            parent.iframeHistory.push(url);
+        }
+        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+        document.location.href = url;
+    });
     
     // The below is just a hacky fix for the fact that the "color-param-this" class for some reason doesn't get applied to the away team tables
     $('.form-table-container:nth-child(1) td:nth-child(2), .form-table-container:nth-child(3) td:nth-child(2)').each(function() {

@@ -41,21 +41,27 @@ function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
 }
 
 function plotCoords(ctx, zip) {
-    ctx.font = '12px Arial';
+    ctx.font = '11px Arial';
     ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     for (let zipItem of zip) {
         const centerX = ctx.canvas.width / 32 * zipItem.coords.x;
         const centerY = ctx.canvas.height / 32 * zipItem.coords.y;
-        const radius = 8;
+        const radius = ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2));
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = 'red';
+        let val = zipItem.player.rating;
+        let hue = Math.floor((100 - val) * 120 / 100);
+        let saturation = Math.abs(val - 50) / 50 * 100;
+        ctx.fillStyle = `hsl(${hue}, ${saturation}%, 50%)`;
         ctx.fill();
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.strokeStyle = '#000000';
         ctx.stroke();
+        ctx.fillStyle = 'white';
+        ctx.fillText(parseInt(zipItem.player.rating), centerX, centerY);
         ctx.fillStyle = 'black';
-        ctx.fillText(zipItem.name, centerX, centerY + 30);
+        ctx.fillText(zipItem.player.name, centerX, centerY + 30);
     }
 }
 
@@ -142,9 +148,12 @@ function getPositionFromCoords(coords) {
 
 $(document).ready(function() {
     const canvas = document.getElementById('football-pitch');
+    var rect = canvas.parentNode.getBoundingClientRect();
+    canvas.width = (rect.height - 10) / 500 * 362;
+    canvas.height = (rect.height - 10);
     const ctx = canvas.getContext('2d');
     const image = document.getElementById('football-pitch-image');
-    ctx.drawImage(image, 0, 0, 362, 500);
+    ctx.drawImage(image, 0, 0, (rect.height - 10) / 500 * 362, (rect.height - 10));
     let coords = calculateCoordsFromFormation(canvas.dataset.formation);//, null, {0: [3, 0, 0, 3], 2: [0, -3, -3, 0]});
     let players = JSON.parse(canvas.dataset.players);
     let playerPositions = {};
@@ -152,17 +161,123 @@ $(document).ready(function() {
         if (!(player.position in playerPositions)) {
             playerPositions[player.position] = [];
         }
-        playerPositions[player.position].push(player.name);
+        playerPositions[player.position].push(player);
     }
-    let names = coords.map(crd => getPositionFromCoords(crd)).map(pos => playerPositions[pos].shift());
+    let playerData = coords.map(crd => getPositionFromCoords(crd)).map(pos => playerPositions[pos].shift());
     let zip = [];
     for (let i = 0; i < players.length; i++) {
         zip.push({
             coords: coords[i],
-            name: names[i]
+            player: playerData[i]
         });
     }
     plotCoords(ctx, zip);
+
+    $('#club-player-performance-table .clickable-row').click(function() {
+        let url = '/simulation/player/' + this.dataset.playerId;
+        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+            parent.iframeHistory.pop();
+            parent.iframeHistory.push(url);
+        } else {
+            parent.iframeHistory.push(url);
+        }
+        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+        document.location.href = url;
+    });
+
+    $('#club-player-performance-table th').hover(
+        function() {
+            if (this.dataset.sort === 'unsorted') {
+                let tableDownArrow = $(this).find('.table-down-arrow');
+                tableDownArrow.css('display', 'inline');
+                tableDownArrow.siblings('.table-arrow').css('display', 'none');
+            }
+            if (this.dataset.sort === 'sorted-descending') {
+                let tableUpArrow = $(this).find('.table-up-arrow');
+                tableUpArrow.css('display', 'inline');
+                tableUpArrow.siblings('.table-arrow').css('display', 'none');
+            }
+            if (this.dataset.sort === 'sorted-ascending') {
+                let tableUnsortedArrow = $(this).find('.table-unsorted-arrow');
+                tableUnsortedArrow.css('display', 'inline');
+                tableUnsortedArrow.siblings('.table-arrow').css('display', 'none');
+            }
+        },
+        function() {
+            $(this).find('.table-arrow').each(function() {
+                $(this).css('display', 'none');
+            });
+            if (this.dataset.sort === 'unsorted') {
+                let tableArrow = $(this).find('.table-down-arrow');
+                tableArrow.css('display', 'none');
+                $(this).find('.table-unsorted-arrow').css('display', 'inline');
+            }
+            if (this.dataset.sort === 'sorted-descending') {
+                let tableArrow = $(this).find('.table-up-arrow');
+                tableArrow.css('display', 'none');
+                $(this).find('.table-down-arrow').css('display', 'inline');
+            }
+            if (this.dataset.sort === 'sorted-ascending') {
+                let tableArrow = $(this).find('.table-unsorted-arrow');
+                tableArrow.css('display', 'none');
+                $(this).find('.table-up-arrow').css('display', 'inline');
+            }
+        }
+    );
+
+    $('#club-player-performance-table th:not(:nth-child(1))').click(function() {
+        if (this.dataset.sort === 'unsorted') {
+            sortHow = 'sorted-descending';
+        }
+        if (this.dataset.sort === 'sorted-descending') {
+            sortHow = 'sorted-ascending';
+        }
+        if (this.dataset.sort === 'sorted-ascending') {
+            sortHow = 'unsorted';
+        }
+        let data = [];
+        let metric = $(this).data('metric');
+        $('#club-player-performance-table tr:not(:nth-child(1))').each(function() {
+            let datum = {
+                'playerId': this.dataset.playerId,
+                'rank': $(this).find('td:eq(0)').text(),
+                'name': $(this).find('td:eq(1)').html(),
+                'games': $(this).find('td:eq(2)').text(),
+                'goals': $(this).find('td:eq(3)').text(),
+                'assists': $(this).find('td:eq(4)').text(),
+                'rating': $(this).find('td:eq(5)').text(),
+            };
+            data.push(datum);
+        });
+        data.sort(function(a, b) {
+            if (sortHow === 'sorted-descending') {
+                return b[metric] - a[metric]; 
+            }
+            if (sortHow === 'sorted-ascending') {
+                return a[metric] - b[metric];   
+            }
+            if (sortHow === 'unsorted') {
+                return a['rank'] - b['rank'];
+            }
+        });
+        for (let i = 0; i < data.length; i++) {
+            let datum = data[i];
+            let tr = $('#club-player-performance-table tr:eq(' + (i + 1) + ')');
+            tr.get(0).dataset.playerId = datum['playerId'];
+            tr.find('td:eq(0)').html(datum['rank']);
+            tr.find('td:eq(1)').html(datum['name']);
+            tr.find('td:eq(2)').text(datum['games']);
+            tr.find('td:eq(3)').text(datum['goals']);
+            tr.find('td:eq(4)').text(datum['assists']);
+            tr.find('td:eq(5)').text(datum['rating']);
+        }
+        this.dataset.sort = sortHow;
+        $(this).siblings().each(function() {
+            this.dataset.sort = 'unsorted';
+            $(this).find('.table-arrow').css('display', 'none');
+            $(this).find('.table-unsorted-arrow').css('display', 'inline');
+        });
+    });
 });
 // let formationPositions = coords.map(i => getPositionFromCoords(i));
 // function Counter(array) {

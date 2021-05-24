@@ -1,3 +1,50 @@
 <img id="football-pitch-image" src="/static/images/football_pitch_converted.png" style="display: none;">
-<canvas id="football-pitch" width="362" height="500" data-formation="{{ formation }}" data-players="{{ players }}">
-</canvas>
+<div style="display: flex; flex-direction: column; height: 100%">
+    <div id="football-pitch-container" style="flex: 3;">
+        <canvas id="football-pitch" data-formation="{{ formation }}" data-players="{{ players }}" style="object-fit: scale-down;">
+        </canvas>
+    </div>
+    <div style="flex: 2; overflow-y: auto; position: relative">
+        <table id="club-player-performance-table" class="full-table">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th data-sort="unsorted" data-metric="games">
+                    <i class="fas fa-tshirt"></i><!-- <img src="/static/images/apps_icon.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+                <th data-sort="unsorted" data-metric="goals">
+                    <i class="fas fa-futbol"></i><!-- <img src="/static/images/goal_icon.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+                <th data-sort="unsorted" data-metric="assists">
+                    <i class="fab fa-angular"></i><!-- <img src="/static/images/assist_icon_2.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+                <th data-sort="unsorted" data-metric="rating">
+                    <i class="fas fa-star"></i><!-- <img src="/static/images/rating_icon.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+            </tr>
+            {% for player, performanceIndices in playerPerformanceItems.items() %}
+                <tr class="clickable-row" data-player-id="{{ player.id }}">
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <div class="player-row-top">
+                            {{ player.getProperName() }}
+                        </div>
+                        <div class="player-row-bottom">
+                            <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.getRating()) }}</span> ·
+                            <span>Age: {{ player.getAge() }}</span> ·
+                            <span>Pos: {{ player.getBestPosition() }}</span>
+                        </div>
+                    </td>
+                    <td>{{ performanceIndices['games'] }}</td>
+                    <td>{{ performanceIndices['goals'] }}</td>
+                    <td>{{ performanceIndices['assists'] }}</td>
+                    <td>{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>

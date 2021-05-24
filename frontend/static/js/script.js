@@ -198,4 +198,13 @@ $(document).ready(function() {
             $(this).find('.table-unsorted-arrow').css('display', 'inline');
         });
     });
+
+    $('.rating-span').each(function() {
+        let val = 100 - $(this).html();
+        let hue = Math.floor((100 - val) * 120 / 100);
+        let saturation = Math.abs(val - 50) / 50 * 100;
+        $(this).css({
+            'backgroundColor': `hsl(${hue}, ${saturation}%, 50%)`,
+        });
+    });
 });

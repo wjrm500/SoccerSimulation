@@ -49,7 +49,7 @@ class Club:
             weights.append(value['popularity'])
         return np.random.choice(formations, size = 1, p = weights)[0]
             
-    def selectTeam(self, homeAway = 'neutral', squad = None):
+    def selectTeam(self, homeAway = 'neutral', squad = None, test = False):
         try:
             squad = self.players if squad is None else squad
             if len(squad) < 10:
@@ -62,10 +62,10 @@ class Club:
                 for position, numPlayers in personnelRequired.items():
                     if numPlayers > 0:
                         for player in squad:
-                            if player not in [select.player for select in selection] and player.injured is False:
+                            if player not in [select.player for select in selection] and (False if test else player.injured) is False:
                                 selectRating = player.positionRatings[position]
-                                selectRating -= selectRating * player.fatigue
-                                selectRating += (selectRating * player.form) / 10
+                                selectRating -= 0 if test else selectRating * player.fatigue
+                                selectRating += 0 if test else (selectRating * player.form) / 10
                                 if selectRating > maxValue:
                                     maxValue = selectRating
                                     select = Select(player, position, selectRating)

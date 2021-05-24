@@ -85,7 +85,13 @@ def player(id):
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
         performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex')[player]
-    return render_template('player/player.html', cssFiles = ['rest_of_website.css', 'iframe.css'], jsFiles = ['iframe.js'], player = player, performanceIndices = performanceIndices)
+    return render_template(
+        'player/player.html',
+        cssFiles = ['rest_of_website.css', 'iframe.css'],
+        jsFiles = ['iframe.js'],
+        player = player,
+        performanceIndices = performanceIndices
+    )
 
 @app.route('/simulation/player/<playerId>/radar')
 def playerRadar(playerId):
@@ -216,17 +222,25 @@ def club(clubId):
     if session['universe']:
         universe = pickle.loads(session['universe'])
         club = universe.getClubById(clubId)
-        team = club.selectTeam()
+        team = club.selectTeam(test = True)
         selection = team.selection
         formation = team.formation
-        players = json.dumps([{'name': select.player.getProperName('Shortened'), 'position': select.position} for select in selection])
+        averageSelectRating = sum([select.rating for select in selection]) / 10
+        players = json.dumps([{
+            'adjustedRating': (select.rating - averageSelectRating) / averageSelectRating,
+            'name': select.player.getProperName('Shortened'),
+            'position': select.position,
+            'rating': select.rating
+            } for select in selection])
+        playerPerformanceItems = club.league.getPerformanceIndices(sortBy = 'performanceIndex', clubs = club)
     return render_template(
         'club/club.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['club.js', 'iframe.js'],
         club = club,
         formation = formation,
-        players = players
+        players = players,
+        playerPerformanceItems = playerPerformanceItems
     )
 
 ### For versioning CSS to prevent browser cacheing
