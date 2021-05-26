@@ -300,6 +300,28 @@ $(document).ready(function() {
         }
         parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
         document.location.href = url;
+    });
+
+    $('.home-away-button').click(function() {
+        let homeAway = $(this).data('homeAway');
+        $('#club-results tr').each(function() {
+            $(this).css('display', '');
+        });
+        $(this).addClass('clicked');
+        $('.home-away-button').not('#' + $(this).attr('id')).each((x, y) => $(y).removeClass('clicked'));
+        if (homeAway === 'home') {
+            $('#club-results tr').each(function() {
+                if ($(this).data('atHome') === 'False') {
+                    $(this).css('display', 'none');
+                }
+            });
+        } else if (homeAway === 'away') {
+            $('#club-results tr').each(function() {
+                if ($(this).data('atHome') === 'True') {
+                    $(this).css('display', 'none');
+                }
+            });
+        }
     })
 });
 // let formationPositions = coords.map(i => getPositionFromCoords(i));

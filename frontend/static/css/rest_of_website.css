@@ -914,6 +914,7 @@ a.result-L:hover {
 }
 
 #club-results {
+    top: 40px;
     font-size: 0.9em;
     height: 100%;
     table-layout: fixed;
@@ -928,8 +929,28 @@ a.result-L:hover {
     width: 25px;
 }
 
+#club-results tr td:nth-child(2) {
+    color: #bbbbbb;
+    width: 25px;
+}
+
 .club-score-container {
     text-align: center;
+}
+
+.home-away-button {
+    background-color: #dddddd;
+    border: none;
+    width: 100%;
+}
+
+.home-away-button:hover {
+    cursor: pointer;
+}
+
+.home-away-button.clicked {
+    background-color: black;
+    color: white;
 }
 
 /* Generic tooltip styling */

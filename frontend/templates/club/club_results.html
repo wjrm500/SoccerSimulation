@@ -1,7 +1,19 @@
+<div style="display: flex; height: 30px; width: 100%;">
+    <div style="flex: 1; padding: 5px;">
+        <button id="all" data-home-away="all" class="home-away-button clicked">All</button>
+    </div>
+    <div style="flex: 1; padding: 5px;">
+        <button id="home" data-home-away="home" class="home-away-button">Home</button>
+    </div>
+    <div style="flex: 1; padding: 5px;">
+        <button id="away" data-home-away="away" class="home-away-button">Away</button>
+    </div>
+</div>
 <table id="club-results" class="full-table">
     {% for result in results %}
-        <tr class="result clickable-row" data-fixture-id="{{ result['fixtureId'] }}">
+        <tr class="result clickable-row" data-fixture-id="{{ result['fixtureId'] }}" data-at-home="{{ result['atHome'] }}">
             <td>{{ result['gameweek'] }}</td>
+            <td>{{ '' if result['atHome'] else '@' }}</td>
             <td class="result-home-club-name result-club-name {% if result['result'] == 'win' %}winner{% endif %}" data-club-id="{{ result['club'].id }}">
                 {{ result['club'].name }}
             </td>

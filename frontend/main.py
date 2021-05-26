@@ -237,10 +237,12 @@ def club(clubId):
 
         results = []
         for matchReport in club.getMatchReports():
+            atHome = club == list(matchReport['clubs'].keys())[0]
             oppClub = [x for x in list(matchReport['clubs'].keys()) if x != club][0]
             clubScore = matchReport['clubs'][club]['match']['goalsFor']
             oppClubScore = matchReport['clubs'][oppClub]['match']['goalsFor']
             result = {
+                'atHome': atHome,
                 'fixtureId': matchReport['fixtureId'],
                 'gameweek': matchReport['gameweek'],
                 'club': club,
