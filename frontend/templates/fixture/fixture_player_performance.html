@@ -2,7 +2,9 @@
     {% for clubData in [homeClubData, awayClubData] %}
         <div class="fixture-players-club">
             <div class="fixture-players-club-title">
-                {{ clubData['team']['club'].name }}
+                <a data-url="/simulation/club/{{ clubData['team']['club'].id }}">
+                    {{ clubData['team']['club'].name }}
+                </a>
             </div>
             <table class="full-table">
                 <tr>

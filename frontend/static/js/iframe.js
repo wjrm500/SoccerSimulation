@@ -22,8 +22,9 @@ $(document).ready(function() {
         document.location.href = parent.iframeHistory[parent.iframeHistoryPointer];
     });
 
-    $('a').click(function() {
-        url = $(this).attr('href');
+    $('a').click(function(e) {
+        e.preventDefault();
+        let url = $(this).data('url');
         if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
             parent.iframeHistory.pop();
             parent.iframeHistory.push(url);
@@ -31,7 +32,19 @@ $(document).ready(function() {
             parent.iframeHistory.push(url);
         }
         parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-    })
+        document.location.href = url;
+    });
+
+    // $('a').click(function() {
+    //     url = $(this).attr('href');
+    //     if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+    //         parent.iframeHistory.pop();
+    //         parent.iframeHistory.push(url);
+    //     } else {
+    //         parent.iframeHistory.push(url);
+    //     }
+    //     parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+    // })
 
     $('.fixture-summary-goal-player').click(function() {
         let url = '/simulation/player/' + this.dataset.playerId;

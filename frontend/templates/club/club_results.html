@@ -1,0 +1,24 @@
+<table id="club-results" class="full-table">
+    {% for result in results %}
+        <tr class="result clickable-row" data-fixture-id="{{ result['fixtureId'] }}">
+            <td>{{ result['gameweek'] }}</td>
+            <td class="result-home-club-name result-club-name {% if result['result'] == 'win' %}winner{% endif %}" data-club-id="{{ result['club'].id }}">
+                {{ result['club'].name }}
+            </td>
+            <td class="middle-bit">
+                <div class="club-score-container" data-result="{{ result['result'] }}">
+                    <span class="{% if result['result'] == 'win' %}winner{% endif %}">
+                        {{ result['clubScore'] }}
+                    </span>
+                    <span>-</span>
+                    <span class="{% if result['result'] == 'loss' %}winner{% endif %}">
+                        {{ result['oppClubScore'] }}
+                    </span>
+                </div>
+            </td>
+            <td class="result-away-club-name result-club-name {% if result['result'] == 'loss' %}winner{% endif %}" data-club-id="{{ result['oppClub'].id }}">
+                {{ result['oppClub'].name }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>

@@ -7,13 +7,13 @@
 <div id="fixture-summary-result" class="fixture-summary-container">
     <div id="fixture-summary-result-headline">
         <div id="fixture-summary-home-team-name" class="fixture-summary-team-name">
-            {{ homeClubData['name'] }}
+            <a data-url="/simulation/club/{{ homeClubData['id'] }}">{{ homeClubData['name'] }}</a>
         </div>
         <div id="fixture-summary-score">
             {{ '{} - {}'.format(homeClubData['match']['goalsFor'], awayClubData['match']['goalsFor']) }}
         </div>
         <div id="fixture-summary-away-team-name" class="fixture-summary-team-name">
-            {{ awayClubData['name'] }}
+            <a data-url="/simulation/club/{{ awayClubData['id'] }}">{{ awayClubData['name'] }}</a>
         </div>
     </div>
     <div id="fixture-summary-goals">

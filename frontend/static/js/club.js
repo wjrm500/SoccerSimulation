@@ -278,6 +278,29 @@ $(document).ready(function() {
             $(this).find('.table-unsorted-arrow').css('display', 'inline');
         });
     });
+
+    $('.club-score-container').each(function() {
+        let result = $(this).data('result');
+        let resultColorMapping = {
+            win: 'lightgreen',
+            draw: 'lemonchiffon',
+            loss: 'lightpink'
+        }
+        $(this).css('backgroundColor', resultColorMapping[result]);
+    });
+
+    $('#club-results .clickable-row').click(function() {
+        let fixtureId = $(this).data('fixtureId');
+        let url = '/simulation/fixture/' + fixtureId;
+        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+            parent.iframeHistory.pop();
+            parent.iframeHistory.push(url);
+        } else {
+            parent.iframeHistory.push(url);
+        }
+        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+        document.location.href = url;
+    })
 });
 // let formationPositions = coords.map(i => getPositionFromCoords(i));
 // function Counter(array) {

@@ -121,6 +121,7 @@ def fixture(fixtureId):
         clubData = []
         for club, data in fixture.match.matchReport['clubs'].items():
             clubDatum = data
+            clubDatum['id'] = club.id
             clubDatum['name'] = club.name
             clubData.append(clubDatum)
         homeClubData, awayClubData = clubData
@@ -233,6 +234,22 @@ def club(clubId):
             'rating': select.rating
             } for select in selection])
         playerPerformanceItems = club.league.getPerformanceIndices(sortBy = 'performanceIndex', clubs = club)
+
+        results = []
+        for matchReport in club.getMatchReports():
+            oppClub = [x for x in list(matchReport['clubs'].keys()) if x != club][0]
+            clubScore = matchReport['clubs'][club]['match']['goalsFor']
+            oppClubScore = matchReport['clubs'][oppClub]['match']['goalsFor']
+            result = {
+                'fixtureId': matchReport['fixtureId'],
+                'gameweek': matchReport['gameweek'],
+                'club': club,
+                'oppClub': oppClub,
+                'clubScore': clubScore,
+                'oppClubScore': oppClubScore,
+                'result': 'win' if clubScore > oppClubScore else 'loss' if oppClubScore > clubScore else 'draw'
+            }
+            results.append(result)
     return render_template(
         'club/club.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
@@ -240,7 +257,8 @@ def club(clubId):
         club = club,
         formation = formation,
         players = players,
-        playerPerformanceItems = playerPerformanceItems
+        playerPerformanceItems = playerPerformanceItems,
+        results = results
     )
 
 ### For versioning CSS to prevent browser cacheing
