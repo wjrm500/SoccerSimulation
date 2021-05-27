@@ -953,6 +953,11 @@ a.result-L:hover {
     color: white;
 }
 
+#club-positions-graph-image {
+    object-fit: contain;
+    width: 100%;
+}
+
 /* Generic tooltip styling */
 
 .my-tooltip {

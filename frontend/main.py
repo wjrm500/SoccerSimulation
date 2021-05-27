@@ -10,6 +10,7 @@ import os
 import pickle
 import utils
 import player_utils
+import club_utils
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import json
@@ -262,6 +263,16 @@ def club(clubId):
         playerPerformanceItems = playerPerformanceItems,
         results = results
     )
+
+@app.route('/simulation/club/<clubId>/position-graph')
+def clubPositionGraph(clubId):
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        club = universe.getClubById(clubId)
+        fig = club_utils.showClubPositions(club)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor
