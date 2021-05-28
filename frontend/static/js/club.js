@@ -40,29 +40,93 @@ function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
     return res;
 }
 
-function plotCoords(ctx, zip) {
+function drawPlayer(player, centerX, centerY, radius, hoverState) {
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+    let val = player.rating;
+    let hue = Math.floor((100 - val) * 120 / 100);
+    let saturation = Math.abs(val - 50) / 50 * 100;
+    if (hoverState) {
+        ctx.fillStyle = `hsl(${hue}, ${saturation}%, 20%)`;
+    } else {
+        ctx.fillStyle = `hsl(${hue}, ${saturation}%, 50%)`;
+    }
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000000';
+    ctx.stroke();
+    ctx.fillStyle = 'white';
+    ctx.font = hoverState ? 'normal 900 12px Arial, sans-serif' : '12px Arial, sans-serif';
+    ctx.fillText(parseInt(player.rating), centerX, centerY);
+    ctx.fillStyle = 'black';
+    ctx.fillText(player.name, centerX, centerY + 30);
+}
+
+var playerIdHovered = 0;
+
+function plotCoords(zip, playerIdHovered) {
     ctx.font = '11px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    let hoverPlaces = [];
     for (let zipItem of zip) {
         const centerX = ctx.canvas.width / 32 * zipItem.coords.x;
         const centerY = ctx.canvas.height / 32 * zipItem.coords.y;
         const radius = ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2));
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        let val = zipItem.player.rating;
-        let hue = Math.floor((100 - val) * 120 / 100);
-        let saturation = Math.abs(val - 50) / 50 * 100;
-        ctx.fillStyle = `hsl(${hue}, ${saturation}%, 50%)`;
-        ctx.fill();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = '#000000';
-        ctx.stroke();
-        ctx.fillStyle = 'white';
-        ctx.fillText(parseInt(zipItem.player.rating), centerX, centerY);
-        ctx.fillStyle = 'black';
-        ctx.fillText(zipItem.player.name, centerX, centerY + 30);
+        hoverPlaces.push({
+            playerId: zipItem.player.id,
+            centerX,
+            centerY,
+            radius
+        });
+        hoverState = playerIdHovered === zipItem.player.id;
+        drawPlayer(zipItem.player, centerX, centerY, radius, hoverState);
     }
+    $(canvas).unbind();
+    $(canvas).mousemove(function(evt) {
+        const {x, y} = getMousePos(evt);
+        canvas.style.cursor = 'auto';
+        for (let hoverPlace of hoverPlaces) {
+            let {playerId, centerX, centerY, radius} = hoverPlace;
+            if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < radius) {
+                canvas.style.cursor = 'pointer';
+                if (playerId !== playerIdHovered) {
+                    playerIdHovered = playerId;
+                    drawPitch(playerIdHovered);
+                    let playerRow = $('#club-player-performance-table tr[data-player-id=' + playerId + ']');
+                    playerRow.addClass('hovered');
+                    playerRow.find('.player-row-bottom').css('color', 'white');
+                    return;
+                }
+            } else {
+                if (playerIdHovered !== 0) {
+                    playerIdHovered = 0;
+                    $('#club-player-performance-table tr').each(function() {
+                        $(this).removeClass('hovered');
+                        $(this).find('.player-row-bottom').css('color', 'grey')
+                    })
+                    drawPitch();
+                }
+            }
+        }
+    });
+    $(canvas).click(function(evt) {
+        const {x, y} = getMousePos(evt);
+        for (let hoverPlace of hoverPlaces) {
+            let {playerId, centerX, centerY, radius} = hoverPlace;
+            if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < radius) {
+                let url = '/simulation/player/' + playerId;
+                if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+                    parent.iframeHistory.pop();
+                    parent.iframeHistory.push(url);
+                } else {
+                    parent.iframeHistory.push(url);
+                }
+                parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+                document.location.href = url;
+            }
+        }
+    });
 }
 
 const positions = {
@@ -146,13 +210,16 @@ function getPositionFromCoords(coords) {
     return selected;
 }
 
-$(document).ready(function() {
-    const canvas = document.getElementById('football-pitch');
-    var rect = canvas.parentNode.getBoundingClientRect();
-    canvas.width = (rect.height - 10) / 500 * 362;
-    canvas.height = (rect.height - 10);
-    const ctx = canvas.getContext('2d');
-    const image = document.getElementById('football-pitch-image');
+function getMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+        y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+    };
+}
+
+function drawPitch(playerIdHovered) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(image, 0, 0, (rect.height - 10) / 500 * 362, (rect.height - 10));
     let coords = calculateCoordsFromFormation(canvas.dataset.formation);//, null, {0: [3, 0, 0, 3], 2: [0, -3, -3, 0]});
     let players = JSON.parse(canvas.dataset.players);
@@ -171,8 +238,17 @@ $(document).ready(function() {
             player: playerData[i]
         });
     }
-    plotCoords(ctx, zip);
+    plotCoords(zip, playerIdHovered);
+}
 
+$(document).ready(function() {
+    canvas = document.getElementById('football-pitch');
+    rect = canvas.parentNode.getBoundingClientRect();
+    canvas.width = (rect.height - 10) / 500 * 362;
+    canvas.height = (rect.height - 10);
+    ctx = canvas.getContext('2d');
+    image = document.getElementById('football-pitch-image');
+    drawPitch();
     $('#club-player-performance-table .clickable-row').click(function() {
         let url = '/simulation/player/' + this.dataset.playerId;
         if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
@@ -279,6 +355,11 @@ $(document).ready(function() {
         });
     });
 
+    $('#club-player-performance-table tr:not(:first-child)').mouseenter(function() {
+        let playerId = $(this).data('playerId');
+        drawPitch(playerId);
+    });
+
     $('.club-score-container').each(function() {
         let result = $(this).data('result');
         let resultColorMapping = {
@@ -324,10 +405,3 @@ $(document).ready(function() {
         }
     })
 });
-// let formationPositions = coords.map(i => getPositionFromCoords(i));
-// function Counter(array) {
-//     let count = {};
-//     array.forEach(val => count[val] = (count[val] || 0) + 1);
-//     return count;
-// }
-//console.log(JSON.stringify(Counter(formationPositions)));

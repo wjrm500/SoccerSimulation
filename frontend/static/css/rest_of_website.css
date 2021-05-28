@@ -67,7 +67,7 @@
     cursor: pointer;
 }
 
-.clickable-row:hover {
+.clickable-row:hover, .clickable-row.hovered {
     background-color: #888888 !important;
     color: white !important;
 }

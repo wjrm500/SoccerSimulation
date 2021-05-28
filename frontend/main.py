@@ -230,6 +230,7 @@ def club(clubId):
         averageSelectRating = sum([select.rating for select in selection]) / 10
         players = json.dumps([{
             'adjustedRating': (select.rating - averageSelectRating) / averageSelectRating,
+            'id': select.player.id,
             'name': select.player.getProperName('Shortened'),
             'position': select.position,
             'rating': select.rating
