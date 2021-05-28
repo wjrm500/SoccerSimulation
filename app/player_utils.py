@@ -241,6 +241,7 @@ def showSkillDistribution(players, labels = None, projection = False, scaleForOv
 
     # ### Show plot
     # plt.show()
+    plt.tight_layout()
     return fig
 
 def showPlayerForm(player):

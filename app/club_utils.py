@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 def showClubPositions(club):
     fig = plt.figure()
     fig.add_subplot(111)
-    tables = club.league.leagueTables
+    league = club.league
+    tables = league.leagueTables
     # Rank positions
     rankedTables = []
     for table in tables.values():
@@ -15,12 +17,21 @@ def showClubPositions(club):
             rankedTable.append(tableItem)
         rankedTables.append(rankedTable)
     ranks = []
-    for rankedTable in rankedTables:
+    for rankedTable in rankedTables[1:]:
         for tableClub, tableData in rankedTable:
             if club == tableClub:
                 ranks.append(tableData['Rank'])
     x = list(range(0, len(ranks)))
     y = ranks
-    # plt.axis('off')
-    plt.plot(x, y, 'b-')
+    for i in range(len(league.clubs) + 1):
+        plt.gca().axhline(i, color = '#bbbbbb', linestyle = '--', linewidth = 0.75)
+    for i in range((len(rankedTables))):
+        if i % 10 == 0:
+            plt.gca().axvline(i, color = '#bbbbbb', linestyle = '--', linewidth = 0.75)
+    plt.plot(x, y, '-bo')
+    plt.xlabel('Gameweek', fontsize = 12, fontweight = 'bold', labelpad = 8)
+    plt.ylabel('League position', fontsize = 12, fontweight = 'bold', labelpad = 8)
+    plt.ylim([0, len(league.clubs) + 1])
+    plt.gca().invert_yaxis()
+    plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
     return fig
