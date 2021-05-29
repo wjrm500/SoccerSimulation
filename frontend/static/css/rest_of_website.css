@@ -945,12 +945,17 @@ a.result-L:hover {
 }
 
 .home-away-button:hover {
+    background-color: #bbbbbb;
     cursor: pointer;
 }
 
 .home-away-button.clicked {
     background-color: black;
     color: white;
+}
+
+.clickable-row:hover .club-score-container {
+    background-color: black !important;
 }
 
 #club-positions-graph-image {

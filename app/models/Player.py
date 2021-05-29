@@ -255,6 +255,11 @@ class Player:
             elif style == 'Whole':
                 properNameArray.append(name)
         return ' '.join(properNameArray)
+
+    def getClubSpecificName(self):
+        otherPlayersAtClub = [player for player in self.club.players if player != self]
+        uniqueSurname = len(list(filter(lambda x: self.name[1] == x.name[1], otherPlayersAtClub))) == 0
+        return self.getProperName('Shortened' if not uniqueSurname else '')
     
     def retire(self):
         self.retired = True
