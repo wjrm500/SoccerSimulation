@@ -89,6 +89,20 @@ $(document).ready(function() {
         }
     });
 
+    $('a').click(function(e) {
+        e.preventDefault();
+        let iframe = document.getElementById('sometimes-iframe');
+        let url = $(this).data('url');
+        if (window.iframeHistoryPointer !== (window.iframeHistory.length - 1)) {
+            window.iframeHistory.pop();
+            window.iframeHistory.push(url);
+        } else {
+            window.iframeHistory.push(url);
+        }
+        window.iframeHistoryPointer = window.iframeHistory.length - 1;
+        iframe.src = url;
+    });
+
     $('#player-performance-table .clickable-row').click(function() {
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/player/' + this.dataset.playerId;

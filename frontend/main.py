@@ -265,6 +265,20 @@ def club(clubId):
         results = results
     )
 
+@app.route('/simulation/player-performance')
+def playerPerformance():
+    if 'universe' in session:
+        universe = pickle.loads(session['universe'])
+        league = universe.systems[0].leagues[0]
+        playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+        return render_template('player_performance_proper.html',
+            cssFiles = ['rest_of_website.css', 'iframe.css'],
+            jsFiles = ['iframe.js'],
+            playerPerformanceItems = playerPerformanceItems
+            )
+    return render_template('error.html')
+
+
 @app.route('/simulation/club/<clubId>/position-graph')
 def clubPositionGraph(clubId):
     if session['universe']:
