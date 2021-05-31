@@ -63,7 +63,7 @@ class League:
     
     def getPerformanceIndices(
         self,
-        indices = ['games', 'goals', 'assists', 'performanceIndex'],
+        indices = ['games', 'goals', 'assists', 'mvps', 'performanceIndex'],
         upToGameweek = None,
         sortBy = None,
         sortDir = None,
@@ -88,6 +88,9 @@ class League:
                 if 'assists' in indices:
                     assists = np.sum([playerReport['assists'] for playerReport in player.playerReports if playerReport['tournament'] == self and playerReport['gameweek'] <= upToGameweek])
                     performanceIndices[player]['assists'] = int(assists)
+                if 'mvps' in indices:
+                    mvps = np.sum([playerReport['manOfTheMatch'] for playerReport in player.playerReports if playerReport['tournament'] == self and playerReport['gameweek'] <= upToGameweek])
+                    performanceIndices[player]['mvps'] = int(mvps)
                 if 'performanceIndex' in indices:
                     performanceIndex = np.mean([playerReport['performanceIndex'] for playerReport in player.playerReports if playerReport['tournament'] == self and playerReport['gameweek'] <= upToGameweek])
                     performanceIndices[player]['performanceIndex'] = round(performanceIndex, 2)

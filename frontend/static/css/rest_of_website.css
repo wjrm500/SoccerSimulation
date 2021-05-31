@@ -218,6 +218,10 @@
     padding: 5px;
 }
 
+.player-performance-table th:first-child {
+    width: 40px;
+}
+
 .player-performance-table th:hover .table-arrow {
     color: black;
 }
@@ -1022,7 +1026,7 @@ a.result-L:hover {
 }
 
 #player-performance-proper-table tr:first-child th:nth-child(1) {
-    width: 25px;
+    min-width: 50px;
 }
 
 #player-performance-proper-table tr:first-child th:nth-child(2) {
@@ -1035,9 +1039,18 @@ a.result-L:hover {
     width: 75px;
 }
 
-#player-performance-proper-table th:not(:nth-child(2)),
-#player-performance-proper-table th:not(:nth-child(2)) {
-    font-size: 0.8em;
+#player-performance-proper-table th:nth-child(n + 4) i {
+    padding: 2px;
+}
+
+#player-performance-proper-table th:nth-child(n + 4).hovered {
+    background-color: grey !important;
+    color: white !important;
+}
+
+#player-performance-proper-table th:nth-child(n + 4).clicked {
+    background-color: black;
+    color: white !important;
 }
 
 #player-performance-proper-table .pp-attributes {

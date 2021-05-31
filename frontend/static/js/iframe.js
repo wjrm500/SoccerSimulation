@@ -25,37 +25,12 @@ $(document).ready(function() {
     $('a').click(function(e) {
         e.preventDefault();
         let url = $(this).data('url');
-        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-            parent.iframeHistory.pop();
-            parent.iframeHistory.push(url);
-        } else {
-            parent.iframeHistory.push(url);
-        }
-        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-        document.location.href = url;
+        sendIFrameToUrl(url);
     });
-
-    // $('a').click(function() {
-    //     url = $(this).attr('href');
-    //     if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-    //         parent.iframeHistory.pop();
-    //         parent.iframeHistory.push(url);
-    //     } else {
-    //         parent.iframeHistory.push(url);
-    //     }
-    //     parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-    // })
 
     $('.fixture-summary-goal-player').click(function() {
         let url = '/simulation/player/' + this.dataset.playerId;
-        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-            parent.iframeHistory.pop();
-            parent.iframeHistory.push(url);
-        } else {
-            parent.iframeHistory.push(url);
-        }
-        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-        document.location.href = url;
+        sendIFrameToUrl(url);
     });
 
     $('#player-game-table .clickable-row').click(function() {
@@ -102,4 +77,15 @@ const forwardButton = {
         this.element.attr('disabled', false);
         this.element.removeClass('history-button-disabled');
     }
+}
+
+function sendIFrameToUrl(url) {
+    if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
+        parent.iframeHistory.pop();
+        parent.iframeHistory.push(url);
+    } else {
+        parent.iframeHistory.push(url);
+    }
+    parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
+    document.location.href = url;
 }

@@ -38,8 +38,10 @@
                 </select>
             </div>
             <div id="filter-detail-container" class="pp-filter-container">
-                <div id="filter-age" class="filter-detail">
-                    <div id="age-range-slider"></div>
+                <div id="filter-age" class="filter-detail" style="align-items: center; display: flex; height: 25px">
+                    <div id="age-range-slider-lower-bound" style="flex: 1; font-weight: bold; text-align: center;">15</div>
+                    <div id="age-range-slider" style="flex: 4;"></div>
+                    <div id="age-range-slider-upper-bound" style="flex: 1; font-weight: bold; text-align: center;">45</div>
                 </div>
                 <div id="filter-player" class="filter-detail">
                     <input type="text" placeholder="Search for a player...">
@@ -70,31 +72,20 @@
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Position</th>
-                <th>Age</th>
-                <th>Rating</th>
-                <th class="pp-attributes">Off</th>
-                <th class="pp-attributes">Spa</th>
-                <th class="pp-attributes">Tec</th>
-                <th class="pp-attributes">Def</th>
-                <th class="pp-attributes">Aut</th>
-                <th class="pp-attributes">Fit</th>
-                <th data-sort="unsorted" data-metric="games" class="pp-performance">
-                    <i class="fas fa-tshirt"></i><!-- <img src="/static/images/apps_icon.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
-                <th data-sort="unsorted" data-metric="goals" class="pp-performance">
-                    <i class="fas fa-futbol"></i><!-- <img src="/static/images/goal_icon.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
-                <th data-sort="unsorted" data-metric="assists" class="pp-performance">
-                    <i class="fab fa-angular"></i><!-- <img src="/static/images/assist_icon_2.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
-                <th data-sort="unsorted" data-metric="rating">
-                    <i class="fas fa-star"></i><!-- <img src="/static/images/rating_icon.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
+                <th><i class="fas fa-crosshairs"></i></th> <!-- Position -->
+                <th data-sort="unsorted" data-metric="age"><i class="fas fa-baby-carriage"></i></th> <!-- Age -->
+                <th data-sort="unsorted" data-metric="rating"><i class="far fa-chart-bar"></i></th> <!-- Rating -->
+                <th class="pp-attributes" data-sort="unsorted" data-metric="offence">Off</th>
+                <th class="pp-attributes" data-sort="unsorted" data-metric="spark">Spa</th>
+                <th class="pp-attributes" data-sort="unsorted" data-metric="technique">Tec</th>
+                <th class="pp-attributes" data-sort="unsorted" data-metric="defence">Def</th>
+                <th class="pp-attributes" data-sort="unsorted" data-metric="authority">Aut</th>
+                <th class="pp-attributes" data-sort="unsorted" data-metric="fitness">Fit</th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="games"><i class="fas fa-tshirt"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="goals"><i class="fas fa-futbol"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="assists"><i class="fab fa-angular"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="mvps"><i class="fas fa-star"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex"><i class="fas fa-star-half-alt" style="color: goldenrod;"></i></th>
             </tr>
             {% for player, performanceIndices in playerPerformanceItems.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">
@@ -112,7 +103,8 @@
                     <td class="pp-performance">{{ performanceIndices['games'] }}</td>
                     <td class="pp-performance">{{ performanceIndices['goals'] }}</td>
                     <td class="pp-performance">{{ performanceIndices['assists'] }}</td>
-                    <td>{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+                    <td class="pp-performance">{{ performanceIndices['mvps'] }}</td>
+                    <td class="pp-performance">{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
                 </tr>
             {% endfor %}
         </table>

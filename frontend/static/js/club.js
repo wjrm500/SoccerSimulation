@@ -116,14 +116,7 @@ function plotCoords(zip, playerIdHovered) {
             let {playerId, centerX, centerY, radius} = hoverPlace;
             if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < radius) {
                 let url = '/simulation/player/' + playerId;
-                if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-                    parent.iframeHistory.pop();
-                    parent.iframeHistory.push(url);
-                } else {
-                    parent.iframeHistory.push(url);
-                }
-                parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-                document.location.href = url;
+                sendIFrameToUrl(url);
             }
         }
     });
@@ -251,14 +244,7 @@ $(document).ready(function() {
     drawPitch();
     $('#club-player-performance-table .clickable-row').click(function() {
         let url = '/simulation/player/' + this.dataset.playerId;
-        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-            parent.iframeHistory.pop();
-            parent.iframeHistory.push(url);
-        } else {
-            parent.iframeHistory.push(url);
-        }
-        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-        document.location.href = url;
+        sendIFrameToUrl(url);
     });
 
     $('#club-player-performance-table th').hover(
@@ -373,14 +359,7 @@ $(document).ready(function() {
     $('#club-results .clickable-row').click(function() {
         let fixtureId = $(this).data('fixtureId');
         let url = '/simulation/fixture/' + fixtureId;
-        if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
-            parent.iframeHistory.pop();
-            parent.iframeHistory.push(url);
-        } else {
-            parent.iframeHistory.push(url);
-        }
-        parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
-        document.location.href = url;
+        sendIFrameToUrl(url);
     });
 
     $('.home-away-button').click(function() {
