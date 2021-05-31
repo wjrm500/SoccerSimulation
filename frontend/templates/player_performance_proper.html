@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="stretched-grid-item">
+    <div id="iframe-header">
+        <div id="iframe-title">
+            <span>Player Performance</span>
+        </div>
+        <div id="history-buttons">
+            <button id="refresh" class="history-button">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button id="history-back" class="history-button">
+                <i class="fas fa-arrow-circle-left"></i>
+            </button>
+            <button id="history-forward" class="history-button">
+                <i class="fas fa-arrow-circle-right"></i>
+            </button>
+        </div>
+    </div>
+    <div id="pp-header">
+        <div id="views" class="pp-sub-container">
+            <div class="pp-button-container">
+                <button id="attributes" data-view="attributes" class="view-button">Attributes</button>
+            </div>
+            <div class="pp-button-container">
+                <button id="performance" data-view="performance" class="view-button clicked">Performance</button>
+            </div>
+        </div>
+        <div id="filters" class="pp-sub-container">
+            <div id="filter-by-container" class="pp-filter-container">
+                <select id="filter-by">
+                    <option disabled selected value="">Filter by...</option>
+                    <option>Age</option>
+                    <option>Club</option>
+                    <option>Player</option>
+                    <option>Position</option>
+                </select>
+            </div>
+            <div id="filter-detail-container" class="pp-filter-container">
+                <div id="filter-age" class="filter-detail">
+                    <div id="age-range-slider"></div>
+                </div>
+                <div id="filter-player" class="filter-detail">
+                    <input type="text" placeholder="Search for a player...">
+                </div>
+                <div id="filter-position" class="filter-detail">
+                    <select>
+                        <option disabled selected value="">Select a position</option>
+                        <option value="all">All positions</option>
+                        {% for position in filterPositions %}
+                            <option value="{{ position }}">{{ position }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div id="filter-club" class="filter-detail">
+                    <select>
+                        <option disabled selected value="">Select a club</option>
+                        <option value="all">All clubs</option>
+                        {% for club in filterClubs %}
+                            <option value="{{ club.id }}">{{ club.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="position: relative; width: 100%;">
+        <table id="player-performance-proper-table" class="full-table player-performance-table">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Age</th>
+                <th>Rating</th>
+                <th class="pp-attributes">Off</th>
+                <th class="pp-attributes">Spa</th>
+                <th class="pp-attributes">Tec</th>
+                <th class="pp-attributes">Def</th>
+                <th class="pp-attributes">Aut</th>
+                <th class="pp-attributes">Fit</th>
+                <th data-sort="unsorted" data-metric="games" class="pp-performance">
+                    <i class="fas fa-tshirt"></i><!-- <img src="/static/images/apps_icon.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+                <th data-sort="unsorted" data-metric="goals" class="pp-performance">
+                    <i class="fas fa-futbol"></i><!-- <img src="/static/images/goal_icon.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+                <th data-sort="unsorted" data-metric="assists" class="pp-performance">
+                    <i class="fab fa-angular"></i><!-- <img src="/static/images/assist_icon_2.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+                <th data-sort="unsorted" data-metric="rating">
+                    <i class="fas fa-star"></i><!-- <img src="/static/images/rating_icon.png"> -->
+                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
+                </th>
+            </tr>
+            {% for player, performanceIndices in playerPerformanceItems.items() %}
+                <tr class="clickable-row" data-player-id="{{ player.id }}">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ player.getProperName() }} <span style="color: darkgrey; font-size: 0.75em; font-style: italic;" data-club-id="{{ player.club.id }}">{{ player.club.name }}</span></td>
+                    <td>{{ player.getBestPosition() }}</td>
+                    <td>{{ '{0:.2f}'.format(player.getAge(2)) }}</td>
+                    <td class="player-rating">{{ '{0:.2f}'.format(player.getRating()) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['offence']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['spark']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['technique']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['defence']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['authority']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['fitness']) }}</td>
+                    <td class="pp-performance">{{ performanceIndices['games'] }}</td>
+                    <td class="pp-performance">{{ performanceIndices['goals'] }}</td>
+                    <td class="pp-performance">{{ performanceIndices['assists'] }}</td>
+                    <td>{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
