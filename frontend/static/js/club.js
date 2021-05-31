@@ -403,5 +403,5 @@ $(document).ready(function() {
                 }
             });
         }
-    })
+    });
 });

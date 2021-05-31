@@ -14,6 +14,7 @@ import club_utils
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import json
+from config import playerConfig
 
 db = Database.getInstance()
 
@@ -271,9 +272,15 @@ def playerPerformance():
         universe = pickle.loads(session['universe'])
         league = universe.systems[0].leagues[0]
         playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+        filterClubs = [{'id': club.id, 'name': club.name} for club in league.clubs]
+        # filterPlayers = [{'id': player.id, 'name': player.getProperName()} for club in league.clubs for player in club.players]
+        filterPositions = list(playerConfig['positions'].keys())
         return render_template('player_performance_proper.html',
             cssFiles = ['rest_of_website.css', 'iframe.css'],
-            jsFiles = ['iframe.js'],
+            jsFiles = ['iframe.js', 'player_performance.js'],
+            filterClubs = filterClubs,
+            # filterPlayers = filterPlayers,
+            filterPositions = filterPositions,
             playerPerformanceItems = playerPerformanceItems
             )
     return render_template('error.html')

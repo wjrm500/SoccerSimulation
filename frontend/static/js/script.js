@@ -103,7 +103,7 @@ $(document).ready(function() {
         iframe.src = url;
     });
 
-    $('#player-performance-table .clickable-row').click(function() {
+    $('.player-performance-table .clickable-row').click(function() {
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/player/' + this.dataset.playerId;
         window.iframeHistory.push(url);
@@ -119,7 +119,7 @@ $(document).ready(function() {
         iframe.src = url;
     });
 
-    $('#player-performance-table th').hover(
+    $('.player-performance-table th').hover(
         function() {
             if (this.dataset.sort === 'unsorted') {
                 let tableDownArrow = $(this).find('.table-down-arrow');
@@ -159,7 +159,7 @@ $(document).ready(function() {
         }
     );
 
-    $('#player-performance-table th:not(:nth-child(1))').click(function() {
+    $('.player-performance-table th:not(:nth-child(1))').click(function() {
         if (this.dataset.sort === 'unsorted') {
             sortHow = 'sorted-descending';
         }
@@ -171,7 +171,7 @@ $(document).ready(function() {
         }
         let data = [];
         let metric = $(this).data('metric');
-        $('#player-performance-table tr:not(:nth-child(1))').each(function() {
+        $('.player-performance-table tr:not(:nth-child(1))').each(function() {
             let datum = {
                 'playerId': this.dataset.playerId,
                 'rank': $(this).find('td:eq(0)').text(),
@@ -196,7 +196,7 @@ $(document).ready(function() {
         });
         for (let i = 0; i < data.length; i++) {
             let datum = data[i];
-            let tr = $('#player-performance-table tr:eq(' + (i + 1) + ')');
+            let tr = $('.player-performance-table tr:eq(' + (i + 1) + ')');
             tr.get(0).dataset.playerId = datum['playerId'];
             tr.find('td:eq(0)').html(datum['rank']);
             tr.find('td:eq(1)').html(datum['name']);

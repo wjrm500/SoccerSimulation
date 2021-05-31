@@ -213,16 +213,16 @@
 
 /* Player performance table */
 
-#player-performance-table th {
+.player-performance-table th {
     cursor: pointer;
     padding: 5px;
 }
 
-#player-performance-table th:hover .table-arrow {
+.player-performance-table th:hover .table-arrow {
     color: black;
 }
 
-#player-performance-table {
+.player-performance-table {
     text-align: left;
     left: 0px;
     height: 100%;
@@ -232,11 +232,11 @@
     width: 100%;
 }
 
-#player-performance-table th img {
+.player-performance-table th img {
     height: 20px;
 }
 
-#player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
+.player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
     width: 75px;
 }
 
@@ -254,15 +254,15 @@
     display: inline;
 }
 
-#player-performance-table tr:nth-child(odd) {
+.player-performance-table tr:nth-child(odd) {
     background-color: #eeeeee;
 }
 
-#player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
+.player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
     text-align: center;
 }
 
-#player-performance-table td:not(:nth-child(-n + 2)):nth-child(-n + 6) {
+.player-performance-table td:not(:nth-child(-n + 2)):nth-child(-n + 6) {
     text-align: center;
 }
 
@@ -354,7 +354,7 @@ td.result-away-club-name {
     text-align: left;
 }
 
-#player-performance-table .clickable-row:hover .player-row-bottom {
+.player-performance-table .clickable-row:hover .player-row-bottom {
     color: white;
 }
 
@@ -965,7 +965,105 @@ a.result-L:hover {
 
 /* Player performance */
 
+#pp-header {
+    display: flex;
+}
 
+#pp-header .pp-sub-container {
+    display: flex;
+    flex: 1;
+    height: 30px;
+    padding: 5px 0px;
+    margin-bottom: 5px;
+}
+
+#pp-header .pp-button-container {
+    flex: 1;
+}
+
+#pp-header .pp-button-container:first-child {
+    padding-right: 2.5px;
+}
+
+#pp-header .pp-button-container:last-child {
+    padding-left: 2.5px;
+}
+
+#pp-header .view-button {
+    background-color: #dddddd;
+    border: none;
+    width: 100%;
+}
+
+#pp-header .view-button:hover {
+    background-color: #bbbbbb;
+    cursor: pointer;
+}
+
+#pp-header .view-button.clicked {
+    background-color: black;
+    color: white;
+}
+
+.pp-filter-container {
+    flex: 1;
+}
+
+#filter-by-container {
+    padding-left: 5px;
+}
+
+#filter-detail-container {
+    display: none;
+}
+
+#filter-by {
+    width: 100%;
+}
+
+#player-performance-proper-table tr:first-child th:nth-child(1) {
+    width: 25px;
+}
+
+#player-performance-proper-table tr:first-child th:nth-child(2) {
+    min-width: 300px;
+}
+
+#player-performance-proper-table th:nth-child(n + 3),
+#player-performance-proper-table td:nth-child(n + 3) {
+    text-align: center;
+    width: 75px;
+}
+
+#player-performance-proper-table th:not(:nth-child(2)),
+#player-performance-proper-table th:not(:nth-child(2)) {
+    font-size: 0.8em;
+}
+
+#player-performance-proper-table .pp-attributes {
+    display: none;
+}
+
+#pp-header .filter-detail {
+    display: none;
+}
+
+#pp-header .filter-detail select {
+    width: 100%;
+}
+
+#pp-header .filter-detail input {
+    height: 25px;
+    width: 100%;
+}
+
+#pp-header .pp-filter-container:first-child {
+    padding-right: 2.5px;
+}
+
+#pp-header .pp-filter-container:last-child {
+    padding-left: 2.5px;
+}
 
 /* Generic tooltip styling */
 
