@@ -9,24 +9,6 @@ $(document).ready(function() {
         $('.pp-' + otherView).hide();
     });
 
-    $('.player-rating').each(function() {
-        let val = 100 - $(this).html();
-        let hue = Math.floor((100 - val) * 120 / 100);
-        let saturation = Math.abs(val - 50) / 50 * 100;
-        $(this).css({
-            'color': `hsl(${hue}, ${saturation}%, 50%)`,
-        });
-    });
-
-    $('.pp-attributes').each(function() {
-        let val = 125 - $(this).html();
-        let hue = Math.floor((100 - val) * 120 / 100);
-        let saturation = Math.abs(val - 50) / 50 * 100;
-        $(this).css({
-            'color': `hsl(${hue}, ${saturation}%, 50%)`,
-        });
-    });
-
     $('#filter-by').change(function() {
         let filterBy = $(this).val();
         $('#filter-detail-container').show();
@@ -87,6 +69,8 @@ $(document).ready(function() {
 
     $('.stretched-grid-item').css('border-bottom', 'none');
 
+    recolorAttributes();
+
     function alternateRowColors() {
         $('#player-performance-proper-table tr:not(:first-child):visible').each(function(index) {
             if (index % 2 !== 0) {
@@ -94,6 +78,18 @@ $(document).ready(function() {
             } else {
                 $(this).css('backgroundColor', '#ffffff');
             }
+        });
+    }
+
+    function recolorAttributes() {
+        $('.player-rating, .pp-attributes').each(function() {
+            let subtractFrom = $(this).hasClass('pp-attributes') ? 125 : 100;
+            let val = subtractFrom - $(this).html();
+            let hue = Math.floor((100 - val) * 120 / 100);
+            let saturation = Math.abs(val - 50) / 50 * 100;
+            $(this).css({
+                'color': `hsl(${hue}, ${saturation}%, 50%)`,
+            });
         });
     }
 
@@ -180,6 +176,7 @@ $(document).ready(function() {
             $(this).get(0).dataset.sort = 'unsorted';
             $(this).removeClass('clicked');
         });
+        recolorAttributes();
     });
 
     $("#age-range-slider").slider({

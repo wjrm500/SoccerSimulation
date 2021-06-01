@@ -3,6 +3,7 @@ sys.path.append('.')
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates as mdates
+from matplotlib.patches import Ellipse
 from models.Player import Player
 from config import playerConfig
 from types import SimpleNamespace
@@ -252,4 +253,29 @@ def showPlayerForm(player):
     x = mdates.date2num(x)
     plt.axis('off')
     plt.plot_date(x, y, 'b-')
+    return fig
+
+def showPlayerDevelopment(player):
+    fig = plt.figure()
+    fig.add_subplot(111)
+    x = range(len(player.ratings.keys()))
+    yR = [val['rating'] for val in list(player.ratings.values())]
+    yPR = [val['peakRating'] for val in list(player.ratings.values())]
+    plt.title('Development Graph', fontsize = 14)
+    plt.xlabel('Day', fontsize = 12, labelpad = 8)
+    plt.ylabel('Rating', fontsize = 12, labelpad = 8)
+    fadeRange = 10
+    for plot, colorTuple in zip([yR, yPR], [[0, 0, 1], [1, 0, 0]]):
+        for i in range(0, fadeRange + 1):
+            for y, strength in zip([plot[0], plot[-1]], [1 - (i / fadeRange), 0 + (i / fadeRange)]):
+                plt.gca().axhline(
+                    y,
+                    (1 / fadeRange) * i - (1 / fadeRange), ### xmin
+                    (1 / fadeRange) * i, ### xmax
+                    color = colorTuple + [strength],
+                    linestyle = '--',
+                    linewidth = strength
+                )
+    plt.plot(x, yR, 'b-')
+    plt.plot(x, yPR, 'r-')
     return fig

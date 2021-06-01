@@ -5,7 +5,7 @@ from Universe import Universe
 # def simulate():
     ### Create Universe, taking in input parameters from user
 
-systemIds = [2]
+systemIds = [3]
 
 universe = Universe(systemIds = systemIds)
 universe.timeTravel(325)

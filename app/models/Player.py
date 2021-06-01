@@ -270,5 +270,7 @@ class Player:
     
     def storeRatingsAndForm(self):
         currentDate = self.controller.universe.currentDate
-        self.ratings[currentDate] = self.rating
+        self.ratings[currentDate] = {}
+        self.ratings[currentDate]['rating'] = self.rating
+        self.ratings[currentDate]['peakRating'] = self.peakRating
         self.forms[currentDate] = self.form

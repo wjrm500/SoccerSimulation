@@ -441,8 +441,8 @@ td.result-away-club-name {
 .player-game-result.draw {color: darkorange;}
 .player-game-result.loss {color: crimson;}
 
-#player-form-graph-image {
-    height: 100%;
+#player-form-graph-image,
+#player-development-graph-image {
     object-fit: contain;
     width: 100%;
 }

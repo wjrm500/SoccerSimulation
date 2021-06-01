@@ -1,36 +1,40 @@
-<table id="player-game-table" class="full-table">
-    <tr>
-        <th>GW</th>
-        <th>Result</th>
-        <th>Involvements</th>
-        <th>Rating</th>
-    </tr>
-    {% for playerReport in player.playerReports %}
-        <tr class="clickable-row" data-fixture-id="{{ playerReport['fixtureId'] }}">
-            <td>{{ playerReport['gameweek'] }}</td>
-            <td>
-                <span class="player-game-result {{ 'draw' if playerReport['extraData']['teamActualGoalsFor'] == playerReport['extraData']['teamActualGoalsAgainst'] else 'win' if playerReport['extraData']['teamActualGoalsFor'] > playerReport['extraData']['teamActualGoalsAgainst'] else 'loss' }}"> {{
-                    '{} - {}'.format(
-                        playerReport['extraData']['teamActualGoalsFor'],
-                        playerReport['extraData']['teamActualGoalsAgainst'],
-                    )
-                }}
-                </span>
-                <span class="player-game-home-away">{{ '@' if playerReport['homeAway'] == 'A' else '' }}</span>
-                <span class="player-game-opposition-name">{{ playerReport['oppositionClub'].name}}</span>
-            </td>
-            <td>
-                {% for _ in range(playerReport['goals']) %}
-                    <i class="fas fa-futbol"></i><!-- <img class="match-icon" src="/static/images/goal_icon.png"> -->
-                {% endfor %}
-                {% for _ in range(playerReport['assists']) %}
-                    <i class="fab fa-angular" style="color: grey;"></i><!-- <img class="match-icon" src="/static/images/assist_icon.png"> -->
-                {% endfor %}
-                {% if playerReport['manOfTheMatch'] %}
-                    <i class="fas fa-star" style="color: green;"></i><!-- <img class="match-icon" src="/static/images/motm_icon.png"> -->
-                {% endif %}
-            </td>
-            <td>{{ '{0:.2f}'.format(playerReport['performanceIndex']) }}</td>
+{% if player.playerReports %}
+    <table id="player-game-table" class="full-table">
+        <tr>
+            <th>GW</th>
+            <th>Result</th>
+            <th>Involvements</th>
+            <th>Rating</th>
         </tr>
-    {% endfor %}
-</table>
+        {% for playerReport in player.playerReports %}
+            <tr class="clickable-row" data-fixture-id="{{ playerReport['fixtureId'] }}">
+                <td>{{ playerReport['gameweek'] }}</td>
+                <td>
+                    <span class="player-game-result {{ 'draw' if playerReport['extraData']['teamActualGoalsFor'] == playerReport['extraData']['teamActualGoalsAgainst'] else 'win' if playerReport['extraData']['teamActualGoalsFor'] > playerReport['extraData']['teamActualGoalsAgainst'] else 'loss' }}"> {{
+                        '{} - {}'.format(
+                            playerReport['extraData']['teamActualGoalsFor'],
+                            playerReport['extraData']['teamActualGoalsAgainst'],
+                        )
+                    }}
+                    </span>
+                    <span class="player-game-home-away">{{ '@' if playerReport['homeAway'] == 'A' else '' }}</span>
+                    <span class="player-game-opposition-name">{{ playerReport['oppositionClub'].name}}</span>
+                </td>
+                <td>
+                    {% for _ in range(playerReport['goals']) %}
+                        <i class="fas fa-futbol"></i><!-- <img class="match-icon" src="/static/images/goal_icon.png"> -->
+                    {% endfor %}
+                    {% for _ in range(playerReport['assists']) %}
+                        <i class="fab fa-angular" style="color: grey;"></i><!-- <img class="match-icon" src="/static/images/assist_icon.png"> -->
+                    {% endfor %}
+                    {% if playerReport['manOfTheMatch'] %}
+                        <i class="fas fa-star" style="color: green;"></i><!-- <img class="match-icon" src="/static/images/motm_icon.png"> -->
+                    {% endif %}
+                </td>
+                <td>{{ '{0:.2f}'.format(playerReport['performanceIndex']) }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <div style="align-items: center; display: flex; height: 100%; font-style: italic; justify-content: center;">No games played</div>
+{% endif %}

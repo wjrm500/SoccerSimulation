@@ -87,12 +87,23 @@ def player(id):
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
         performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex')[player]
+        yR = [val['rating'] for val in list(player.ratings.values())]
+        yPR = [val['peakRating'] for val in list(player.ratings.values())]
+        playerDevelopment = {
+            'rating': {
+                'start': yR[0], 'end': yR[-1]
+            },
+            'peakRating': {
+                'start': yPR[0], 'end': yPR[-1]
+            }
+        }
     return render_template(
         'player/player.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['iframe.js'],
         player = player,
-        performanceIndices = performanceIndices
+        performanceIndices = performanceIndices,
+        playerDevelopment = playerDevelopment
     )
 
 @app.route('/simulation/player/<playerId>/radar')
@@ -111,6 +122,16 @@ def playerFormGraph(playerId):
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(playerId)
         fig = player_utils.showPlayerForm(player)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
+
+@app.route('/simulation/player/<playerId>/development-graph')
+def playerDevelopmentGraph(playerId):
+    if session['universe']:
+        universe = pickle.loads(session['universe'])
+        player = universe.playerController.getPlayerById(playerId)
+        fig = player_utils.showPlayerDevelopment(player)
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')

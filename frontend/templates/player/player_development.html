@@ -1,0 +1,55 @@
+<div style="display: flex; flex-direction: column; font-size: 0.9em; height: 100%;">
+    <div>
+        <img id="player-development-graph-image" src="/simulation/player/{{ player.id }}/development-graph">
+    </div>
+    <div style="background-color: #eeeeee; border: 1px solid black; border-radius: 5px; display: flex; margin: 5px; padding: 5px; text-align: center;">
+        <div style="border-right: 1px dashed #bbbbbb; flex: 1;">
+            <div style="font-size: 0.9em; font-weight: bold;">Rating</div>
+            <div style="display: flex;">
+                <div style="flex: 1;">
+                    {{ '{:.2f}'.format(playerDevelopment['rating']['start']) }}
+                </div>
+                <div>
+                    {% if playerDevelopment['rating']['end'] > playerDevelopment['rating']['start'] %}
+                        <i class="fas fa-arrow-up" style="color: limegreen;"></i>
+                        <span style="color: limegreen; font-size: 0.8em; font-weight: bold;">
+                            {{ '{:.2f}'.format(playerDevelopment['rating']['end'] - playerDevelopment['rating']['start']) }}
+                        </span>
+                    {% else %}
+                        <i class="fas fa-arrow-down" style="color: red;"></i>
+                        <span style="color: red; font-size: 0.8em; font-weight: bold;">
+                            {{ '{:.2f}'.format(playerDevelopment['rating']['end'] - playerDevelopment['rating']['start']) }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div style="flex: 1;">
+                    {{ '{:.2f}'.format(playerDevelopment['rating']['end']) }}
+                </div>
+            </div>
+        </div>
+        <div style="flex: 1;">
+            <div style="font-size: 0.9em; font-weight: bold;">Peak Rating</div>
+            <div style="display: flex;">
+                <div style="flex: 1;">
+                    {{ '{:.2f}'.format(playerDevelopment['peakRating']['start']) }}
+                </div>
+                <div>
+                    {% if playerDevelopment['peakRating']['end'] > playerDevelopment['peakRating']['start'] %}
+                        <i class="fas fa-arrow-up" style="color: limegreen;"></i>
+                        <span style="color: limegreen; font-size: 0.8em; font-weight: bold;">
+                            {{ '{:.2f}'.format(playerDevelopment['peakRating']['end'] - playerDevelopment['peakRating']['start']) }}
+                        </span>
+                    {% else %}
+                        <i class="fas fa-arrow-down" style="color: red;"></i>
+                        <span style="color: red; font-size: 0.8em; font-weight: bold;">
+                            {{ '{:.2f}'.format(playerDevelopment['peakRating']['end'] - playerDevelopment['peakRating']['start']) }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div style="flex: 1;">
+                    {{ '{:.2f}'.format(playerDevelopment['peakRating']['end']) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
