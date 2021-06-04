@@ -100,7 +100,7 @@ def player(id):
     return render_template(
         'player/player.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
-        jsFiles = ['iframe.js'],
+        jsFiles = ['iframe.js', 'player.js'],
         player = player,
         performanceIndices = performanceIndices,
         playerDevelopment = playerDevelopment

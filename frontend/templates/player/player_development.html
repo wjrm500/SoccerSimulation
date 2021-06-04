@@ -1,6 +1,13 @@
 <div style="display: flex; flex-direction: column; font-size: 0.9em; height: 100%;">
-    <div>
-        <img id="player-development-graph-image" src="/simulation/player/{{ player.id }}/development-graph">
+    <div id="development-graph-container">
+        <button id="load-development-graph" data-player-id="{{ player.id }}">
+            <div id="text">
+                Load Development Graph
+            </div>
+            <div id="spinner" style="display: none; padding: 10px;">
+                <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
+            </div>
+        </button>
     </div>
     <div style="background-color: #eeeeee; border: 1px solid #bbbbbb; border-radius: 3px; display: flex; margin: 5px; padding: 5px; text-align: center;">
         <div style="border-right: 1px dashed #bbbbbb; flex: 1;">

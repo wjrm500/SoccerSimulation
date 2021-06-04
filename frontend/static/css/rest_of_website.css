@@ -240,8 +240,18 @@
     height: 20px;
 }
 
-.player-performance-table th:not(:nth-child(-n + 2)):nth-child(-n + 6) {
-    width: 75px;
+.player-performance-table th:first-child {
+    width: 40px;
+}
+
+.player-performance-table th:nth-child(n + 3) {
+    width: 10%;
+}
+
+@media (max-width: 1500px) {
+    .table-arrow {
+        display: none !important;
+    }
 }
 
 .table-arrow {
@@ -391,6 +401,23 @@ td.result-away-club-name {
 
 #player-grid #grid-item-form {
     grid-area: form;
+}
+
+#development-graph-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+}
+
+#grid-item-form #load-development-graph {
+    border: none;
+    border-radius: 5px;
+    max-width: 50%;
+}
+
+#grid-item-form #load-development-graph:hover {
+    background-color: #bbbbbb;
 }
 
 /* Player summary */
