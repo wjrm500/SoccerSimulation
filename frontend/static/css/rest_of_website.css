@@ -245,7 +245,7 @@
 }
 
 .player-performance-table th:nth-child(n + 3) {
-    width: 10%;
+    width: 75px;
 }
 
 @media (max-width: 1500px) {
