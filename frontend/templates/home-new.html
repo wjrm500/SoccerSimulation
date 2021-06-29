@@ -1,0 +1,19 @@
+{% extends 'home.html' %}
+
+{% block home_body %}
+    <div class="button-container">
+        <form method="post">
+            <label for="system">
+                Select a system
+            </label>
+            <select id="system-select" name="system">
+                {% for system in systems %}
+                    <option value="{{ system._id }}">
+                        {{ system.system_name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+{% endblock %}

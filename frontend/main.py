@@ -15,6 +15,7 @@ import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from config import playerConfig
 import json
+from simulate import simulate
 
 db = Database.getInstance()
 
@@ -25,12 +26,24 @@ Session(app)
 
 @app.route('/', methods = ['GET'])
 def getHome():
-    systems = db.cnx['soccersim']['systems'].find()
-    return render_template('home.html', cssFiles = ['home.css'], systems = systems)
+    return render_template('home-initial.html', cssFiles = ['home.css'], jsFiles = ['home.js'])
 
 @app.route('/', methods = ['POST'])
 def postHome():
     universeKey = request.form['universe_key']
+    session['universeKey'] = universeKey
+    session['universe'] = db.getUniverseGridFile(universeKey)
+    return redirect(url_for('simulation'))
+
+@app.route('/new', methods = ['GET'])
+def getNew():
+    systems = db.cnx['soccersim']['systems'].find()
+    return render_template('home-new.html', cssFiles = ['home.css'], jsFiles = ['home.js'], systems = systems)
+
+@app.route('/new', methods = ['POST'])
+def postNew():
+    systemId = int(request.form['system'])
+    universeKey = simulate(systemId)
     session['universeKey'] = universeKey
     session['universe'] = db.getUniverseGridFile(universeKey)
     return redirect(url_for('simulation'))

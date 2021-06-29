@@ -3,8 +3,8 @@ import datetime
 systemConfig = {
     'numSystems': 1,
     'numLeaguesPerSystem': 1,
-    'numClubsPerLeague': 24,
-    'numPlayersPerClub': 40
+    'numClubsPerLeague': 10,
+    'numPlayersPerClub': 25
 }
 
 timeConfig = {

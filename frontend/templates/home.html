@@ -6,14 +6,8 @@
         <div id="title" class="logo-title-element">Soccer Simulation</div>
     </a>
     <div id="home-buttons-container" class="home-sub-container">
-        <div id="left-button-container" class="button-container">
-            <button id="new-simulation-button" class="simulation-button">New Simulation</button>
-        </div>
-        <div id="right-button-container" class="button-container">
-            <form id="existing-simulation-form" method="post" autocomplete="off" spellcheck="false">
-                <input id="existing-simulation-button" class="simulation-button" type="text" name="universe_key" value="hjsiiisufs"><!-- Existing Simulation (Enter Key Here) -->
-            </form>
-        </div>
+        {% block home_body %}
+        {% endblock %}
     </div>
 </div>
 {% endblock %}
