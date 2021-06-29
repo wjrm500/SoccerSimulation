@@ -8,9 +8,9 @@ import gridfs
 import sys
 import pickle
 
-def simulate(systemId):
+def simulate(customConfig, systemId):
     ### Create Universe, taking in input parameters from user
-    universe = Universe(systemIds = [systemId])
+    universe = Universe(customConfig = customConfig, systemIds = [systemId])
     universe.timeTravel(150)
     pickledUniverse = pickle.dumps(universe)
     letters = string.ascii_lowercase

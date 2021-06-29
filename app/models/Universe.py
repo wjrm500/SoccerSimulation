@@ -5,15 +5,17 @@ import datetime
 from PlayerController import PlayerController
 
 class _Universe:
-    def __init__(self, systemIds = None):
+    def __init__(self, customConfig = None, systemIds = None):
         self.currentDate = config.timeConfig['startDate']
         self.playerController = PlayerController(self)
+        self.config = customConfig
         self.systems = []
         if systemIds is not None:
             for systemId in systemIds:
                 self.systems.append(System(self, systemId))
         else:
-            for _ in range(config.systemConfig['numSystems']):
+            numSystems = customConfig['numSystems'] or config.systemConfig['numSystems']
+            for _ in range(numSystems):
                 self.systems.append(System(self))
         self.scheduleLeagues()
         
@@ -63,8 +65,8 @@ class _Universe:
 
 _instance = None
 
-def Universe(systemIds = None):
+def Universe(customConfig = None, systemIds = None):
     global _instance
     if _instance is None:
-        _instance = _Universe(systemIds)
+        _instance = _Universe(customConfig, systemIds)
     return _instance

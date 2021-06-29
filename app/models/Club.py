@@ -12,7 +12,8 @@ class Club:
         self.name = city['city_name']
         self.league = league
         self.players = []
-        for _ in range(config.systemConfig['numPlayersPerClub']):
+        numPlayersPerClub = league.system.universe.config['numPlayersPerClub'] or config.systemConfig['numPlayersPerClub']
+        for _ in range(numPlayersPerClub):
             player = self.league.system.universe.playerController.createPlayer()
             self.players.append(player)
             player.club = self

@@ -4,7 +4,7 @@
     <div class="button-container">
         <form method="post">
             <label for="system">
-                Select a system
+                System
             </label>
             <select id="system-select" name="system">
                 {% for system in systems %}
@@ -13,6 +13,14 @@
                     </option>
                 {% endfor %}
             </select>
+            <label for="num-clubs">
+                Number of clubs
+            </label>
+            <input type="number" name="num-clubs" min="10" max="24">
+            <label for="num-players-per-club">
+                Number of players per club
+            </label>
+            <input type="number" name="num-players-per-club" min="20" max="40">
             <input type="submit" value="Submit">
         </form>
     </div>

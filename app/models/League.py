@@ -14,9 +14,10 @@ class League:
     
     def populateWithClubs(self):
         db = Database.getInstance()
+        numClubsPerLeague = self.system.universe.config['numClubsPerLeague'] or systemConfig['numClubsPerLeague']
         cities = db.cnx['soccersim']['cities'].aggregate([
             {'$match': {'system_id': self.system.id}},
-            {'$sample': {'size': systemConfig['numClubsPerLeague']}}
+            {'$sample': {'size': numClubsPerLeague}}
         ])
         for city in cities:
             club = Club(self, city)

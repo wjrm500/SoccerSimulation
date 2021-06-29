@@ -31,9 +31,7 @@ def getHome():
 @app.route('/', methods = ['POST'])
 def postHome():
     universeKey = request.form['universe_key']
-    session['universeKey'] = universeKey
-    session['universe'] = db.getUniverseGridFile(universeKey)
-    return redirect(url_for('simulation'))
+    return redirect(url_for('simulation/' + universeKey))
 
 @app.route('/new', methods = ['GET'])
 def getNew():
@@ -43,52 +41,55 @@ def getNew():
 @app.route('/new', methods = ['POST'])
 def postNew():
     systemId = int(request.form['system'])
-    universeKey = simulate(systemId)
-    session['universeKey'] = universeKey
-    session['universe'] = db.getUniverseGridFile(universeKey)
-    return redirect(url_for('simulation'))
+    customConfig = {
+        'numLeaguesPerSystem': None,
+        'numClubsPerLeague': int(request.form['num-clubs']),
+        'numPlayersPerClub': int(request.form['num-players-per-club'])
+    }
+    universeKey = simulate(customConfig, systemId)
+    return redirect(url_for('simulation/' + universeKey))
 
-@app.route('/simulation')
-def simulation():
-    if 'universe' in session:
-        universe = pickle.loads(session['universe'])
-        league = universe.systems[0].leagues[0]
+@app.route('/simulation/<universeKey>')
+def simulation(universeKey):
+    universe = db.getUniverseGridFile(universeKey)
+    session['universe'] = universe
+    universe = pickle.loads(universe)
+    league = universe.systems[0].leagues[0]
 
-        ### Get standings
-        leagueTable = league.getLeagueTable()
-        leagueTableItems = list(leagueTable.items())
-        leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
+    ### Get standings
+    leagueTable = league.getLeagueTable()
+    leagueTableItems = list(leagueTable.items())
+    leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
 
-        # Get player performance
-        playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+    # Get player performance
+    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
 
-        ### Get results
-        dates = {}
-        for matchReport in league.matchReports:
-            clubA, clubB = matchReport['clubs'].keys()
-            match = list(matchReport['clubs'].values())[0]['match']
-            scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
-            result = {
-                'fixtureId': matchReport['fixtureId'],
-                'homeClub': clubA,
-                'awayClub': clubB,
-                'homeScore': scoreA,
-                'awayScore': scoreB
-            }
-            # strDate = matchReport['date'].strftime('%d %b')
-            if matchReport['date'] not in dates:
-                dates[matchReport['date']] = []
-            dates[matchReport['date']].append(result)
+    ### Get results
+    dates = {}
+    for matchReport in league.matchReports:
+        clubA, clubB = matchReport['clubs'].keys()
+        match = list(matchReport['clubs'].values())[0]['match']
+        scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
+        result = {
+            'fixtureId': matchReport['fixtureId'],
+            'homeClub': clubA,
+            'awayClub': clubB,
+            'homeScore': scoreA,
+            'awayScore': scoreB
+        }
+        # strDate = matchReport['date'].strftime('%d %b')
+        if matchReport['date'] not in dates:
+            dates[matchReport['date']] = []
+        dates[matchReport['date']].append(result)
 
-        return render_template('simulation.html',
-            cssFiles = ['rest_of_website.css'],
-            jsFiles = ['script.js'],
-            universeKey = session['universeKey'],
-            leagueTableItems = leagueTableItems,
-            playerPerformanceItems = playerPerformanceItems,
-            dates = dates
-            )
-    return render_template('error.html')
+    return render_template('simulation.html',
+        cssFiles = ['rest_of_website.css'],
+        jsFiles = ['script.js'],
+        universeKey = universeKey,
+        leagueTableItems = leagueTableItems,
+        playerPerformanceItems = playerPerformanceItems,
+        dates = dates
+        )
 
 @app.route('/simulation/default-iframe')
 def default():
