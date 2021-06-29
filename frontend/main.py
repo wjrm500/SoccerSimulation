@@ -13,8 +13,8 @@ import player_utils
 import club_utils
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import json
 from config import playerConfig
+import json
 
 db = Database.getInstance()
 
