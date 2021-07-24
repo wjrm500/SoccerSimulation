@@ -1147,7 +1147,7 @@ a {
     text-decoration: none;
 }
 
-a:hover {
+a:hover:not(.nav-element):not(.nav-button) {
     background-color: #aaaaaa;
     color: white;
     cursor: pointer;

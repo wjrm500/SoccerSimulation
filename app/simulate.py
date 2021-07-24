@@ -11,7 +11,7 @@ import pickle
 def simulate(customConfig, systemId):
     ### Create Universe, taking in input parameters from user
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
-    universe.timeTravel(150)
+    universe.timeTravel(350)
     pickledUniverse = pickle.dumps(universe)
     letters = string.ascii_lowercase
     universeKey = ''.join(random.choice(letters) for i in range(10))

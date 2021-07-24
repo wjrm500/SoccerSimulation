@@ -63,3 +63,37 @@ body {
 #existing-simulation-button::placeholder {
     color: white;
 }
+
+#new-simulation-form {
+    width: 500px;
+}
+
+.form-group {
+    display: flex;
+    margin: 10px 0px;
+}
+
+.form-group > * {
+    flex: 1;
+}
+
+input, select {
+    box-sizing: border-box;
+    border: none;
+    border-radius: 2px;
+    margin: 0px;
+    padding: 0px 5px;
+    width: 100%;
+}
+
+input[type=submit] {
+    background-image: linear-gradient(to right, #224cdc, #c845a5);
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    height: 40px;
+}
+
+input[type=submit]:hover {
+    background-image: linear-gradient(to right, #1b3cb0, #a63186);
+}

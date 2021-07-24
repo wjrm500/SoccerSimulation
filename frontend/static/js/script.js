@@ -89,7 +89,7 @@ $(document).ready(function() {
         }
     });
 
-    $('a').click(function(e) {
+    $('#main a').click(function(e) {
         e.preventDefault();
         let iframe = document.getElementById('sometimes-iframe');
         let url = $(this).data('url');

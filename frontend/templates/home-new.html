@@ -2,26 +2,35 @@
 
 {% block home_body %}
     <div class="button-container">
-        <form method="post">
-            <label for="system">
-                System
-            </label>
-            <select id="system-select" name="system">
-                {% for system in systems %}
-                    <option value="{{ system._id }}">
-                        {{ system.system_name }}
-                    </option>
-                {% endfor %}
-            </select>
-            <label for="num-clubs">
-                Number of clubs
-            </label>
-            <input type="number" name="num-clubs" min="10" max="24">
-            <label for="num-players-per-club">
-                Number of players per club
-            </label>
-            <input type="number" name="num-players-per-club" min="20" max="40">
-            <input type="submit" value="Submit">
+        <form method="post" id="new-simulation-form">
+            <div class="form-group">
+                <label for="system">
+                    System
+                </label>
+                <select id="system-select" name="system">
+                    {% for system in systems %}
+                        <option value="{{ system._id }}">
+                            {{ system.system_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="num-clubs">
+                    Number of clubs
+                </label>
+                <input type="number" name="num-clubs" min="10" max="24">
+            </div>
+            <div class="form-group">
+                <label for="num-players-per-club">
+                    Number of players per club
+                </label>
+                <input type="number" name="num-players-per-club" min="20" max="40">
+            </div>
+            <hr>
+            <div class="form-group">
+                <input type="submit" value="Simulate">
+            </div>
         </form>
     </div>
 {% endblock %}

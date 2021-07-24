@@ -265,7 +265,7 @@ def showPlayerDevelopment(player):
     plt.xlabel('Day', fontsize = 12, labelpad = 8)
     plt.ylabel('Rating', fontsize = 12, labelpad = 8)
     fadeRange = 10
-    for plot, colorTuple in zip([yR, yPR], [[0, 0, 1], [1, 0, 0]]):
+    for plot, colorTuple in zip([yR, yPR], [[0, 0, 1], [0.68, 0.85, 0.90]]):
         for i in range(0, fadeRange + 1):
             for y, strength in zip([plot[0], plot[-1]], [1 - (i / fadeRange), 0 + (i / fadeRange)]):
                 plt.gca().axhline(
@@ -277,5 +277,5 @@ def showPlayerDevelopment(player):
                     linewidth = strength
                 )
     plt.plot(x, yR, 'b-')
-    plt.plot(x, yPR, 'r-')
+    plt.plot(x, yPR, color = 'lightblue', linestyle = 'solid')
     return fig
