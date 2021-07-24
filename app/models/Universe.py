@@ -19,9 +19,10 @@ class _Universe:
                 self.systems.append(System(self))
         self.scheduleLeagues()
         
-    def timeTravel(self, days):
+    def timeTravel(self, days, r):
         for i in range(days):
-            print(i)
+            print(round((i / days), 2))
+            r.set('simulation_progress', i / days)
             self.resolveQuotidia()
             self.advanceOneDay()
     

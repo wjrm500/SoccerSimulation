@@ -16,6 +16,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from config import playerConfig
 import json
 from simulate import simulate
+import redis
 
 db = Database.getInstance()
 
@@ -23,6 +24,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12).hex()
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
+r = redis.Redis()
 
 @app.route('/', methods = ['GET'])
 def getHome():
@@ -46,8 +48,13 @@ def postNew():
         'numClubsPerLeague': int(request.form['num-clubs']),
         'numPlayersPerClub': int(request.form['num-players-per-club'])
     }
-    universeKey = simulate(customConfig, systemId)
-    return redirect(url_for('simulation/' + universeKey))
+    r.set('simulation_progress', 0);
+    universeKey = simulate(customConfig, systemId, r)
+    return redirect('/simulation/' + universeKey)
+
+@app.route('/simulation/check-progress', methods = ['GET'])
+def checkSimulationProgress():
+    return r.get('simulation_progress').decode('utf-8')
 
 @app.route('/simulation/<universeKey>')
 def simulation(universeKey):

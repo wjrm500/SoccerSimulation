@@ -8,10 +8,12 @@ import gridfs
 import sys
 import pickle
 
-def simulate(customConfig, systemId):
+def simulate(customConfig, systemId, r):
     ### Create Universe, taking in input parameters from user
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
-    universe.timeTravel(350)
+    daysToTimeTravel = ((customConfig['numClubsPerLeague'] - 1) * 2 * 7) + 7
+    print(daysToTimeTravel)
+    universe.timeTravel(daysToTimeTravel, r)
     pickledUniverse = pickle.dumps(universe)
     letters = string.ascii_lowercase
     universeKey = ''.join(random.choice(letters) for i in range(10))

@@ -86,14 +86,31 @@ input, select {
     width: 100%;
 }
 
-input[type=submit] {
+#simulate-button {
     background-image: linear-gradient(to right, #224cdc, #c845a5);
+    border: none;
     border-radius: 5px;
     color: white;
     font-weight: 500;
     height: 40px;
 }
 
-input[type=submit]:hover {
+#simulate-button:hover {
     background-image: linear-gradient(to right, #1b3cb0, #a63186);
+}
+
+#progress-bar-container {
+    background-color: white;
+    border-radius: 5px;
+    display: none;
+    height: 40px;
+    width: 100%;
+}
+
+#progress-bar {
+    background-color: limegreen;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 40px;
+    width: 0%;
 }

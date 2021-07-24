@@ -19,18 +19,30 @@
                 <label for="num-clubs">
                     Number of clubs
                 </label>
-                <input type="number" name="num-clubs" min="10" max="24">
+                <input type="number" name="num-clubs" min="10" max="24" required>
             </div>
             <div class="form-group">
                 <label for="num-players-per-club">
                     Number of players per club
                 </label>
-                <input type="number" name="num-players-per-club" min="20" max="40">
+                <input type="number" name="num-players-per-club" min="20" max="40" required>
             </div>
             <hr>
             <div class="form-group">
-                <input type="submit" value="Simulate">
+                <button id="simulate-button">
+                    <div id="text">
+                        Simulate
+                    </div>
+                    <div id="spinner" style="display: none; padding: 10px;">
+                        <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
+                    </div>
+                </button>
             </div>
         </form>
+        <div class="form-group">
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
     </div>
 {% endblock %}
