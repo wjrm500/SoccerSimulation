@@ -1,21 +1,16 @@
-import sys
-sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app")
-sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app\\models")
-
 from flask import Flask, session, render_template, request, url_for, redirect, Response
 from flask_session import Session
-from Universe import Universe
-from Database import Database
+from app.config import playerConfig
+from app.simulate import simulate
+import app.utils
+import app.player_utils
+import app.club_utils
+from app.models.Database import Database
+import io
 import os
 import pickle
-import utils
-import player_utils
-import club_utils
-import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from config import playerConfig
 import json
-from simulate import simulate
 import redis
 
 db = Database.getInstance()

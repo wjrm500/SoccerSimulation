@@ -1,11 +1,8 @@
-import sys
-sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app\\models")
-from Universe import Universe
+from .models.Universe import Universe
 import random
 import string
-from Database import Database
+from .models.Database import Database
 import gridfs
-import sys
 import pickle
 
 def simulate(customConfig, systemId, r):

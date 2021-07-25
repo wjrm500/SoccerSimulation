@@ -1,14 +1,7 @@
-import sys
-sys.path.append('.')
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates as mdates
-from matplotlib.patches import Ellipse
-from models.Player import Player
-from config import playerConfig
-from types import SimpleNamespace
 import math
-import copy
 
 def showPredictedRatings(player):
     ageList, predictedRatingList = [], []

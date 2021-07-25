@@ -11,9 +11,7 @@ import glob
 import os
 import re
 import joblib
-import sys
-sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app\\models")
-from Database import Database
+from .models.Database import Database
 
 def generateName(chars):        
     return ''.join(random.choice(string.ascii_lowercase) for _ in range(chars))
