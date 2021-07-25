@@ -11,14 +11,13 @@ import os
 import pickle
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import json
-import redis
 from rq import Queue
 from worker import conn
+import redis
 
-q = Queue(connection=conn)
-
-ON_HEROKU = 'ON_HEROKU' in os.environ
 db = Database.getInstance() ### MongoDB
+q = Queue(connection=conn)
+ON_HEROKU = 'ON_HEROKU' in os.environ
 if ON_HEROKU:
     r = redis.from_url(os.environ.get('REDIS_URL'))
 else:
@@ -53,8 +52,7 @@ def postNew():
         'numClubsPerLeague': int(request.form['num-clubs']),
         'numPlayersPerClub': int(request.form['num-players-per-club'])
     }
-    r.set('simulation_progress', 0);
-    q.enqueue(simulate, customConfig, systemId, r)
+    q.enqueue(simulate, customConfig, systemId)
     jsFiles = ['waiting.js']
     return render_template('waiting.html', jsFiles = jsFiles)
     # return redirect('/simulation/' + universeKey)
