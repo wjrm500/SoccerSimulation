@@ -103,7 +103,7 @@ input, select {
     background-color: white;
     border-radius: 5px;
     height: 40px;
-    width: 100%;
+    width: 500px;
 }
 
 #progress-bar {

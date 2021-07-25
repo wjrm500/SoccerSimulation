@@ -4,8 +4,11 @@ from rq import Worker, Queue, Connection
 
 listen = ['high', 'default', 'low']
 
-redis_url = os.environ.get('REDIS_URL')
-conn = redis.from_url(redis_url)
+ON_HEROKU = 'ON_HEROKU' in os.environ
+if ON_HEROKU:
+    conn = redis.from_url(os.environ.get('REDIS_URL'))
+else:
+    conn = redis.Redis()
 
 if __name__ == '__main__':
     with Connection(conn):
