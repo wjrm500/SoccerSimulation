@@ -55,7 +55,8 @@ def postNew():
     }
     r.set('simulation_progress', 0);
     q.enqueue(simulate, customConfig, systemId, r)
-    return render_template('waiting.html')
+    jsFiles = ['waiting.js']
+    return render_template('waiting.html', jsFiles = jsFiles)
     # return redirect('/simulation/' + universeKey)
 
 @app.route('/simulation/check-progress', methods = ['GET'])
