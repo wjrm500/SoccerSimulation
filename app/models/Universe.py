@@ -1,8 +1,8 @@
-import config
-from System import System
-from Scheduler import Scheduler
+from .. import config
+from .System import System
+from .Scheduler import Scheduler
 import datetime
-from PlayerController import PlayerController
+from .PlayerController import PlayerController
 
 class _Universe:
     def __init__(self, customConfig = None, systemIds = None):

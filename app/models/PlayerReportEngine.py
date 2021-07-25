@@ -1,7 +1,5 @@
-from config import matchConfig
+from .. import goal_probability, utils
 import numpy as np
-import utils
-from goal_probability import goalProbability
 
 class PlayerReportEngine:
     def __init__(self, match):
@@ -71,10 +69,10 @@ class PlayerReportEngine:
 
         offensiveContribution = clubReport['team'].selectionOffensiveContributions[select]
         defensiveContribution = clubReport['team'].selectionDefensiveContributions[select]
-        teamPredictedGoalsFor = utils.limitValue(goalProbability[int(clubReport['potential'])]['mu'], mn = 0) ### What if team predicted goals for was based on the individual's potential
+        teamPredictedGoalsFor = utils.limitValue(goal_probability.goalProbability[int(clubReport['potential'])]['mu'], mn = 0) ### What if team predicted goals for was based on the individual's potential
         teamActualGoalsFor = clubReport['match']['goalsFor']
         teamOffensiveOutperformance = teamActualGoalsFor - teamPredictedGoalsFor
-        teamPredictedGoalsAgainst = utils.limitValue(goalProbability[int(oppositionClubReport['potential'])]['mu'], mn = 0)
+        teamPredictedGoalsAgainst = utils.limitValue(goal_probability.goalProbability[int(oppositionClubReport['potential'])]['mu'], mn = 0)
         teamActualGoalsAgainst = oppositionClubReport['match']['goalsFor']
         teamDefensiveOutperformance = teamPredictedGoalsAgainst - teamActualGoalsAgainst
         offensiveBoost = utils.limitValue(offensiveContribution * teamOffensiveOutperformance * 5, mn = -1.5, mx = 1.5)

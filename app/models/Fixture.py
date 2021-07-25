@@ -1,4 +1,4 @@
-from Match import Match
+from .Match import Match
 
 class Fixture:
     def __init__(self, fixtureId, tournament, date = None, clubX = None, clubY = None):

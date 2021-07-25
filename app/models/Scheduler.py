@@ -1,6 +1,5 @@
 from datetime import date, timedelta
-import random
-from Fixture import Fixture
+from .Fixture import Fixture
 import copy
 
 class Scheduler:

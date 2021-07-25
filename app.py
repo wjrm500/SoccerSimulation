@@ -15,7 +15,9 @@ import redis
 
 db = Database.getInstance()
 
-app = Flask(__name__)
+template_folder = os.path.abspath('frontend/templates')
+static_folder = os.path.abspath('frontend/static')
+app = Flask(__name__, template_folder = template_folder, static_folder = static_folder)
 app.secret_key = os.urandom(12).hex()
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)

@@ -1,7 +1,7 @@
-from config import systemConfig
-from Club import Club
+from ..config import systemConfig
+from .Club import Club
 import copy
-from Database import Database
+from .Database import Database
 import numpy as np
 
 class League:   

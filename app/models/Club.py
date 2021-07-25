@@ -1,9 +1,8 @@
-import config
-from Player import Player
+from .. import config
 import numpy as np
 import copy
-from Select import Select
-from Team import Team
+from .Select import Select
+from .Team import Team
 import re
 
 class Club:

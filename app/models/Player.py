@@ -1,5 +1,4 @@
-import utils
-import config
+from .. import config, utils
 import random
 import numpy as np
 import copy

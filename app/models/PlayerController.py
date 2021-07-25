@@ -1,6 +1,5 @@
 import copy
-import random
-from Player import Player
+from .Player import Player
 
 class PlayerController:
     def __init__(self, universe):

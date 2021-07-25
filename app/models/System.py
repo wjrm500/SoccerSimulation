@@ -1,6 +1,6 @@
-from config import systemConfig
-from League import League
-from Database import Database
+from ..config import systemConfig
+from .League import League
+from .Database import Database
 
 class System:
     def __init__(self, universe, systemId = None):
