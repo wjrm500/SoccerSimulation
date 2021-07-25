@@ -12,6 +12,10 @@ import pickle
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import json
 import redis
+from rq import Queue
+from worker import conn
+
+q = Queue(connection=conn)
 
 ON_HEROKU = 'ON_HEROKU' in os.environ
 db = Database.getInstance() ### MongoDB
@@ -50,8 +54,9 @@ def postNew():
         'numPlayersPerClub': int(request.form['num-players-per-club'])
     }
     r.set('simulation_progress', 0);
-    universeKey = simulate(customConfig, systemId, r)
-    return redirect('/simulation/' + universeKey)
+    q.enqueue(simulate, customConfig, systemId, r)
+    return render_template('waiting.html')
+    # return redirect('/simulation/' + universeKey)
 
 @app.route('/simulation/check-progress', methods = ['GET'])
 def checkSimulationProgress():
