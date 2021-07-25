@@ -25,7 +25,7 @@ class Database:
     def getUniverseGridFile(self, universeKey):
         if not hasattr(self, 'universe'):
             fs = gridfs.GridFS(self.cnx.grid_file)
-            result = fs.find_one({'filename': 'universe_' + universeKey})
+            result = fs.find_one({'filename': universeKey})
             self.universe = result.read()
         return self.universe
 
