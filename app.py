@@ -14,6 +14,8 @@ import json
 from rq import Queue
 from worker import conn
 import redis
+import random
+from string import ascii_lowercase
 
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
@@ -52,9 +54,10 @@ def postNew():
         'numClubsPerLeague': int(request.form['num-clubs']),
         'numPlayersPerClub': int(request.form['num-players-per-club'])
     }
-    q.enqueue(simulate, customConfig, systemId)
+    universeKey = ''.join(random.choice(ascii_lowercase) for i in range(10))
+    q.enqueue(simulate, customConfig, systemId, universeKey)
     jsFiles = ['waiting.js']
-    return render_template('waiting.html', jsFiles = jsFiles)
+    return render_template('waiting.html', universeKey = universeKey, jsFiles = jsFiles)
     # return redirect('/simulation/' + universeKey)
 
 @app.route('/simulation/check-progress', methods = ['GET'])

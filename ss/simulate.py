@@ -1,6 +1,4 @@
 from .models.Universe import Universe
-import random
-import string
 from .models.Database import Database
 import gridfs
 import pickle
@@ -13,7 +11,7 @@ if ON_HEROKU:
 else:
     r = redis.Redis()
 
-def simulate(customConfig, systemId):
+def simulate(customConfig, systemId, universeKey):
     r.set('simulation_progress', 0);
     ### Create Universe, taking in input parameters from user
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
@@ -21,11 +19,7 @@ def simulate(customConfig, systemId):
     print(daysToTimeTravel)
     universe.timeTravel(daysToTimeTravel, r)
     pickledUniverse = pickle.dumps(universe)
-    letters = string.ascii_lowercase
-    universeKey = ''.join(random.choice(letters) for i in range(10))
-    universeFilename = 'universe_' + universeKey
     db = Database.getInstance()
     cnx = db.cnx.grid_file
     fs = gridfs.GridFS(cnx)
-    fs.put(pickledUniverse, filename = universeFilename)
-    return universeKey
+    fs.put(pickledUniverse, filename = universeKey)

@@ -6,6 +6,11 @@ $(document).ready(function() {
                 function (progress) {
                     progress *= 100;
                     $('#simulation-progress').html(progress);
+                    if (progress > 99.9) {
+                        alert('done');
+                        let universeKey = $('#simulation-progress').data('universe-key');
+                        window.location.href = `/simulation/${universeKey}`;
+                    }
                 }
             )
         },
