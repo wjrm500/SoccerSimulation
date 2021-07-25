@@ -5,11 +5,20 @@ $(document).ready(function() {
                 '/simulation/check-progress',
                 function (progress) {
                     progress *= 100;
-                    $('#simulation-progress').html(progress);
                     if (progress > 99) {
-                        let universeKey = $('#simulation-progress').data('universe-key');
-                        window.location.href = `/simulation/${universeKey}`;
+                        $('#progress-bar').css({
+                            'border-top-right-radius': '5px',
+                            'border-bottom-right-radius': '5px'
+                        });
+                        setTimeout(
+                            function () {
+                                let universeKey = $('#progress-bar').data('universe-key');
+                                window.location.href = `/simulation/${universeKey}`;
+                            },
+                            2000
+                        );
                     }
+                    $('#progress-bar').css('width', progress + '%');
                 }
             )
         },

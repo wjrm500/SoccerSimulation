@@ -126,6 +126,7 @@
     border: 2px solid #dddddd;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 .stretched-grid-item {
