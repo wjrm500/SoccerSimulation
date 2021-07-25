@@ -15,7 +15,7 @@ $(document).ready(function() {
                                 let universeKey = $('#progress-bar').data('universe-key');
                                 window.location.href = `/simulation/${universeKey}`;
                             },
-                            2000
+                            3000
                         );
                     }
                     $('#progress-bar').css('width', progress + '%');

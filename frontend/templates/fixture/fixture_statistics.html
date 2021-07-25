@@ -11,7 +11,7 @@
                 <div class="form-results-boxes">
                     {% for result in data['results'] %}
                         <div class="my-tooltip">
-                            <a href="/simulation/fixture/{{ result['fixtureId'] }}" class="form-results-box result-{{ result['result'] }}">
+                            <a href="/simulation/fixture/{{ result['fixtureId'] }}" class="form-results-box result-{{ result['result'] }}" data-url="/simulation/fixture/{{ result['fixtureId'] }}">
                                 {{ result['result'] }}
                             </a>
                             <span class="my-tooltiptext">
