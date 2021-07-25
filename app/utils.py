@@ -5,39 +5,36 @@ import numpy as np
 import random
 from datetime import date
 from dateutil.relativedelta import relativedelta
-import mysql.connector
 import copy
 import pickle
 import glob
 import os
 import re
 import joblib
-
-cnx = mysql.connector.connect(user = "root",
-                              password = "Gigabit123",
-                              host = "127.0.0.1",
-                              database = "simulator")
+import sys
+sys.path.append(r"C:\\Users\\Will May\\Documents\\Python\\SoccerSim\\app\\models")
+from Database import Database
 
 def generateName(chars):        
     return ''.join(random.choice(string.ascii_lowercase) for _ in range(chars))
 
 def loadPlayerNames():
-    cursor = cnx.cursor()
-    get_firstname = 'SELECT firstname, `count` FROM fakefootball.firstnames'
-    cursor.execute(get_firstname)
-    resultSet = cursor.fetchall()
+    db = Database.getInstance()
+    results = db.cnx['soccersim']['forenames'].find()
+    results = [record for record in results]
     global forenames, forenameWeights
-    forenames = [record[0] for record in resultSet]
-    forenameWeights = [record[1] for record in resultSet]
-    forenameWeights = [forenameWeight / sum(forenameWeights) for forenameWeight in forenameWeights]
-    get_surname = 'SELECT surname, `count` FROM fakefootball.surnames'
-    cursor.execute(get_surname)
-    resultSet = cursor.fetchall()
+    forenames = [record['forename'] for record in results]
+    forenameCounts = [record['count'] for record in results]
+    countSum = sum(forenameCounts)
+    forenameWeights = [record['count'] / countSum for record in results]
+
+    results = db.cnx['soccersim']['surnames'].find()
+    results = [record for record in results]
     global surnames, surnameWeights
-    surnames = [record[0] for record in resultSet]
-    surnameWeights = [record[1] for record in resultSet]
-    surnameWeights = [surnameWeight / sum(surnameWeights) for surnameWeight in surnameWeights]
-    cursor.close()
+    surnames = [record['surname'] for record in results]
+    surnameCounts = [record['count'] for record in results]
+    countSum = sum(surnameCounts)
+    surnameWeights = [record['count'] / countSum for record in results]
 
 def sortMcAndOApostrophe(name):
     rx = re.compile(r'(?:(?<=Mc)|(?<=O\'))([a-z])')

@@ -541,6 +541,7 @@ td.result-away-club-name {
     min-width: 50px;
     padding: 5px;
     text-align: center;
+    white-space: nowrap;
 }
 
 #fixture-summary-away-team-name {
@@ -555,6 +556,7 @@ td.result-away-club-name {
 
 .fixture-summary-team-goals {
     flex: 4;
+    max-height: 0px;
 }
 
 #fixture-summary-goals-divider {
