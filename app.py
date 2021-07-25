@@ -1,11 +1,11 @@
 from flask import Flask, session, render_template, request, url_for, redirect, Response
 from flask_session import Session
-from app.config import playerConfig
-from app.simulate import simulate
-import app.utils as utils
-import app.player_utils as player_utils
-import app.club_utils as club_utils
-from app.models.Database import Database
+from ss.config import playerConfig
+from ss.simulate import simulate
+import ss.utils as utils
+import ss.player_utils as player_utils
+import ss.club_utils as club_utils
+from ss.models.Database import Database
 import io
 import os
 import pickle
