@@ -56,7 +56,7 @@ def postNew():
     }
     r.set('simulation_progress', 0)
     universeKey = ''.join(random.choice(ascii_lowercase) for _ in range(10))
-    q.enqueue(simulate, customConfig, systemId, universeKey)
+    q.enqueue(simulate, customConfig, systemId, universeKey, job_timeout = 3600)
     return render_template('waiting.html', universeKey = universeKey, cssFiles = ['home.css'], jsFiles = ['waiting.js'])
 
 @app.route('/simulation/check-progress', methods = ['GET'])
