@@ -54,7 +54,8 @@ def postNew():
         'numClubsPerLeague': int(request.form['num-clubs']),
         'numPlayersPerClub': int(request.form['num-players-per-club'])
     }
-    universeKey = ''.join(random.choice(ascii_lowercase) for i in range(10))
+    r.set('simulation_progress', 0)
+    universeKey = ''.join(random.choice(ascii_lowercase) for _ in range(10))
     q.enqueue(simulate, customConfig, systemId, universeKey)
     jsFiles = ['waiting.js']
     return render_template('waiting.html', universeKey = universeKey, jsFiles = jsFiles)

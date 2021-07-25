@@ -12,7 +12,6 @@ else:
     r = redis.Redis()
 
 def simulate(customConfig, systemId, universeKey):
-    r.set('simulation_progress', 0);
     ### Create Universe, taking in input parameters from user
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
     daysToTimeTravel = ((customConfig['numClubsPerLeague'] - 1) * 2 * 7) + 7
