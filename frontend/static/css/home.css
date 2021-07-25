@@ -102,7 +102,6 @@ input, select {
 #progress-bar-container {
     background-color: white;
     border-radius: 5px;
-    display: none;
     height: 40px;
     width: 100%;
 }
