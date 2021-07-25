@@ -13,7 +13,12 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import json
 import redis
 
-db = Database.getInstance()
+ON_HEROKU = 'ON_HEROKU' in os.environ
+db = Database.getInstance() ### MongoDB
+if ON_HEROKU:
+    r = redis.from_url(os.environ.get('REDIS_URL'))
+else:
+    r = redis.Redis()
 
 template_folder = os.path.abspath('frontend/templates')
 static_folder = os.path.abspath('frontend/static')
@@ -21,7 +26,6 @@ app = Flask(__name__, template_folder = template_folder, static_folder = static_
 app.secret_key = os.urandom(12).hex()
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
-r = redis.Redis()
 
 @app.route('/', methods = ['GET'])
 def getHome():
