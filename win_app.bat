@@ -1,0 +1,1 @@
+START "" rqworker -w rq_win.WindowsWorker && python app.py

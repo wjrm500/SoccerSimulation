@@ -21,8 +21,9 @@ class _Universe:
         
     def timeTravel(self, days, r):
         for i in range(days):
-            print(round((i / days), 2))
-            r.set('simulation_progress', i / days)
+            simulation_progress = i / (days - 1)
+            print('i = {}; Days = {}; Simulation Progress = {}'.format(i, days, simulation_progress))
+            r.set('simulation_progress', simulation_progress)
             self.resolveQuotidia()
             self.advanceOneDay()
     

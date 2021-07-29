@@ -12,5 +12,9 @@ else:
 
 if __name__ == '__main__':
     with Connection(conn):
-        worker = Worker(map(Queue, listen))
+        if not ON_HEROKU and os.name == 'nt':
+            from rq_win import WindowsWorker
+            worker = WindowsWorker(map(Queue, listen))
+        else:
+            worker = Worker(map(Queue, listen))
         worker.work()
