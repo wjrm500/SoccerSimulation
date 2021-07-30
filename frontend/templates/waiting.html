@@ -11,10 +11,17 @@
             <div style="font-size: 0.9em; text-align: center">Approximately <span id="seconds-remaining">???</span> seconds remaining...</div>
         </div>
         <div style="margin-top: 35px;">
-            <label style="margin-bottom: 10px; text-align: center;">Don't fancy waiting? Enter your email address below to receive an email notification when the simulation is complete</label>
+            <label style="margin-bottom: 10px; text-align: center;">Don't fancy waiting? Enter your email address below to receive an email notification when your simulation is complete, and then feel free to close this web page and disappear!</label>
             <div style="display: flex;">
-                <input id="email-input" type="email" placeholder="Enter your email address">
-                <button id="submit-email" class="simulate-button" style="margin-left: 10px;">Submit</button>
+                <input id="email-input" type="email" placeholder="Enter your email address" style="margin-right: 10px;">
+                <button id="submit-email" class="simulate-button">
+                    <div id="text">
+                        Simulate
+                    </div>
+                    <div id="spinner" style="display: none; padding: 10px;">
+                        <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
+                    </div>
+                </button>
             </div>
         </div>
     </div>

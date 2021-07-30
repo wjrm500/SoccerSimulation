@@ -27,6 +27,7 @@ $(document).ready(function() {
                     let pctProgressRemaining = 100 - progress;
                     let millisecondsRemaining = millisecondsPerPctProgress * pctProgressRemaining;
                     let estSecondsRemaining = Math.round(millisecondsRemaining / 1000);
+                    estSecondsRemaining = isFinite(estSecondsRemaining) ? estSecondsRemaining : '???';
                     $('#seconds-remaining').html(estSecondsRemaining);
                 }
             )
@@ -34,6 +35,9 @@ $(document).ready(function() {
         500
     );
     $('#submit-email').click(function () {
+        let submit = $(this);
+        submit.find('#text').hide();
+        submit.find('#spinner').show();
         let emailInput = $('#email-input').val();
         if (validateEmail(emailInput)) {
             $.post(
@@ -43,7 +47,16 @@ $(document).ready(function() {
                     email_input: emailInput
                 },
                 function (response) {
-                    alert('done');
+                    $('#email-input').animate({width: 'toggle'}, 350);
+                    submit.css('width', '100%');
+                    setTimeout(
+                        function () {
+                            submit.find('#spinner').hide();
+                            submit.find('#text').show();
+                            submit.find('#text').html('Email address successfully submitted');
+                        },
+                        150
+                    );
                 }
             );
         } else {
