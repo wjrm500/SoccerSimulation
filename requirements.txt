@@ -20,10 +20,13 @@ pymongo==3.12.0
 pyparsing==2.4.7
 python-dateutil==2.8.2
 python-dotenv==0.19.0
+python-http-client==3.3.2
 redis==3.5.3
 rq==1.9.0
 scipy==1.7.0
+sendgrid==6.7.1
 six==1.16.0
+starkbank-ecdsa==1.1.1
 typing-extensions==3.10.0.0
 Werkzeug==2.0.1
 zipp==3.5.0
