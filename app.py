@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, request, url_for, redirect, Response
+from flask import Flask, session, render_template, request, url_for, redirect, Response, jsonify
 from flask_session import Session
 from ss.config import playerConfig
 from ss.simulate import simulate
@@ -54,14 +54,23 @@ def postNew():
         'numClubsPerLeague': int(request.form['num-clubs']),
         'numPlayersPerClub': int(request.form['num-players-per-club'])
     }
-    r.set('simulation_progress', 0)
     universeKey = ''.join(random.choice(ascii_lowercase) for _ in range(10))
+    r.set('simulation_progress_' + universeKey, 0)
     q.enqueue(simulate, customConfig, systemId, universeKey, job_timeout = 3600)
     return render_template('waiting.html', universeKey = universeKey, cssFiles = ['home.css'], jsFiles = ['waiting.js'])
 
-@app.route('/simulation/check-progress', methods = ['GET'])
-def checkSimulationProgress():
-    return r.get('simulation_progress').decode('utf-8')
+@app.route('/simulation/check-progress/<universeKey>', methods = ['GET'])
+def checkSimulationProgress(universeKey):
+    redisKey = 'simulation_progress_' + universeKey
+    if r.exists(redisKey):
+        return r.get(redisKey).decode('utf-8')
+
+@app.route('/simulation/store-email', methods = ['POST'])
+def storeEmail():
+    email_input = request.form.get('email_input')
+    universe_key = request.form.get('universe_key')
+    r.set('email_' + universe_key, email_input)
+    return jsonify('success')
 
 @app.route('/simulation/<universeKey>')
 def simulation(universeKey):
@@ -333,7 +342,6 @@ def playerPerformance():
             playerPerformanceItems = playerPerformanceItems
             )
     return render_template('error.html')
-
 
 @app.route('/simulation/club/<clubId>/position-graph')
 def clubPositionGraph(clubId):

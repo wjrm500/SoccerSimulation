@@ -7,5 +7,15 @@
                 <div id="progress-bar" data-universe-key="{{ universeKey }}"></div>
             </div>
         </div>
+        <div class="form-group">
+            <div style="font-size: 0.9em; text-align: center">Approximately <span id="seconds-remaining">???</span> seconds remaining...</div>
+        </div>
+        <div style="margin-top: 35px;">
+            <label style="margin-bottom: 10px; text-align: center;">Don't fancy waiting? Enter your email address below to receive an email notification when the simulation is complete</label>
+            <div style="display: flex;">
+                <input id="email-input" type="email" placeholder="Enter your email address">
+                <button id="submit-email" class="simulate-button" style="margin-left: 10px;">Submit</button>
+            </div>
+        </div>
     </div>
 {% endblock %}

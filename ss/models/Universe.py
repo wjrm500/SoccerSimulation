@@ -23,7 +23,7 @@ class _Universe:
         for i in range(days):
             simulation_progress = i / (days - 1)
             print('i = {}; Days = {}; Simulation Progress = {}'.format(i, days, simulation_progress))
-            r.set('simulation_progress', simulation_progress)
+            r.set('simulation_progress_' + self.universeKey, simulation_progress)
             self.resolveQuotidia()
             self.advanceOneDay()
     

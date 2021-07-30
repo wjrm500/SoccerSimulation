@@ -4,6 +4,7 @@ import gridfs
 import pickle
 import os
 import redis
+from .send_email import send_email
 
 ON_HEROKU = 'ON_HEROKU' in os.environ
 if ON_HEROKU:
@@ -14,9 +15,13 @@ else:
 def simulate(customConfig, systemId, universeKey):
     ### Create Universe, taking in input parameters from user
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
+    universe.universeKey = universeKey
     daysToTimeTravel = ((customConfig['numClubsPerLeague'] - 1) * 2 * 7) + 7
     print(daysToTimeTravel)
     universe.timeTravel(daysToTimeTravel, r)
+    if r.exists('email_' + universeKey):
+        recipient_address = r.get('email_' + universeKey).decode('utf-8')
+        send_email(recipient_address, universeKey)
     pickledUniverse = pickle.dumps(universe)
     db = Database.getInstance()
     cnx = db.cnx.grid_file

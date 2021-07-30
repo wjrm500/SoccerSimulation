@@ -23,6 +23,7 @@ body {
 
 .button-container {
     height: 40px;
+    max-width: 500px;
     padding: 0px 25px;
 }
 
@@ -86,7 +87,7 @@ input, select {
     width: 100%;
 }
 
-#simulate-button {
+.simulate-button {
     background-image: linear-gradient(to right, #224cdc, #c845a5);
     border: none;
     border-radius: 5px;
@@ -95,7 +96,7 @@ input, select {
     height: 40px;
 }
 
-#simulate-button:hover {
+.simulate-button:hover {
     background-image: linear-gradient(to right, #1b3cb0, #a63186);
 }
 
