@@ -7,13 +7,11 @@ class Team:
     ### Noun 'Select' - An entity comprising a player and a position, binded as a tuple
     ### Noun 'Selection' - An array or collection of Selects
     ### Noun 'Team' - A superlative entity whose values arise from the aggregation of values in a Selection
-    def __init__(self, club, formation, selection, homeAway):
+    def __init__(self, club, formation, selection):
         self.club = club
         self.formation = formation
         self.selection = selection
         self.selectRatings = {}
-        self.homeAway = homeAway
-        self.setHomeAwayDifferential()
         self.players = [select.player for select in selection]
         self.setRating()
         self.normaliseSelectRatings()
@@ -21,14 +19,6 @@ class Team:
         self.setTeamOffenceDefence()
         self.setSelectionOffensiveDefensiveContributions()
         self.setGoalAndAssistFactors()
-    
-    def setHomeAwayDifferential(self):
-        if self.homeAway == 'Home':
-            self.homeAwayDifferential = 1 + (config.matchConfig['homeAwayDifferential'] / 2)
-        elif self.homeAway == 'Away':
-            self.homeAwayDifferential = 1 - (config.matchConfig['homeAwayDifferential'] / 2)
-        else:
-            self.homeAwayDifferential = 0
     
     def getSelectFromPlayer(self, player):
         for select in self.selection:

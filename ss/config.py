@@ -265,7 +265,11 @@ playerConfig = {
 }
 
 matchConfig = {
-    'homeAwayDifferential': 0.05, ### 2.5% boost for home team stats, 2.5% reduction for away team stats
+    'homeAwayDifferential': {
+        'neutral': 1.00,
+        'home': 1.025,
+        'away': 0.975
+    },
     'contribution': {
         'offence': {
             'offence': 1.0,

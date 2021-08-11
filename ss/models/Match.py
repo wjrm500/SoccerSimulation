@@ -13,13 +13,11 @@ class Match:
         self.neutralVenue = neutralVenue
         self.matchReport = {'fixtureId': self.fixture.id, 'tournament': self.tournament, 'gameweek': self.fixture.gameweek, 'date': self.date, 'clubs': {club: {} for club in self.clubs}}
         report = self.matchReport
-        homeAwayTuple = (None, None) if self.neutralVenue else ('Home', 'Away')
+        homeAwayTuple = (None, None) if self.neutralVenue else ('home', 'away')
         for club, homeAway in zip(self.clubs, homeAwayTuple):
             report['clubs'][club]['team'] = club.selectTeam(homeAway = homeAway)
         report['clubs'][self.clubX]['potential'] = report['clubs'][self.clubX]['team'].offence - report['clubs'][self.clubY]['team'].defence
         report['clubs'][self.clubY]['potential'] = report['clubs'][self.clubY]['team'].offence - report['clubs'][self.clubX]['team'].defence
-        clubXPot = report['clubs'][self.clubX]['potential']
-        clubYPot = report['clubs'][self.clubY]['potential']  
         for club in self.clubs:
             oppositionClub = self.getOppositionClub(club)
             report['clubs'][club]['oppositionClub'] = funcy.omit(report['clubs'][oppositionClub], 'oppositionClub')

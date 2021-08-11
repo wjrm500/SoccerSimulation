@@ -66,12 +66,13 @@ class Club:
                                 selectRating = player.positionRatings[position]
                                 selectRating -= 0 if test else selectRating * player.fatigue
                                 selectRating += 0 if test else (selectRating * player.form) / 10
+                                selectRating *= config.matchConfig['homeAwayDifferential'][homeAway]
                                 if selectRating > maxValue:
                                     maxValue = selectRating
                                     select = Select(player, position, selectRating)
                 personnelRequired[select.position] -= 1
                 selection.append(select)
-            return Team(self, chosenFormation, selection, homeAway)
+            return Team(self, chosenFormation, selection)
         except:
             return None
     
