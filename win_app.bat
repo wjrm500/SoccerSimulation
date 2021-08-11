@@ -1,1 +1,1 @@
-START "" rqworker -w rq_win.WindowsWorker && python app.py
+START "" rqworker -w rq_win.WindowsWorker && venv\Scripts\activate.bat && python app.py

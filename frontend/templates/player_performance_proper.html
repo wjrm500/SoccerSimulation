@@ -90,7 +90,13 @@
             {% for player, performanceIndices in playerPerformanceItems.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">
                     <td>{{ loop.index }}</td>
-                    <td>{{ player.getProperName() }} <span style="color: darkgrey; font-size: 0.75em; font-style: italic;" data-club-id="{{ player.club.id }}">{{ player.club.name }}</span></td>
+                    <td>
+                        <div class="player-row-top">
+                            {{ player.getProperName() }}
+                        </div>
+                        <div class="player-row-bottom" data-club-id="{{ player.club.id }}" style="color: darkgrey; font-size: 0.75em; font-style: italic;">
+                            {{ player.club.name }}
+                        </div>
                     <td>{{ player.getBestPosition() }}</td>
                     <td>{{ '{0:.2f}'.format(player.getAge(2)) }}</td>
                     <td class="player-rating">{{ '{0:.2f}'.format(player.getRating()) }}</td>

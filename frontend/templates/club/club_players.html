@@ -7,7 +7,7 @@
     <div style="flex: 2; overflow-y: auto; position: relative">
         <table id="club-player-performance-table" class="full-table player-performance-table">
             <tr>
-                <th>#</th>
+                <th style="display: none;">#</th>
                 <th>Name</th>
                 <th data-sort="unsorted" data-metric="games">
                     <i class="fas fa-tshirt"></i><!-- <img src="/static/images/apps_icon.png"> -->
@@ -28,7 +28,7 @@
             </tr>
             {% for player, performanceIndices in playerPerformanceItems.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">
-                    <td>{{ loop.index }}</td>
+                    <td style="display: none;">{{ loop.index }}</td>
                     <td>
                         <div class="player-row-top">
                             {{ player.getProperName() }}

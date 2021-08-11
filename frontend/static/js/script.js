@@ -1,4 +1,15 @@
 $(document).ready(function() {
+    $('#copy-simulation-key').click(function() {
+        let textToCopy = $('#input-simulation-key').html();
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                $('#simulation-key-value .my-tooltiptext').css('visibility', 'visible');
+                setTimeout(function() {
+                    $('#simulation-key-value .my-tooltiptext').css('visibility', 'hidden');
+                }, 1000);
+            });
+    });
+
     styleLeagueTable();
 
     window.iframeHistoryPointer = 0;

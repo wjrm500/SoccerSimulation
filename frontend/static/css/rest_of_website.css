@@ -33,14 +33,39 @@
     margin: 0px 5px;
 }
 
-#simulation-key-value input {
+#simulation-key-label {
+    white-space: nowrap;
+}
+
+#simulation-key-value {
     background-color: white;
     border: none;
     border-radius: 5px;
-    color: red;
     font-weight: 500;
     text-align: center;
     width: 100%;
+}
+
+#input-simulation-key {
+    color: red;
+}
+
+#copy-simulation-key {
+    color: #aaaaaa;
+}
+
+#simulation-key-value .my-tooltiptext {
+    background-color: red;
+    visibility: hidden;
+}
+
+#simulation-key-value .my-tooltiptext::after {
+    border-color: transparent transparent red transparent;
+}
+
+#copy-simulation-key:hover {
+    color: #888888;
+    cursor: pointer;
 }
 
 #hyperlink-panel {
@@ -57,7 +82,7 @@
     text-decoration: none;
 }
 
-.nav-button:hover {
+#title:hover, .nav-button:hover {
     color: red;
 }
 
@@ -208,6 +233,7 @@
     height: 100%;
     padding: 5px;
     position: absolute;
+    table-layout: fixed;
     top: 0px;
     width: 100%;
 }
@@ -221,7 +247,7 @@
 }
 
 .player-performance-table th:nth-child(n + 3) {
-    width: 75px;
+    width: 40px;
 }
 
 @media (max-width: 1500px) {
@@ -256,9 +282,18 @@
     text-align: center;
 }
 
+.player-row-top {
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .player-row-bottom {
     color: grey;
     font-size: 0.8em;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* Results */
@@ -426,6 +461,19 @@ td.result-away-club-name {
     height: 15px;
 }
 
+#player-game-table {
+    font-size: 0.9em;
+    table-layout: fixed;
+}
+
+#player-game-table th:first-child {
+    width: 30px;
+}
+
+#player-game-table th:last-child {
+    width: 50px;
+}
+
 #player-game-table tr:nth-child(odd) {
     background-color: #eeeeee;
 }
@@ -590,16 +638,22 @@ td.result-away-club-name {
     background-color: #999999;
     border: 1px solid black;
     border-radius: 5px;
-    bottom: 0;
     color: white;
+    display: block;
     font-size: 0.8em;
     font-weight: 500;
     margin: 5px;
     padding: 5px;
-    position: absolute;
     text-align: center;
     text-decoration: none;
     width: -webkit-fill-available;
+}
+
+@media (min-width: 1500px) {
+    #fixture-summary-footer-container {
+        bottom: 0;
+        position: absolute;
+    }
 }
 
 #fixture-summary-footer-container:hover {
@@ -633,6 +687,7 @@ td.result-away-club-name {
     flex: 9;
     font-size: 0.8em;
     position: initial;
+    table-layout: fixed;
 }
 
 .fixture-players-club table th {
@@ -641,16 +696,18 @@ td.result-away-club-name {
 
 .fixture-players-club table td:first-child {
     padding: 0px 5px;
-    width: 40%;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .fixture-players-club table th:not(:first-child) {
     text-align: center;
+    width: 32px;
 }
 
 .fixture-players-club table td:not(:first-child) {
     text-align: center;
-    width: 10%;
 }
 
 .fixture-players-club table td:last-child {
@@ -703,12 +760,15 @@ td.result-away-club-name {
 
 .form-results-club-name {
     padding: 5px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .form-results-boxes {
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 0px 10px;
 }
 
@@ -723,6 +783,14 @@ td.result-away-club-name {
     justify-content: center;
     text-decoration: none;
     width: 25px;
+}
+
+@media (max-width: 1500px) {
+    .form-results-box {
+        font-size: 0.75em;
+        height: 15px;
+        width: 15px;
+    }
 }
 
 .form-results-box:hover {
@@ -822,6 +890,28 @@ a.result-L:hover {
     table-layout: fixed;
 }
 
+.form-table th:nth-child(1) {
+    width: 20px;
+}
+
+.form-table th:nth-child(n + 3) {
+    width: 25px;
+}
+
+@media (max-width: 1500px) {
+    .form-table {
+        font-size: 0.6em;
+    }
+
+    .form-table th:nth-child(1) {
+        width: 15px;
+    }
+    
+    .form-table th:nth-child(n + 3) {
+        width: 20px;
+    }
+}
+
 .form-table th {
     font-weight: normal;
 }
@@ -831,10 +921,6 @@ a.result-L:hover {
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.form-table th:not(:nth-child(2)) {
-    width: 30px;
 }
 
 .form-table tr.color-param-this {
@@ -968,6 +1054,7 @@ a.result-L:hover {
 }
 
 #club-positions-graph-image {
+    height: 100%;
     object-fit: contain;
     width: 100%;
 }
@@ -1041,7 +1128,7 @@ a.result-L:hover {
 #player-performance-proper-table th:nth-child(n + 3),
 #player-performance-proper-table td:nth-child(n + 3) {
     text-align: center;
-    width: 75px;
+    width: 50px;
 }
 
 #player-performance-proper-table th:nth-child(n + 4) i {

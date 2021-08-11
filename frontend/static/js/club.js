@@ -41,6 +41,7 @@ function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
 }
 
 function drawPlayer(player, centerX, centerY, radius, hoverState) {
+    let largeScreen = screen.width > 1500;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
     let val = player.rating;
@@ -56,10 +57,12 @@ function drawPlayer(player, centerX, centerY, radius, hoverState) {
     ctx.strokeStyle = '#000000';
     ctx.stroke();
     ctx.fillStyle = 'white';
-    ctx.font = hoverState ? 'normal 900 12px Arial, sans-serif' : '12px Arial, sans-serif';
+    let fontSize = largeScreen ? '12px' : '8px';
+    ctx.font = hoverState ? `normal 900 ${fontSize} Arial, sans-serif` : `${fontSize} Arial, sans-serif`;
     ctx.fillText(parseInt(player.rating), centerX, centerY);
     ctx.fillStyle = 'black';
-    ctx.fillText(player.name, centerX, centerY + 30);
+    let textOffset = largeScreen ? 30 : 20; 
+    ctx.fillText(player.name, centerX, centerY + textOffset);
 }
 
 var playerIdHovered = 0;

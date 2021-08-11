@@ -9,7 +9,11 @@
                 Unique Simulation Key:
             </div>
             <div id="simulation-key-value" class="simulation-key-element">
-                <input type="text" value="{{ universeKey }}" disabled>
+                <span id="input-simulation-key">{{ universeKey }}</span>
+                <span class="my-tooltip">
+                    <i id="copy-simulation-key" class="far fa-copy"></i>
+                    <span class="my-tooltiptext">Copied!</span>
+                </span>
             </div>
         </div>
     </div>
@@ -20,11 +24,8 @@
         <a href="/contact" id="contact-button" class="nav-button">
             Contact
         </a>
-        <a href="/new-simulation" id="new-simulation-button" class="nav-button">
-            New Simulation
-        </a>
-        <a href="/resimulate" id="resimulate-button" class="nav-button">
-            Resimulate
+        <a href="/new" id="new-simulation-button" class="nav-button">
+            New
         </a>
     </div>
 </div>

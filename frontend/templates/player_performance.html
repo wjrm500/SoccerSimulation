@@ -24,7 +24,10 @@
             <td>{{ loop.index }}</td>
             <td>
                 <div class="player-row-top">
-                    {{ player.getProperName() }} <span style="color: darkgrey; font-size: 0.75em; font-style: italic;">{{ player.club.name }}</span>
+                    <div>{{ player.getProperName() }}</div>
+                    <div style="color: darkgrey; font-size: 0.75em; font-style: italic;">
+                        {{ player.club.name }}
+                    </div>
                 </div>
                 <div class="player-row-bottom">
                     <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.getRating()) }}</span> ·
