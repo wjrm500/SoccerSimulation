@@ -365,5 +365,6 @@ def clearSession():
     session.clear()
     return redirect(url_for('getHome'))
 
+debug_setting = not ON_HEROKU
 if __name__ == '__main__':
-    app.run()
+    app.run(debug = debug_setting)

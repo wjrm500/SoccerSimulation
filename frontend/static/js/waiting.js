@@ -47,16 +47,11 @@ $(document).ready(function() {
                     email_input: emailInput
                 },
                 function (response) {
-                    $('#email-input').animate({width: 'toggle'}, 350);
+                    $('#email-input').hide();
                     submit.css('width', '100%');
-                    setTimeout(
-                        function () {
-                            submit.find('#spinner').hide();
-                            submit.find('#text').show();
-                            submit.find('#text').html('Email address successfully submitted');
-                        },
-                        150
-                    );
+                    submit.find('#spinner').hide();
+                    submit.find('#text').show();
+                    submit.find('#text').html('Email address successfully submitted');
                 }
             );
         } else {

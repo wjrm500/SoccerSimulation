@@ -1,7 +1,7 @@
 .env
 test_universes/
 flask_session/
-app/__pycache__/
-app/models/__pycache__
-frontend/__pycache__
 transfer_data_from_mysql_to_mongo_db.py
+__pycache__/
+ *.pyc
+ .vscode
