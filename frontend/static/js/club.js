@@ -57,7 +57,7 @@ function drawPlayer(player, centerX, centerY, radius, hoverState) {
     ctx.strokeStyle = '#000000';
     ctx.stroke();
     ctx.fillStyle = 'white';
-    let fontSize = largeScreen ? '12px' : '8px';
+    let fontSize = largeScreen ? '12px' : '9px';
     ctx.font = hoverState ? `normal 900 ${fontSize} Arial, sans-serif` : `${fontSize} Arial, sans-serif`;
     ctx.fillText(parseInt(player.rating), centerX, centerY);
     ctx.fillStyle = 'black';

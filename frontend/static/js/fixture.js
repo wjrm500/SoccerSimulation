@@ -1,5 +1,20 @@
 $(document).ready(function() {
-    $('.fixture-players-club table td:last-child').each(function() {
+
+    $('.pre-match-form').each(function() {
+        let val = $(this).html();
+        let prefix = val.charAt(0);
+        if (prefix === '±') {
+            return;
+        } else if (prefix === '+') {
+            val = val.substring(1);
+        }
+        val = parseFloat(val);
+        $(this).css({
+            'color': val === 0 ? 'black' : val > 0 ? 'limegreen' : 'red'
+        });
+    });
+
+    $('.performance-index').each(function() {
         let val = 100 - ($(this).html() * 10);
         let hue = Math.floor((100 - val) * 120 / 100);
         let saturation = Math.abs(val - 50) / 50 * 100;
@@ -7,7 +22,7 @@ $(document).ready(function() {
         $(this).css({
             'backgroundColor': motm === 'True' ? 'black' : '',
             'color': `hsl(${hue}, ${saturation}%, 50%)`
-        })
+        });
     });
 
     $('.fixture-players-club table td:first-child').click(function() {

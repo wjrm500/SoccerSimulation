@@ -424,7 +424,7 @@ td.result-away-club-name {
 #grid-item-form #load-development-graph {
     border: none;
     border-radius: 5px;
-    max-width: 50%;
+    width: 100%;
 }
 
 #grid-item-form #load-development-graph:hover {
@@ -486,6 +486,15 @@ td.result-away-club-name {
 
 .player-game-opposition-name {
     font-size: 0.8em;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 1500px) {
+    .player-game-opposition-name {
+        display: block;
+    }
 }
 
 .player-game-result.win {color: limegreen;}
@@ -685,9 +694,14 @@ td.result-away-club-name {
 
 .fixture-players-club table {
     flex: 9;
-    font-size: 0.8em;
     position: initial;
     table-layout: fixed;
+}
+
+@media (max-width: 1500px) {
+    .fixture-players-club table {
+        font-size: 0.6em;
+    }
 }
 
 .fixture-players-club table th {

@@ -21,10 +21,10 @@
                         <td data-player-id="{{ player.id }}">{{ player.getProperName() }}</td>
                         <td>{{ data['position'] }}</td>
                         <td>{{ data['extraData']['selectRating'] }}</td>
-                        <td>N/A</td> <!-- Don't appear to currently have pre-match form available -->
+                        <td class="pre-match-form">{{ data['extraData']['preMatchForm'] }}</td>
                         <td>{{ data['goals'] }}</td>
                         <td>{{ data['assists'] }}</td>
-                        <td>{{ data['performanceIndex'] }}</td>
+                        <td class="performance-index">{{ data['performanceIndex'] }}</td>
                     </tr>
                 {% endfor %}
             </table>

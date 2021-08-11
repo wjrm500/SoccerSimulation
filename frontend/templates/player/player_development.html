@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: column; font-size: 0.9em; height: 100%;">
-    <div id="development-graph-container">
+    <div id="development-graph-container" style="background-color: #eeeeee; border: 1px solid #bbbbbb; border-radius: 3px; display: flex; margin: 5px; padding: 5px; text-align: center;">
         <button id="load-development-graph" data-player-id="{{ player.id }}">
             <div id="text">
                 Load Development Graph
@@ -11,7 +11,7 @@
     </div>
     <div style="background-color: #eeeeee; border: 1px solid #bbbbbb; border-radius: 3px; display: flex; margin: 5px; padding: 5px; text-align: center;">
         <div style="border-right: 1px dashed #bbbbbb; flex: 1;">
-            <div style="color: blue; font-size: 0.9em; font-weight: bold;">Rating</div>
+            <div style="color: blue; font-size: 0.9em; font-weight: bold;">Current Rating</div>
             <div style="display: flex;">
                 <div style="flex: 1;">
                     {{ '{:.2f}'.format(playerDevelopment['rating']['start']) }}
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div style="flex: 1;">
-            <div style="color: lightblue; font-size: 0.9em; font-weight: bold;">Peak Rating</div>
+            <div style="color: #6fbad3; font-size: 0.9em; font-weight: bold;">Peak Rating</div>
             <div style="display: flex;">
                 <div style="flex: 1;">
                     {{ '{:.2f}'.format(playerDevelopment['peakRating']['start']) }}

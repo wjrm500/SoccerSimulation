@@ -16,6 +16,7 @@ from worker import conn
 import redis
 import random
 from string import ascii_lowercase
+from datetime import timedelta
 
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
@@ -124,6 +125,18 @@ def player(id):
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
         performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex')[player]
+        injuries = []
+        for injury in player.injuries:
+            startDate = injury[0]
+            injuryLength = injury[1]
+            endDate = startDate + timedelta(int(injuryLength))
+            injuryText = 'Between {} and {} ({} days)'.format(
+                startDate.strftime('%d %b'),
+                endDate.strftime('%d %b'),
+                injuryLength
+            )
+            injuries.append(injuryText)
+        performanceIndices['injuries'] = injuries
         yR = [val['rating'] for val in list(player.ratings.values())]
         yPR = [val['peakRating'] for val in list(player.ratings.values())]
         playerDevelopment = {
@@ -195,6 +208,10 @@ def fixture(fixtureId):
             reorderedPlayers = sorted(clubData['players'].items(), key = lambda x: positions.index(x[1]['position']))
             clubData['players'] = {k: v for k, v in reorderedPlayers}
             for player, data in clubData['players'].items():
+                preMatchForm = data['preMatchForm']
+                prefix = '+' if preMatchForm > 0 else '±' if preMatchForm == 0 else ''
+                preMatchFormText = '{}{:.2f}'.format(prefix, preMatchForm)
+                clubData['players'][player]['extraData']['preMatchForm'] = preMatchFormText
                 clubData['players'][player]['extraData']['selectRating'] = '{:.2f}'.format(data['extraData']['selectRating'])
                 clubData['players'][player]['performanceIndex'] = '{:.2f}'.format(data['performanceIndex'])
 
