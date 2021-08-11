@@ -2,7 +2,14 @@
 
 {% block home_body %}
     <div id="left-button-container" class="button-container">
-        <button id="new-simulation-button" class="simulation-button">New Simulation</button>
+        <button id="new-simulation-button" class="simulation-button">
+            <div id="text">
+                New Simulation
+            </div>
+            <div id="spinner" style="display: none; padding: 10px;">
+                <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
+            </div>
+        </button>
     </div>
     <div id="right-button-container" class="button-container">
         <form id="existing-simulation-form" method="post" autocomplete="off" spellcheck="false">

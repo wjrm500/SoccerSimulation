@@ -9,6 +9,7 @@ class Database:
     __instance__ = None
 
     def __init__(self):
+        self.universes = {}
         if Database.__instance__ is None:
             Database.__instance__ = self
             self.connect()
@@ -23,11 +24,11 @@ class Database:
         return self.universe
     
     def getUniverseGridFile(self, universeKey):
-        if not hasattr(self, 'universe'):
+        if universeKey not in self.universes:
             fs = gridfs.GridFS(self.cnx.grid_file)
             result = fs.find_one({'filename': universeKey})
-            self.universe = result.read()
-        return self.universe
+            self.universes[universeKey] = result.read()
+        return self.universes[universeKey]
 
     @staticmethod
     def getInstance():

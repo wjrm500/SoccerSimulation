@@ -1,6 +1,7 @@
 $(document).ready(function() {
     let universeKey = $('#progress-bar').data('universe-key');
     let originTime = (new Date()).getTime();
+    let finalCountdownLength = 10000;
     let checkProgress = setInterval(
         function () {
             $.get(
@@ -8,16 +9,25 @@ $(document).ready(function() {
                 function (progress) {
                     progress *= 100;
                     if (progress === 100) {
-                        clearInterval(checkProgress);
                         $('#progress-bar').css({
                             'border-top-right-radius': '5px',
                             'border-bottom-right-radius': '5px'
                         });
+                        clearInterval(checkProgress);
+                        let finalCountdownProgress = finalCountdownLength / 1000;
+                        let finalCountdownInterval = setInterval(
+                            function() {
+                                finalCountdownProgress -= 1;
+                                $('#seconds-remaining').html(finalCountdownProgress);
+                            },
+                            1000
+                        );
                         setTimeout(
                             function () {
+                                clearInterval(finalCountdownInterval)
                                 window.location.href = `/simulation/${universeKey}`;
                             },
-                            5000
+                            finalCountdownLength
                         );
                     }
                     $('#progress-bar').css('width', progress + '%');
@@ -27,7 +37,11 @@ $(document).ready(function() {
                     let pctProgressRemaining = 100 - progress;
                     let millisecondsRemaining = millisecondsPerPctProgress * pctProgressRemaining;
                     let estSecondsRemaining = Math.round(millisecondsRemaining / 1000);
-                    estSecondsRemaining = isFinite(estSecondsRemaining) ? estSecondsRemaining : '???';
+                    let finalCountdownLengthInSeconds = Math.round(finalCountdownLength / 1000)
+                    estSecondsRemaining = isFinite(estSecondsRemaining) ? estSecondsRemaining + finalCountdownLengthInSeconds : '???';
+                    if (!isFinite(estSecondsRemaining)) {
+                        originTime = (new Date()).getTime(); // Reset origin time if bar not moving yet
+                    }
                     $('#seconds-remaining').html(estSecondsRemaining);
                 }
             )

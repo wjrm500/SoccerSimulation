@@ -27,3 +27,4 @@ def simulate(customConfig, systemId, universeKey):
     cnx = db.cnx.grid_file
     fs = gridfs.GridFS(cnx)
     fs.put(pickledUniverse, filename = universeKey)
+    r.flushdb()
