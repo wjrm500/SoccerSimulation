@@ -193,12 +193,16 @@
 
 /* League table */
 
+#league-table th {
+    padding: 2px;
+}
+
 .league-table-number-icon {
     display: none;
     height: 15px;
 }
 
-#league-table tr:hover {
+#league-table tr:not(:first-child):hover {
     background-color: #888888;
     color: white;
     cursor: pointer;
@@ -212,11 +216,21 @@
     font-weight: 500;
 }
 
+#league-table td:nth-child(2),
+#league-table td:nth-child(5),
+#league-table td:nth-child(7),
+#league-table td:nth-child(8) {
+    border-right: 0.5px dashed darkgrey;
+}
+
 /* Player performance table */
 
 .player-performance-table th {
+    padding: 2px;
+}
+
+.player-performance-table th:not(:first-child) {
     cursor: pointer;
-    padding: 5px;
 }
 
 .player-performance-table th:first-child {
@@ -251,6 +265,10 @@
 }
 
 @media (max-width: 1500px) {
+    #always-data-container .player-row-bottom {
+        display: none !important;
+    }
+
     .table-arrow {
         display: none !important;
     }
@@ -270,7 +288,7 @@
     display: inline;
 }
 
-.player-performance-table tr:nth-child(odd) {
+.player-performance-table tr:nth-child(even) {
     background-color: #eeeeee;
 }
 
@@ -379,8 +397,14 @@ td.result-away-club-name {
     text-align: left;
 }
 
-.player-performance-table .clickable-row:hover .player-row-bottom {
-    color: white;
+.player-row-top-club-name {
+    color: darkgrey;
+    font-size: 0.75em;
+    font-style: italic;
+}
+
+.player-performance-table .clickable-row:hover .player-row-top-club-name {
+    color: white !important;
 }
 
 #sometimes-iframe {
@@ -801,9 +825,9 @@ td.result-away-club-name {
 
 @media (max-width: 1500px) {
     .form-results-box {
-        font-size: 0.75em;
-        height: 15px;
-        width: 15px;
+        font-size: 0.7em;
+        height: 18px;
+        width: 18px;
     }
 }
 
@@ -1230,4 +1254,8 @@ a:hover:not(.nav-element):not(.nav-button) {
     background-color: #aaaaaa;
     color: white;
     cursor: pointer;
+}
+
+.date-row {
+    height: 25px;
 }

@@ -27,7 +27,23 @@ class Scheduler:
                     clubX, clubY = game['home'], game['away']
                     cls.scheduleFixture(currentDate, gameweek, league, clubX, clubY)
                 gameweek += 1
-            currentDate += timedelta(days = 1) 
+            currentDate += timedelta(days = 1)
+    
+    @classmethod
+    def spreadScheduleLeagueFixtures(cls, year, league):
+        schedule = cls.roundRobinScheduler(league, robinType = 'double')
+        gameweek = 1
+        gameDayOfYear = 1
+        gameInterval = 300 / len(schedule)
+        while True:
+            if not schedule.get(gameweek): ### Exit loop when fixtures have been exhausted
+                return
+            gameDate = date(year, 1, 1) + timedelta(round(gameDayOfYear) - 1)
+            for game in schedule[gameweek]:
+                clubX, clubY = game['home'], game['away']
+                cls.scheduleFixture(gameDate, gameweek, league, clubX, clubY)
+            gameweek += 1
+            gameDayOfYear += gameInterval
     
     @classmethod
     def roundRobinScheduler(cls, tournament, robinType = 'single', returnedObject = 'dict'):
@@ -80,5 +96,4 @@ class Scheduler:
             elif returnedObject == 'fixture':
                 fixtureList = [Fixture(tournament, clubX = value[0], clubY = value[1]) for value in gameweek.values()]
             reformattedSchedule[i + 1] = fixtureList
-
         return reformattedSchedule

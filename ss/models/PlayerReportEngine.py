@@ -52,16 +52,7 @@ class PlayerReportEngine:
 
         select = clubReport['team'].getSelectFromPlayer(player)
         selectRating = clubReport['team'].getSelectRating(select)
-        oppositionTeamRating = oppositionClubReport['team'].rating
-        # ratingDiff = utils.limitValue(selectRating - oppositionTeamRating, mn = -17, mx = 17)
-        # a = np.power(abs(ratingDiff) / 10, 2)
-        # b = np.power(a, 3) / 25
-        # if ratingDiff > 0:
-        #     baseRating = 5 + a - b
-        # else:
-        #     baseRating = 5 - a + b
-        # modulatedBaseRating = utils.limitedRandNorm({'mu': baseRating, 'sg': 0.5, 'mn': 3, 'mx': 7})
-
+        oppositionTeamRating = oppositionClubReport['team'].averageRating
         ratingAdvantage = selectRating - oppositionTeamRating
         x = ratingAdvantage
         baseRating = ((1 / (1 + np.power(np.e, (-x / 12.5)))) + 0.5) * 5

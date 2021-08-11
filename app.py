@@ -347,7 +347,7 @@ def playerPerformance():
         universe = pickle.loads(session['universe'])
         league = universe.systems[0].leagues[0]
         playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
-        filterClubs = [{'id': club.id, 'name': club.name} for club in league.clubs]
+        filterClubs = sorted([{'id': club.id, 'name': club.name} for club in league.clubs], key = lambda x: x['name'])
         # filterPlayers = [{'id': player.id, 'name': player.getProperName()} for club in league.clubs for player in club.players]
         filterPositions = list(playerConfig['positions'].keys())
         return render_template('player_performance_proper.html',

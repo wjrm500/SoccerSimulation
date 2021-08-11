@@ -41,7 +41,7 @@ $(document).ready(function() {
         let clubId = $(this).val();
         if (clubId !== 'all') {
             $('#player-performance-proper-table tr:not(:first-child)').each(function() {
-                if (clubId != $(this).find('td:nth-child(2) span').data('clubId')) {
+                if (clubId != $(this).find('td:nth-child(2) .player-row-bottom').data('clubId')) {
                     $(this).hide();
                 }
             });

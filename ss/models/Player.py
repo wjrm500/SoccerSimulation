@@ -216,7 +216,7 @@ class Player:
     
     def injure(self):
         if self.club is not None and self.injured is False:
-            injury = True if np.random.normal(self.fatigue, 0.02) > 0.25 else False
+            injury = True if np.random.normal(self.fatigue, 0.25) > 0.75 else False
             if injury:
                 x, itemArray, probabilityArray = 1, [], []
                 for i in range(1, 366):

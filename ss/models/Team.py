@@ -13,7 +13,7 @@ class Team:
         self.selection = selection
         self.selectRatings = {}
         self.players = [select.player for select in selection]
-        self.setRating()
+        self.setAverageRating()
         self.normaliseSelectRatings()
         self.setSelectionOffencesDefences()
         self.setTeamOffenceDefence()
@@ -28,12 +28,12 @@ class Team:
     def getSelectRating(self, select):
         return select.rating
     
-    def setRating(self):
-        self.rating = np.mean(list(map(self.getSelectRating, self.selection)))
+    def setAverageRating(self):
+        self.averageRating = np.mean(list(map(self.getSelectRating, self.selection)))
     
     def normaliseSelectRatings(self):
         for select, selectRating in self.selectRatings.items():
-            self.selectRatings[select] = ((selectRating * 2) + (self.rating * 1)) / 3
+            self.selectRatings[select] = ((selectRating * 2) + (self.averageRating * 1)) / 3
 
     def getPositionOffenceDefence(self, position):
         positionOffence, positionDefence = 0, 0

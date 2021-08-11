@@ -16,7 +16,7 @@ def simulate(customConfig, systemId, universeKey):
     ### Create Universe, taking in input parameters from user
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
     universe.universeKey = universeKey
-    daysToTimeTravel = ((customConfig['numClubsPerLeague'] - 1) * 2 * 7) + 7
+    daysToTimeTravel = 300
     print(daysToTimeTravel)
     universe.timeTravel(daysToTimeTravel, r)
     if r.exists('email_' + universeKey):

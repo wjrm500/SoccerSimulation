@@ -32,7 +32,7 @@ $(document).ready(function() {
                 }
             )
         },
-        500
+        250
     );
     $('#submit-email').click(function () {
         let submit = $(this);
