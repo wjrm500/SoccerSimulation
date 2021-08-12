@@ -102,8 +102,16 @@ def pickleObject(obj):
 def pickleLargeObject(obj):
     objName = type(obj).__name__ + str(generateRandomDigits(5))
     outfile = open(objName, 'wb')
-    joblib.dump(obj, outfile)
+    joblib.dump(obj, outfile, protocol = 3)
     outfile.close()
+    return objName
+
+def joblibDumps(obj):
+    filename = pickleLargeObject(obj)
+    with open(filename, 'rb') as file:
+        obj = file.read()
+    os.remove(filename)
+    return obj
 
 def unpickleMostRecent(path):
     files = glob.glob(path + '/*')

@@ -29,6 +29,27 @@ $(document).ready(function() {
         let url = '/simulation/player/' + this.dataset.playerId;
         sendIFrameToUrl(url);
     });
+
+    let numClubs = $('#form-tables-grid').data('num-clubs');
+    let numProRel = Math.floor(numClubs / 5);
+    let allPositions = [...Array(numClubs).keys()].map((x) => x + 1);
+    let promPositions = allPositions.filter((x) => x <= numProRel);
+    let relPositions = allPositions.filter((x) => x > numClubs - numProRel);
+
+    $('.form-table tr:not(:first-child)').each(function() {
+        debugger;
+        let rank = parseInt($(this).find('td:first-child').html());
+        if (promPositions.includes(rank)) {
+            $(this).addClass('color-param-top4');
+        } else if (relPositions.includes(rank)) {
+            $(this).addClass('color-param-bottom4');
+        }
+        if (promPositions[promPositions.length - 1] === rank) {
+            $(this).addClass('color-param-top4-border');
+        } else if (relPositions[0] === rank) {
+            $(this).addClass('color-param-bottom4-border');
+        }
+    })
     
     // The below is just a hacky fix for the fact that the "color-param-this" class for some reason doesn't get applied to the away team tables
     $('.form-table-container:nth-child(1) td:nth-child(2), .form-table-container:nth-child(3) td:nth-child(2)').each(function() {

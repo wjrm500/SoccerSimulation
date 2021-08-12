@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, request, url_for, redirect, Response, jsonify
+from flask import Flask, session, render_template, request, url_for, redirect, Response, jsonify, send_file
 from flask_session import Session
 from ss.config import playerConfig
 from ss.simulate import simulate
@@ -114,6 +114,14 @@ def simulation(universeKey):
         playerPerformanceItems = playerPerformanceItems,
         dates = dates
         )
+
+from io import BytesIO
+
+@app.route('/download/<universeKey>')
+def download(universeKey):
+    universe = db.getUniverseGridFile(universeKey)
+    attachmentFilename = 'universe_' + universeKey
+    return send_file(BytesIO(universe), attachment_filename = attachmentFilename, as_attachment = True)
 
 @app.route('/simulation/default-iframe')
 def default():
@@ -240,19 +248,8 @@ def fixture(fixtureId):
                     leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
                     for j, leagueTableItem in enumerate(leagueTableItems):
                         leagueTableItem[1]['#'] = j + 1
-                        colorParams = []
-                        if j == 3:
-                            colorParams.append('color-param-top4-border')
-                        if j == len(leagueTableItems) - 4:
-                            colorParams.append('color-param-bottom4-border')
-                        if j < 4:
-                            colorParams.append('color-param-top4')
-                        if j > len(leagueTableItems) - 5:
-                            colorParams.append('color-param-bottom4')
                         if leagueTableItem[0] == club:
-                            # colorParams.append('color-param-this') ### Overwritten for some reason for away teams, no idea why, so have used JS for this
                             tableIndex = j
-                        leagueTableItem[1]['colorParams'] = ' '.join(colorParams)
                     if tableIndex < 1:
                         startTableIndex = 0
                         endTableIndex = 3
@@ -292,7 +289,8 @@ def fixture(fixtureId):
         reverseFixture = reverseFixtureData,
         recentResults = recentResults,
         preMatchLeagueTables = preMatchLeagueTables,
-        postMatchLeagueTables = postMatchLeagueTables
+        postMatchLeagueTables = postMatchLeagueTables,
+        numClubs = len(universe.systems[0].leagues[0].clubs)
     )
 
 @app.route('/simulation/club/<clubId>')

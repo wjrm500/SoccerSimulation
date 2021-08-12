@@ -40,7 +40,7 @@
                 Post-match
             </div>
         </div>
-        <div id="form-tables-grid">
+        <div id="form-tables-grid" data-num-clubs="{{ numClubs }}">
             {% for leagueTables in [preMatchLeagueTables, postMatchLeagueTables] %}
                 {% for club, table in leagueTables['data'].items() %}
                     <div class="form-table-container">

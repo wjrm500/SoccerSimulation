@@ -1,0 +1,3 @@
+File "c:\users\will may\documents\python\soccersim\venv\lib\site-packages\pymongo\helpers.py", line 167, in _check_command_response
+    raise OperationFailure(errmsg, code, response, max_wire_version)
+pymongo.errors.OperationFailure: you are over your space quota, using 516 MB of 512 MB, full error: {'ok': 0, 'errmsg': 'you are over your space quota, using 516 MB of 512 MB', 'code': 8000, 'codeName': 'AtlasError'}

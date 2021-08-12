@@ -17,5 +17,10 @@
     font-size: 2em;
     font-family: 'Quattrocento Sans', sans-serif;
     font-weight: bold;
-    white-space: nowrap;
+}
+
+@media (max-width: 500px) {
+    #title {
+        display: none;
+    }
 }

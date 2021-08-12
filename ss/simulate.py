@@ -5,6 +5,7 @@ import pickle
 import os
 import redis
 from .send_email import send_email
+import ss.utils as utils
 
 ON_HEROKU = 'ON_HEROKU' in os.environ
 if ON_HEROKU:
@@ -22,7 +23,7 @@ def simulate(customConfig, systemId, universeKey):
     if r.exists('email_' + universeKey):
         recipient_address = r.get('email_' + universeKey).decode('utf-8')
         send_email(recipient_address, universeKey)
-    pickledUniverse = pickle.dumps(universe)
+    pickledUniverse = utils.joblibDumps(universe)
     db = Database.getInstance()
     cnx = db.cnx.grid_file
     fs = gridfs.GridFS(cnx)
