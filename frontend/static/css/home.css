@@ -133,3 +133,36 @@ input[type=file] {
 .simulation-form {
     width: 100%;
 }
+
+#links {
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+}
+
+#links a {
+    margin: 0px 5px;
+}
+
+.link {
+    color: white !important;
+    text-align: center;
+    text-decoration: none;
+    width: 100px;
+}
+
+.link a {
+    color: white !important;
+    text-decoration: none; 
+}
+
+.link:hover a {
+    color: darkgrey !important;
+}
+
+.link:first-child {
+    border-right: 0.5px solid darkgrey;
+}
