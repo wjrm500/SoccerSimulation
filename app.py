@@ -388,6 +388,22 @@ def clubPositionGraph(clubId):
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
 
+@app.route('/about', methods = ['GET'])
+def about():
+    return render_template(
+        'about.html',
+        cssFiles = ['rest_of_website.css'],
+        jsFiles = ['script.js']
+    )
+
+@app.route('/contact', methods = ['GET'])
+def contact():
+    return render_template(
+        'contact.html',
+        cssFiles = ['rest_of_website.css'],
+        jsFiles = ['script.js']
+    )
+
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor
 def inject_dict_for_all_templates():

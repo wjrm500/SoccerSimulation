@@ -1278,3 +1278,7 @@ a:hover:not(.nav-element):not(.nav-button) {
 .date-row {
     height: 25px;
 }
+
+.about-list li {
+    margin: 10px;
+}
