@@ -67,15 +67,22 @@ def getExistingSimulation():
 
 @app.route('/existing-simulation', methods = ['POST'])
 def postExistingSimulation():
+    error = 'ERROR: '
     existingHow = request.form.get('existing-how')
     if existingHow == 'in-the-cloud':
         universeKey = request.form.get('universe-key')
-        return redirect(url_for('simulation', universeKey = universeKey))
+        if db.universeKeyExists(universeKey):
+            return redirect(url_for('simulation', universeKey = universeKey))
+        error += 'Universe Key {} does not exist'.format(universeKey)
     elif existingHow == 'on-my-computer':
         file = request.files.get('upload-file')
         bytestream = file.read()
-        universe = pickle.loads(bytestream)
-        return showSimulation('', universe)
+        try:
+            universe = pickle.loads(bytestream)
+            return showSimulation('', universe)
+        except:
+            error += 'Invalid file upload'
+    return render_template('home-existing.html', cssFiles = ['home.css'], jsFiles = ['home.js'], error = error) 
 
 @app.route('/simulation/check-progress/<universeKey>', methods = ['GET'])
 def checkSimulationProgress(universeKey):

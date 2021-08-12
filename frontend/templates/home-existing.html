@@ -28,6 +28,9 @@
                     </div>
                 </button>
             </div>
+        {% if error %}
+            <div id="error">{{ error }}</div>
+        {% endif %}
         </form>
     </div>
 {% endblock %}

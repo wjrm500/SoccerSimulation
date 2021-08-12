@@ -11,6 +11,7 @@ body {
     position: fixed;
     top: 40%;
     transform: translate(-50%, -50%);
+    width: 500px;
 }
 
 .home-sub-container {
@@ -19,12 +20,14 @@ body {
 
 #home-buttons-container {
     display: flex;
+    width: 100%;
 }
 
 .button-container {
+    display: flex;
     height: 40px;
-    max-width: 500px;
-    padding: 0px 25px;
+    justify-content: center;
+    width: 100%;
 }
 
 #left-button-container {
@@ -42,7 +45,7 @@ body {
     font-weight: 500;
     height: 100%;
     text-align: center;
-    width: 350px;
+    width: 200px;
 }
 
 #new-simulation-button {
@@ -63,10 +66,6 @@ body {
 
 #existing-simulation-button::placeholder {
     color: white;
-}
-
-#new-simulation-form, #existing-simulation-form {
-    width: 500px;
 }
 
 .form-group {
@@ -104,7 +103,6 @@ input, select {
     background-color: white;
     border-radius: 5px;
     height: 40px;
-    width: 500px;
 }
 
 #progress-bar {
@@ -121,4 +119,17 @@ input[type=file] {
 
 #title:hover {
     color: darkgrey;
+}
+
+#error {
+    background-color: red;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+}
+
+.simulation-form {
+    width: 100%;
 }

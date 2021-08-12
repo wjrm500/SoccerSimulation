@@ -16,6 +16,11 @@ class Database:
         else:
             raise Exception("You cannot create another Database class")
     
+    def universeKeyExists(self, universeKey):
+        fs = gridfs.GridFS(self.cnx.grid_file)
+        result = fs.find_one({'filename': universeKey})
+        return bool(result)
+    
     def getUniverse(self, universeKey):
         if not hasattr(self, 'universe'):
             collection = self.cnx['soccersim']['universes']

@@ -20,4 +20,8 @@ $(document).ready(function () {
         divToShow.css('display', 'flex');
         divToShow.find('input').prop('required', true);
     });
+
+    setTimeout(function() {
+        $('#error').slideUp();
+    }, 2000);
 });
