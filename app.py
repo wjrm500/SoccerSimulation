@@ -1,3 +1,4 @@
+from ss.models.Universe import Universe
 from flask import Flask, session, render_template, request, url_for, redirect, Response, jsonify, send_file
 from flask_session import Session
 from ss.config import playerConfig
@@ -42,13 +43,13 @@ def postHome():
     universeKey = request.form['universe_key']
     return redirect(url_for('simulation/' + universeKey))
 
-@app.route('/new', methods = ['GET'])
-def getNew():
+@app.route('/new-simulation', methods = ['GET'])
+def getNewSimulation():
     systems = db.cnx['soccersim']['systems'].find()
     return render_template('home-new.html', cssFiles = ['home.css'], jsFiles = ['home.js'], systems = systems)
 
-@app.route('/new', methods = ['POST'])
-def postNew():
+@app.route('/new-simulation', methods = ['POST'])
+def postNewSimulation():
     systemId = int(request.form['system'])
     customConfig = {
         'numLeaguesPerSystem': None,
@@ -59,6 +60,22 @@ def postNew():
     r.set('simulation_progress_' + universeKey, 0)
     q.enqueue(simulate, customConfig, systemId, universeKey, job_timeout = 3600)
     return render_template('waiting.html', universeKey = universeKey, cssFiles = ['home.css'], jsFiles = ['waiting.js'])
+
+@app.route('/existing-simulation', methods = ['GET'])
+def getExistingSimulation():
+    return render_template('home-existing.html', cssFiles = ['home.css'], jsFiles = ['home.js'])
+
+@app.route('/existing-simulation', methods = ['POST'])
+def postExistingSimulation():
+    existingHow = request.form.get('existing-how')
+    if existingHow == 'in-the-cloud':
+        universeKey = request.form.get('universe-key')
+        return redirect(url_for('simulation', universeKey = universeKey))
+    elif existingHow == 'on-my-computer':
+        file = request.files.get('upload-file')
+        bytestream = file.read()
+        universe = pickle.loads(bytestream)
+        return showSimulation('', universe)
 
 @app.route('/simulation/check-progress/<universeKey>', methods = ['GET'])
 def checkSimulationProgress(universeKey):
@@ -78,6 +95,9 @@ def simulation(universeKey):
     universe = db.getUniverseGridFile(universeKey)
     session['universe'] = universe
     universe = pickle.loads(universe)
+    return showSimulation(universeKey, universe)
+    
+def showSimulation(universeKey, universe):
     league = universe.systems[0].leagues[0]
 
     ### Get standings

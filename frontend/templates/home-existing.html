@@ -1,0 +1,33 @@
+{% extends 'home.html' %}
+
+{% block home_body %}
+    <div class="button-container">
+        <form method="post" id="existing-simulation-form" class="simulation-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Where is the simulation stored</label>
+                <select id="existing-how" name="existing-how" style="width: 100%;" required>
+                    <option value="" selected disabled>Select an option</option>
+                    <option value="in-the-cloud">In the cloud</option>
+                    <option value="on-my-computer">On my computer</option>
+                </select>
+            </div>
+            <div id="in-the-cloud" class="form-group hideable-div" style="display: none;">
+                <label>Enter Universe Key</label>
+                <input type="text" name="universe-key" spellcheck="false">
+            </div>
+            <div id="on-my-computer" class="form-group hideable-div" style="display: none;">
+                <input type="file" name="upload-file" style="width: 250px;">
+            </div>
+            <div class="form-group">
+                <button class="simulate-button">
+                    <div id="text">
+                        Submit
+                    </div>
+                    <div id="spinner" style="display: none; padding: 10px;">
+                        <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

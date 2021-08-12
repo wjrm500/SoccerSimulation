@@ -108,7 +108,7 @@
 }
 
 #title:hover, .nav-button:hover {
-    color: red;
+    color: darkgrey;
 }
 
 /* Main */
@@ -1056,16 +1056,8 @@ a.result-L:hover {
     width: 100%;
 }
 
-#club-player-performance-table tr:nth-child(odd) {
-    background-color: #eeeeee;
-}
-
 #club-player-performance-table tr:hover .player-row-bottom {
     color: white !important;
-}
-
-#club-player-performance-table tr:hover {
-    cursor: pointer;
 }
 
 .rating-span {

@@ -2,7 +2,7 @@
 
 {% block home_body %}
     <div id="left-button-container" class="button-container">
-        <button id="new-simulation-button" class="simulation-button">
+        <button id="new-simulation-button" class="simulation-button" data-url="/new-simulation">
             <div id="text">
                 New Simulation
             </div>
@@ -12,8 +12,13 @@
         </button>
     </div>
     <div id="right-button-container" class="button-container">
-        <form id="existing-simulation-form" method="post" autocomplete="off" spellcheck="false">
-            <input id="existing-simulation-button" class="simulation-button" type="text" name="universe_key" placeholder="Existing Simulation (Enter Key Here)">
-        </form>
+        <button id="existing-simulation-button" class="simulation-button" data-url="/existing-simulation">
+            <div id="text">
+                Existing Simulation
+            </div>
+            <div id="spinner" style="display: none; padding: 10px;">
+                <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
+            </div>
+        </button>
     </div>
 {% endblock %}
