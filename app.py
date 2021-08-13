@@ -76,9 +76,8 @@ def postExistingSimulation():
         error += 'Universe Key {} does not exist'.format(universeKey)
     elif existingHow == 'on-my-computer':
         file = request.files.get('upload-file')
-        bytestream = file.read()
+        universe = file.read()
         try:
-            universe = pickle.loads(bytestream)
             return showSimulation('', universe)
         except:
             error += 'Invalid file upload'
@@ -100,11 +99,11 @@ def storeEmail():
 @app.route('/simulation/<universeKey>')
 def simulation(universeKey):
     universe = db.getUniverseGridFile(universeKey)
-    universe = pickle.loads(universe)
     return showSimulation(universeKey, universe)
     
 def showSimulation(universeKey, universe):
     session['universe'] = universe
+    universe = pickle.loads(universe)
     league = universe.systems[0].leagues[0]
 
     ### Get standings
