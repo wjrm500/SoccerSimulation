@@ -100,11 +100,11 @@ def storeEmail():
 @app.route('/simulation/<universeKey>')
 def simulation(universeKey):
     universe = db.getUniverseGridFile(universeKey)
-    session['universe'] = universe
     universe = pickle.loads(universe)
     return showSimulation(universeKey, universe)
     
 def showSimulation(universeKey, universe):
+    session['universe'] = universe
     league = universe.systems[0].leagues[0]
 
     ### Get standings
@@ -156,7 +156,7 @@ def default():
 
 @app.route('/simulation/player/<id>')
 def player(id):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(id)
         performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex')[player]
@@ -193,7 +193,7 @@ def player(id):
 
 @app.route('/simulation/player/<playerId>/radar')
 def playerRadar(playerId):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(playerId)
         fig = player_utils.showSkillDistribution(player, projection = True)
@@ -203,7 +203,7 @@ def playerRadar(playerId):
 
 @app.route('/simulation/player/<playerId>/form-graph')
 def playerFormGraph(playerId):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(playerId)
         fig = player_utils.showPlayerForm(player)
@@ -213,7 +213,7 @@ def playerFormGraph(playerId):
 
 @app.route('/simulation/player/<playerId>/development-graph')
 def playerDevelopmentGraph(playerId):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         player = universe.playerController.getPlayerById(playerId)
         fig = player_utils.showPlayerDevelopment(player)
@@ -223,7 +223,7 @@ def playerDevelopmentGraph(playerId):
 
 @app.route('/simulation/fixture/<fixtureId>')
 def fixture(fixtureId):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         fixture = universe.getFixtureById(int(fixtureId))
         clubData = []
@@ -322,7 +322,7 @@ def fixture(fixtureId):
 
 @app.route('/simulation/club/<clubId>')
 def club(clubId):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         club = universe.getClubById(clubId)
         team = club.selectTeam(test = True)
@@ -387,7 +387,7 @@ def playerPerformance():
 
 @app.route('/simulation/club/<clubId>/position-graph')
 def clubPositionGraph(clubId):
-    if session['universe']:
+    if 'universe' in session:
         universe = pickle.loads(session['universe'])
         club = universe.getClubById(clubId)
         fig = club_utils.showClubPositions(club)
