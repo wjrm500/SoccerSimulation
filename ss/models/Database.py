@@ -21,19 +21,12 @@ class Database:
         result = fs.find_one({'filename': universeKey})
         return bool(result)
     
-    def getUniverse(self, universeKey):
-        if not hasattr(self, 'universe'):
-            collection = self.cnx['soccersim']['universes']
-            result = collection.find_one({'_id': universeKey})
-            self.universe = result['value']
-        return self.universe
-    
     def getUniverseGridFile(self, universeKey):
-        if universeKey not in self.universes:
-            fs = gridfs.GridFS(self.cnx.grid_file)
-            result = fs.find_one({'filename': universeKey})
+        fs = gridfs.GridFS(self.cnx.grid_file)
+        result = fs.find_one({'filename': universeKey})
+        if result:
             self.universes[universeKey] = result.read()
-        return self.universes[universeKey]
+            return self.universes[universeKey]
 
     @staticmethod
     def getInstance():

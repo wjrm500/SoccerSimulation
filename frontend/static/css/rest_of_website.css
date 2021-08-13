@@ -336,7 +336,7 @@
 }
 
 .player-row-bottom {
-    color: grey;
+    color: #666666;
     font-size: 0.8em;
     overflow-x: clip;
     text-overflow: ellipsis;

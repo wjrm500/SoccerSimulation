@@ -2,7 +2,6 @@ import random
 import string
 import collections.abc
 import numpy as np
-import random
 from datetime import date
 from dateutil.relativedelta import relativedelta
 import copy
@@ -12,6 +11,7 @@ import os
 import re
 import joblib
 from .models.Database import Database
+from string import ascii_lowercase
 
 def generateName(chars):        
     return ''.join(random.choice(string.ascii_lowercase) for _ in range(chars))
@@ -146,3 +146,6 @@ def printCodeTimeTaken(code):
         timeTaken = 0
     print('Code: {} --- Time taken: {}'.format(code, timeTaken))
     datetimePrevious = datetimeNow
+
+def makeUniverseKey(length = 10):
+    return ''.join(random.choice(ascii_lowercase) for _ in range(length))

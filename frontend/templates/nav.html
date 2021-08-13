@@ -3,7 +3,7 @@
         <img id="logo" class="logo-title-element" src="/static/images/soccersim_logo.png">
         <div id="title" class="logo-title-element">Soccer Simulation</div>
     </a>
-    {% if universeKey %}
+    {% if universeKey|length == 10 %}
         <div class="nav-element">
             <div id="simulation-key-container">
                 <div id="simulation-key-label" class="simulation-key-element">
@@ -28,7 +28,7 @@
             <div class="text">Contact</div>
             <div class="icon"><i class="far fa-envelope"></i></div>
         </a>
-        {% if universeKey %}
+        {% if universeKey|length == 10 %}
             <a href="/download/{{ universeKey }}" id="new-simulation-button" class="nav-button">
                 <div class="text">Download</div>
                 <div class="icon"><i class="fas fa-download"></i></div>
