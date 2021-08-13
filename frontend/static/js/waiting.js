@@ -21,13 +21,13 @@ $(document).ready(function() {
                                     function (complete) {
                                         debugger;
                                         if (JSON.parse(complete)) {
-                                            window.location.href = `/simulation/${universeKey}`;
                                             clearInterval(checkDatabase);
+                                            window.location.href = `/simulation/${universeKey}`;
                                         }
                                     }
                                 )
                             },
-                            2000
+                            5000
                         );
                     }
                     $('#progress-bar').css('width', progress + '%');

@@ -19,6 +19,7 @@ def simulate(customConfig, systemId, universeKey):
     universe.universeKey = universeKey
     daysToTimeTravel = 300
     print(daysToTimeTravel)
+    print(universe.systems[0].name)
     universe.timeTravel(daysToTimeTravel, r)
     if r.exists('email_' + universeKey):
         recipient_address = r.get('email_' + universeKey).decode('utf-8')
@@ -28,4 +29,4 @@ def simulate(customConfig, systemId, universeKey):
     cnx = db.cnx.grid_file
     fs = gridfs.GridFS(cnx)
     fs.put(pickledUniverse, filename = universeKey)
-    r.flushdb()
+    r.flushall()
