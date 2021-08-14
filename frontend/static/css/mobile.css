@@ -1,0 +1,65 @@
+#main {
+    height: 100%;
+}
+
+#nav {
+    border-radius: 0px;
+    margin: 0px;
+}
+
+#full-container {
+    width: 100%;
+}
+
+#outer-mobile-data-container {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+#mobile-data-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 2.5px;
+}
+
+.data-container {
+    border: none;
+    border-radius: none;
+    padding: 0px;
+}
+
+.player-row-bottom {
+    display: none;
+}
+
+.grid-item {
+    background-color: white;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    margin: 2px 0px;
+    overflow-y: auto;
+}
+
+#no-mobile-access-notice {
+    align-items: center;
+    background-color: yellow;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    font-weight: 500;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+#no-mobile-access-notice .text {
+    font-size: 0.8em;
+}
+
+#no-mobile-access-notice .close-icon {
+    font-size: 25px;
+    margin: 5px;
+}

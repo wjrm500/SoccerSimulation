@@ -1,0 +1,48 @@
+{% extends 'desktop/base.html' %}
+{% block body %}
+<div id="main">
+    <div id="full-container" style="width: 100%">
+        <div id="outer-mobile-data-container" class="data-container">
+            <div id="nav">
+                <a href="/" id="logo-title-container" class="home-sub-container nav-element">
+                    <img id="logo" class="logo-title-element" src="/static/images/soccersim_logo.png">
+                    <div id="title" class="logo-title-element">Soccer Simulation</div>
+                </a>
+                <div id="hyperlink-panel" class="nav-element">
+                    <a href="/about" id="about-button" class="nav-button">
+                        <div class="text">About</div>
+                        <div class="icon"><i class="far fa-address-card"></i></div>
+                    </a>
+                    <a href="/contact" id="contact-button" class="nav-button">
+                        <div class="text">Contact</div>
+                        <div class="icon"><i class="far fa-envelope"></i></div>
+                    </a>
+                    <a href="/new-simulation" id="new-simulation-button" class="nav-button">
+                        <div class="text">New</div>
+                        <div class="icon"><i class="far fa-plus-square"></i></div>
+                    </a>
+                </div>
+            </div>
+            <div id="mobile-data-container">
+                <div style="display: flex; justify-content: center; padding: 5px; width: 100%">
+                    <div style="text-align: justify; width: 100%;">
+                       <h3>The <b>Contact</b> page</h3>
+                       <ul style="padding-inline-start: 20px;">
+                          <li>
+                             Email me at <a href="mailto:wjrm500@gmail.com" style="color: blue; text-decoration: underline;">wjrm500@gmail.com</a>
+                          </li>
+                          <li>
+                             Find me on <a href="https://www.linkedin.com/in/william-may-6893371a3/" style="color: blue; text-decoration: underline;">LinkedIn</a>
+                          </li>
+                          <li>
+                             Or find out more about me and my other interests on <a href="https://wjrm500.com" style="color: blue; text-decoration: underline;">my website</a>
+                          </li>
+                       </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

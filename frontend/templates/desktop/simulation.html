@@ -1,4 +1,4 @@
-{% extends 'rest_of_website.html' %}
+{% extends 'desktop/rest_of_website.html' %}
 {% block content %}
 <div id="main">
     <div class="half-container">
@@ -8,7 +8,7 @@
                     Standings
                 </div>
                 <div class="grid-item-content">
-                    {% include 'standings.html' %}
+                    {% include 'desktop/standings.html' %}
                 </div>
             </div>
             <div id="grid-item-performance" class="grid-item">
@@ -19,7 +19,7 @@
                     </a>
                 </div>
                 <div class="grid-item-content">
-                    {% include 'player_performance.html' %}
+                    {% include 'desktop/player_performance.html' %}
                 </div>
             </div>
             <div id="grid-item-results" class="grid-item">
@@ -27,7 +27,7 @@
                     Results
                 </div>
                 <div class="grid-item-content">
-                    {% include 'results.html' %}
+                    {% include 'desktop/results.html' %}
                 </div>
             </div>
         </div>

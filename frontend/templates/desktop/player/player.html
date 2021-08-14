@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'desktop/base.html' %}
 
 {% block body %}
 <div class="stretched-grid-item">
@@ -22,22 +22,22 @@
     <div id="player-grid" class="grid-item-content">
         <div id="grid-item-summary" class="grid-item">
             <div class="grid-item-content">
-                {% include 'player/player_summary.html' %}
+                {% include 'desktop/player/player_summary.html' %}
             </div>
         </div>
         <div id="grid-item-stats-radar" class="grid-item">
             <div class="grid-item-content">
-                {% include 'player/player_stats_radar.html' %}
+                {% include 'desktop/player/player_stats_radar.html' %}
             </div>
         </div>
         <div id="grid-item-games" class="grid-item">
             <div class="grid-item-content">
-                {% include 'player/player_games.html' %}
+                {% include 'desktop/player/player_games.html' %}
             </div>
         </div>
         <div id="grid-item-form" class="grid-item">
             <div class="grid-item-content">
-                {% include 'player/player_development.html' %}
+                {% include 'desktop/player/player_development.html' %}
             </div>
         </div>
     </div>

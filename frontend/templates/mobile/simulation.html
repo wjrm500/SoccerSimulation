@@ -1,0 +1,64 @@
+{% extends 'desktop/base.html' %}
+{% block body %}
+<div id="main">
+    <div id="full-container" style="width: 100%">
+        <div id="outer-mobile-data-container" class="data-container">
+            <div id="nav">
+                <a href="/" id="logo-title-container" class="home-sub-container nav-element">
+                    <img id="logo" class="logo-title-element" src="/static/images/soccersim_logo.png">
+                    <div id="title" class="logo-title-element">Soccer Simulation</div>
+                </a>
+                <div id="hyperlink-panel" class="nav-element">
+                    <a href="/about" id="about-button" class="nav-button">
+                        <div class="text">About</div>
+                        <div class="icon"><i class="far fa-address-card"></i></div>
+                    </a>
+                    <a href="/contact" id="contact-button" class="nav-button">
+                        <div class="text">Contact</div>
+                        <div class="icon"><i class="far fa-envelope"></i></div>
+                    </a>
+                    <a href="/new-simulation" id="new-simulation-button" class="nav-button">
+                        <div class="text">New</div>
+                        <div class="icon"><i class="far fa-plus-square"></i></div>
+                    </a>
+                </div>
+            </div>
+            <div id="no-mobile-access-notice">
+                <div class="text">
+                    Access the app via your laptop or desktop PC for the full experience!
+                </div>
+                <div class="close-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+            </div>
+            <div id="mobile-data-container">
+                <div id="grid-item-standings" class="grid-item">
+                    <div class="grid-item-title">
+                        Standings
+                    </div>
+                    <div class="grid-item-content">
+                        {% include 'desktop/standings.html' %}
+                    </div>
+                </div>
+                <div id="grid-item-performance" class="grid-item">
+                    <div class="grid-item-title" style="align-items: center; display: flex; justify-content: space-between;">
+                        <div>Player performance</div>
+                    </div>
+                    <div class="grid-item-content">
+                        {% include 'desktop/player_performance.html' %}
+                    </div>
+                </div>
+                <div id="grid-item-results" class="grid-item">
+                    <div class="grid-item-title">
+                        Results
+                    </div>
+                    <div class="grid-item-content">
+                        {% include 'desktop/results.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'desktop/base.html' %}
 
 {% block body %}
 <div class="stretched-grid-item">
@@ -24,17 +24,17 @@
     <div id="fixture-grid" class="grid-item-content">
         <div id="grid-item-summary" class="grid-item">
             <div class="grid-item-content">
-                {% include 'fixture/fixture_summary.html' %}
+                {% include 'desktop/fixture/fixture_summary.html' %}
             </div>
         </div>
         <div id="grid-item-statistics" class="grid-item">
             <div class="grid-item-content">
-                {% include 'fixture/fixture_statistics.html' %}
+                {% include 'desktop/fixture/fixture_statistics.html' %}
             </div>
         </div>
         <div id="grid-item-performance" class="grid-item">
             <div class="grid-item-content">
-                {% include 'fixture/fixture_player_performance.html' %}
+                {% include 'desktop/fixture/fixture_player_performance.html' %}
             </div>
         </div>
     </div>

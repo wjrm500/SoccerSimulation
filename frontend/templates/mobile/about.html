@@ -1,0 +1,63 @@
+{% extends 'desktop/base.html' %}
+{% block body %}
+<div id="main">
+    <div id="full-container" style="width: 100%">
+        <div id="outer-mobile-data-container" class="data-container">
+            <div id="nav">
+                <a href="/" id="logo-title-container" class="home-sub-container nav-element">
+                    <img id="logo" class="logo-title-element" src="/static/images/soccersim_logo.png">
+                    <div id="title" class="logo-title-element">Soccer Simulation</div>
+                </a>
+                <div id="hyperlink-panel" class="nav-element">
+                    <a href="/about" id="about-button" class="nav-button">
+                        <div class="text">About</div>
+                        <div class="icon"><i class="far fa-address-card"></i></div>
+                    </a>
+                    <a href="/contact" id="contact-button" class="nav-button">
+                        <div class="text">Contact</div>
+                        <div class="icon"><i class="far fa-envelope"></i></div>
+                    </a>
+                    <a href="/new-simulation" id="new-simulation-button" class="nav-button">
+                        <div class="text">New</div>
+                        <div class="icon"><i class="far fa-plus-square"></i></div>
+                    </a>
+                </div>
+            </div>
+            <div id="mobile-data-container">
+                <div style="display: flex; justify-content: center; padding: 5px; width: 100%">
+                    <div style="text-align: justify; width: 100%;">
+                        <h3>The <b>About</b> page</h3>
+                        <p>Hi! My name is William May, and I'd like to wish you a warm welcome to <b>Soccer Simulation</b>.</p>
+                        <p>This website is designed to showcase the latest, OOP Python-based iteration of a football simulation project that has been a lifelong passion of mine. You might like to discover more by reading <a href="https://wjrm500.com/a-history-of-one-mans-inexplicable-obsession-with-football-simulation/" style="color: blue; text-decoration: underline;">this article</a>.</p>
+                        <h5>How to create your own simulation</h5>
+                        <ol class="about-list">
+                            <li>Go to the <a href="/new-simulation" style="color: blue; text-decoration: underline;">New Simulation</a> page</li>
+                            <li>Here you will be presented with three different dropdowns...</li>
+                            <ul>
+                                <li>The <b>System</b> you choose determines from which pool of randomly generated city names the clubs in the simulation have their names drawn from</li>
+                                <li><b>Number of clubs</b> is the number of clubs that will compete in the single league competition that is simulated. This can be any value from 8 to 50. The higher this number is, the longer the simulation will take to run</li>
+                                <li><b>Number of players per club</b> is self-explanatory. This can be any value from 15 to 60. The higher this number is, the longer the simulation will take to run</li>
+                            </ul>
+                            <li>Click submit and wait for the simulation to complete. There is a progress bar and an estimated time to completion provided for your convenience, but for longer-running simulations, it's probably best to submit your email address via the input field provided, close the window and await the automated email informing you that the simulation is complete</li>
+                            <li>
+                                <p>Enter your simulation and inspect the data! Almost everything on the simulation page is clickable, so my advice is to start clicking straight away and "follow your nose". The simulation is deep, so if you have an inquisitive mind and love data I'm sure there will be plenty to interest you!</p>
+                                <p>You will notice that the left-hand side of the simulation page is static, whilst the right-hand side of the page is loaded with new data with each click. This was a design decision: I figured keeping the most important data permanently visible on the left-hand side of the page would mean you are able to quickly and easily access detailed Club, Result or Player data with a single click, minimising back and forth travel.</p>
+                            </li>
+                        </ol>
+                        <h5>A few practical things to note</h5>
+                        <ul class="about-list">
+                            <li><b>The simulation page should only be viewed on a laptop or desktop computer</b>. It's a great big data dashboard and I don't think it's even worth me bothering to make it mobile-friendly at this stage</li>
+                            <li>Simulations are by default stored on a free MongoDB instance with a limited capacity of 512 MB. Because of these constraints, <b>all simulations are automatically deleted from the server after 12 hours</b></li>
+                            <li>If you want to persist your simulation indefinitely, you can download it as a binary file by clicking "Download" in the top-right corner of the simulation page, and then access the simulation via this application at a later date by uploading the binary file on the <a href="/existing-simulation" style="color: blue; text-decoration: underline;">Existing Simulation</a> page and hitting submit</li>
+                            <li>Or, if you are a rabid Pythonista and want to explore the simulation on your own computer, one way to do this would be to read in and de-pickle (<i>pickle.loads()</i>) the file in Python</li>
+                        </ul>
+                        <p>Happy simulating!</p>
+                        <img src="/static/images/my_signature.png" style="width: 150px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

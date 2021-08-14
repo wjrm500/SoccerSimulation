@@ -1,5 +1,6 @@
 from ss.models.Universe import Universe
 from flask import Flask, session, render_template, request, url_for, redirect, Response, jsonify, send_file
+from flask_mobility import Mobility
 from flask_session import Session
 from ss.config import playerConfig
 from ss.simulate import simulate
@@ -16,6 +17,7 @@ from rq import Queue
 from worker import conn
 import redis
 from datetime import timedelta
+from io import BytesIO
 
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
@@ -31,10 +33,62 @@ app = Flask(__name__, template_folder = template_folder, static_folder = static_
 app.secret_key = os.urandom(12).hex()
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
+Mobility(app)
+
+def showSimulation():
+    activeUniverseKey = session['activeUniverseKey']
+    universe = pickle.loads(session['universes'][activeUniverseKey])
+    league = universe.systems[0].leagues[0]
+
+    ### Get standings
+    leagueTable = league.getLeagueTable()
+    leagueTableItems = list(leagueTable.items())
+    leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
+
+    # Get player performance
+    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+
+    ### Get results
+    dates = {}
+    for matchReport in league.matchReports:
+        clubA, clubB = matchReport['clubs'].keys()
+        match = list(matchReport['clubs'].values())[0]['match']
+        scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
+        result = {
+            'fixtureId': matchReport['fixtureId'],
+            'homeClub': clubA,
+            'awayClub': clubB,
+            'homeScore': scoreA,
+            'awayScore': scoreB
+        }
+        if matchReport['date'] not in dates:
+            dates[matchReport['date']] = []
+        dates[matchReport['date']].append(result)
+    
+    if request.MOBILE:
+        return render_template(
+            'mobile/simulation.html',
+            cssFiles = ['rest_of_website.css', 'mobile.css'],
+            jsFiles = ['mobile.js'],
+            universeKey = activeUniverseKey,
+            leagueTableItems = leagueTableItems,
+            playerPerformanceItems = playerPerformanceItems,
+            dates = dates
+        )
+
+    return render_template(
+        'desktop/simulation.html',
+        cssFiles = ['rest_of_website.css'],
+        jsFiles = ['script.js'],
+        universeKey = activeUniverseKey,
+        leagueTableItems = leagueTableItems,
+        playerPerformanceItems = playerPerformanceItems,
+        dates = dates
+    )
 
 @app.route('/', methods = ['GET'])
 def getHome():
-    return render_template('home-initial.html', cssFiles = ['home.css'], jsFiles = ['home.js'])
+    return render_template('desktop/home-initial.html', cssFiles = ['home.css'], jsFiles = ['home.js'])
 
 @app.route('/', methods = ['POST'])
 def postHome():
@@ -44,7 +98,7 @@ def postHome():
 @app.route('/new-simulation', methods = ['GET'])
 def getNewSimulation():
     systems = db.cnx['soccersim']['systems'].find()
-    return render_template('home-new.html', cssFiles = ['home.css'], jsFiles = ['home.js'], systems = systems)
+    return render_template('desktop/home-new.html', cssFiles = ['home.css'], jsFiles = ['home.js'], systems = systems)
 
 @app.route('/new-simulation', methods = ['POST'])
 def postNewSimulation():
@@ -57,11 +111,11 @@ def postNewSimulation():
     universeKey = utils.makeUniverseKey()
     r.set('simulation_progress_' + universeKey, 0)
     q.enqueue(simulate, customConfig, systemId, universeKey, job_timeout = 3600)
-    return render_template('waiting.html', universeKey = universeKey, cssFiles = ['home.css'], jsFiles = ['waiting.js'])
+    return render_template('desktop/waiting.html', universeKey = universeKey, cssFiles = ['home.css'], jsFiles = ['waiting.js'])
 
 @app.route('/existing-simulation', methods = ['GET'])
 def getExistingSimulation():
-    return render_template('home-existing.html', cssFiles = ['home.css'], jsFiles = ['home.js'])
+    return render_template('desktop/home-existing.html', cssFiles = ['home.css'], jsFiles = ['home.js'])
 
 @app.route('/existing-simulation', methods = ['POST'])
 def postExistingSimulation():
@@ -82,7 +136,7 @@ def postExistingSimulation():
             return showSimulation()
         except:
             error += 'Invalid file upload'
-    return render_template('home-existing.html', cssFiles = ['home.css'], jsFiles = ['home.js'], error = error) 
+    return render_template('desktop/home-existing.html', cssFiles = ['home.css'], jsFiles = ['home.js'], error = error) 
 
 @app.route('/simulation/check-progress/<universeKey>', methods = ['GET'])
 def checkSimulationProgress(universeKey):
@@ -113,47 +167,6 @@ def simulation(universeKey):
         universe = db.getUniverseGridFile(universeKey)
         session['universes'][universeKey] = universe
     return showSimulation()
-    
-def showSimulation():
-    activeUniverseKey = session['activeUniverseKey']
-    universe = pickle.loads(session['universes'][activeUniverseKey])
-    league = universe.systems[0].leagues[0]
-
-    ### Get standings
-    leagueTable = league.getLeagueTable()
-    leagueTableItems = list(leagueTable.items())
-    leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
-
-    # Get player performance
-    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
-
-    ### Get results
-    dates = {}
-    for matchReport in league.matchReports:
-        clubA, clubB = matchReport['clubs'].keys()
-        match = list(matchReport['clubs'].values())[0]['match']
-        scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
-        result = {
-            'fixtureId': matchReport['fixtureId'],
-            'homeClub': clubA,
-            'awayClub': clubB,
-            'homeScore': scoreA,
-            'awayScore': scoreB
-        }
-        if matchReport['date'] not in dates:
-            dates[matchReport['date']] = []
-        dates[matchReport['date']].append(result)
-
-    return render_template('simulation.html',
-        cssFiles = ['rest_of_website.css'],
-        jsFiles = ['script.js'],
-        universeKey = activeUniverseKey,
-        leagueTableItems = leagueTableItems,
-        playerPerformanceItems = playerPerformanceItems,
-        dates = dates
-        )
-
-from io import BytesIO
 
 @app.route('/download/<universeKey>')
 def download(universeKey):
@@ -163,7 +176,7 @@ def download(universeKey):
 
 @app.route('/simulation/default-iframe')
 def default():
-    return render_template('default_iframe.html', cssFiles = ['rest_of_website.css'])
+    return render_template('desktop/default_iframe.html', cssFiles = ['rest_of_website.css'])
 
 @app.route('/simulation/player/<id>')
 def player(id):
@@ -379,15 +392,14 @@ def playerPerformance():
     filterClubs = sorted([{'id': club.id, 'name': club.name} for club in league.clubs], key = lambda x: x['name'])
     # filterPlayers = [{'id': player.id, 'name': player.getProperName()} for club in league.clubs for player in club.players]
     filterPositions = list(playerConfig['positions'].keys())
-    return render_template('player_performance_proper.html',
+    return render_template('desktop/player_performance_proper.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['iframe.js', 'player_performance.js'],
         filterClubs = filterClubs,
         # filterPlayers = filterPlayers,
         filterPositions = filterPositions,
         playerPerformanceItems = playerPerformanceItems
-        )
-    return render_template('error.html')
+    )
 
 @app.route('/simulation/club/<clubId>/position-graph')
 def clubPositionGraph(clubId):
@@ -400,19 +412,15 @@ def clubPositionGraph(clubId):
 
 @app.route('/about', methods = ['GET'])
 def about():
-    return render_template(
-        'about.html',
-        cssFiles = ['rest_of_website.css'],
-        jsFiles = ['script.js']
-    )
+    if request.MOBILE:
+        return render_template('mobile/about.html', cssFiles = ['rest_of_website.css', 'mobile.css'])
+    return render_template('about.html', cssFiles = ['rest_of_website.css'], jsFiles = ['script.js'])
 
 @app.route('/contact', methods = ['GET'])
 def contact():
-    return render_template(
-        'contact.html',
-        cssFiles = ['rest_of_website.css'],
-        jsFiles = ['script.js']
-    )
+    if request.MOBILE:
+        return render_template('mobile/contact.html', cssFiles = ['rest_of_website.css', 'mobile.css'])
+    return render_template('contact.html', cssFiles = ['rest_of_website.css'], jsFiles = ['script.js'])
 
 @app.before_request
 def add_universes_to_session():
