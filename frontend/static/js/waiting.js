@@ -19,7 +19,6 @@ $(document).ready(function() {
                                 $.get(
                                     `/simulation/check-universe-key-exists-in-database/${universeKey}`,
                                     function (complete) {
-                                        debugger;
                                         if (JSON.parse(complete)) {
                                             clearInterval(checkDatabase);
                                             window.location.href = `/simulation/${universeKey}`;
