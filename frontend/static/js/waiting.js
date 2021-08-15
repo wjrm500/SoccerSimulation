@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $('#links').css('display', 'none');
     let universeKey = $('#progress-bar').data('universe-key');
     let originTime = (new Date()).getTime();
     let checkProgress = setInterval(
