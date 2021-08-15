@@ -206,7 +206,7 @@ def player(id):
         }
     }
     return render_template(
-        'player/player.html',
+        'desktop/player/player.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['iframe.js', 'player.js'],
         player = player,
@@ -326,7 +326,7 @@ def fixture(fixtureId):
             })
 
     return render_template(
-        'fixture/fixture.html',
+        'desktop/fixture/fixture.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['fixture.js', 'iframe.js'],
         fixture = fixture,
@@ -374,7 +374,7 @@ def club(clubId):
         }
         results.append(result)
     return render_template(
-        'club/club.html',
+        'desktop/club/club.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['club.js', 'iframe.js'],
         club = club,
@@ -414,13 +414,13 @@ def clubPositionGraph(clubId):
 def about():
     if request.MOBILE:
         return render_template('mobile/about.html', cssFiles = ['rest_of_website.css', 'mobile.css'])
-    return render_template('about.html', cssFiles = ['rest_of_website.css'], jsFiles = ['script.js'])
+    return render_template('desktop/about.html', cssFiles = ['rest_of_website.css'], jsFiles = ['script.js'])
 
 @app.route('/contact', methods = ['GET'])
 def contact():
     if request.MOBILE:
         return render_template('mobile/contact.html', cssFiles = ['rest_of_website.css', 'mobile.css'])
-    return render_template('contact.html', cssFiles = ['rest_of_website.css'], jsFiles = ['script.js'])
+    return render_template('desktop/contact.html', cssFiles = ['rest_of_website.css'], jsFiles = ['script.js'])
 
 @app.before_request
 def add_universes_to_session():
