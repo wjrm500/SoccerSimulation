@@ -1178,35 +1178,45 @@ a.result-L:hover {
     width: 100%;
 }
 
-#player-performance-proper-table tr:first-child th:nth-child(1) {
+.player-performance-table tr:first-child th:nth-child(1) {
     min-width: 50px;
 }
 
-#player-performance-proper-table tr:first-child th:nth-child(2) {
+.player-performance-table tr:first-child th:nth-child(2) {
     min-width: 300px;
 }
 
-#player-performance-proper-table th:nth-child(n + 3),
-#player-performance-proper-table td:nth-child(n + 3) {
+.player-performance-table th:nth-child(n + 3),
+.player-performance-table td:nth-child(n + 3) {
     text-align: center;
     width: 50px;
 }
 
-#player-performance-proper-table th:nth-child(n + 4) i {
+.player-performance-table th:nth-child(n + 4) i {
     padding: 2px;
 }
 
-#player-performance-proper-table th:nth-child(n + 4).hovered {
+.player-performance-table th:nth-child(n + 4).hovered {
     background-color: grey !important;
     color: white !important;
 }
 
-#player-performance-proper-table th:nth-child(n + 4).clicked {
+.player-performance-table th:nth-child(n + 4).clicked {
     background-color: black;
     color: white !important;
 }
 
-#player-performance-proper-table .pp-attributes {
+#player-performance-table th:nth-child(n + 3).hovered {
+    background-color: grey !important;
+    color: white !important;
+}
+
+#player-performance-table th:nth-child(n + 3).clicked {
+    background-color: black;
+    color: white !important;
+}
+
+.player-performance-table .pp-attributes {
     display: none;
 }
 

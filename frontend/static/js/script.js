@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    window.onresize = function(){ location.reload(); }
+
     $('#copy-simulation-key').click(function() {
         let textToCopy = $('#input-simulation-key').html();
         navigator.clipboard.writeText(textToCopy)
@@ -132,59 +134,31 @@ $(document).ready(function() {
         iframe.src = url;
     });
 
-    $('.player-performance-table th').hover(
+    $('#player-performance-table th:nth-child(n + 3)').hover(
         function() {
-            if (this.dataset.sort === 'unsorted') {
-                let tableDownArrow = $(this).find('.table-down-arrow');
-                tableDownArrow.css('display', 'inline');
-                tableDownArrow.siblings('.table-arrow').css('display', 'none');
-            }
-            if (this.dataset.sort === 'sorted-descending') {
-                let tableUpArrow = $(this).find('.table-up-arrow');
-                tableUpArrow.css('display', 'inline');
-                tableUpArrow.siblings('.table-arrow').css('display', 'none');
-            }
-            if (this.dataset.sort === 'sorted-ascending') {
-                let tableUnsortedArrow = $(this).find('.table-unsorted-arrow');
-                tableUnsortedArrow.css('display', 'inline');
-                tableUnsortedArrow.siblings('.table-arrow').css('display', 'none');
-            }
+            $(this).addClass('hovered');
         },
         function() {
-            $(this).find('.table-arrow').each(function() {
-                $(this).css('display', 'none');
-            });
-            if (this.dataset.sort === 'unsorted') {
-                let tableArrow = $(this).find('.table-down-arrow');
-                tableArrow.css('display', 'none');
-                $(this).find('.table-unsorted-arrow').css('display', 'inline');
-            }
-            if (this.dataset.sort === 'sorted-descending') {
-                let tableArrow = $(this).find('.table-up-arrow');
-                tableArrow.css('display', 'none');
-                $(this).find('.table-down-arrow').css('display', 'inline');
-            }
-            if (this.dataset.sort === 'sorted-ascending') {
-                let tableArrow = $(this).find('.table-unsorted-arrow');
-                tableArrow.css('display', 'none');
-                $(this).find('.table-up-arrow').css('display', 'inline');
-            }
+            $(this).removeClass('hovered');
         }
-    );
+    )
 
-    $('.player-performance-table th:not(:nth-child(1))').click(function() {
+    $('#player-performance-table th:nth-child(n + 3)').click(function() {
+        $(this).removeClass('clicked')
         if (this.dataset.sort === 'unsorted') {
             sortHow = 'sorted-descending';
+            $(this).addClass('clicked');
         }
         if (this.dataset.sort === 'sorted-descending') {
             sortHow = 'sorted-ascending';
+            $(this).addClass('clicked');
         }
         if (this.dataset.sort === 'sorted-ascending') {
             sortHow = 'unsorted';
         }
         let data = [];
         let metric = $(this).data('metric');
-        $('.player-performance-table tr:not(:nth-child(1))').each(function() {
+        $('#player-performance-table tr:not(:nth-child(1))').each(function() {
             let datum = {
                 'playerId': this.dataset.playerId,
                 'rank': $(this).find('td:eq(0)').text(),
@@ -192,7 +166,7 @@ $(document).ready(function() {
                 'games': $(this).find('td:eq(2)').text(),
                 'goals': $(this).find('td:eq(3)').text(),
                 'assists': $(this).find('td:eq(4)').text(),
-                'rating': $(this).find('td:eq(5)').text(),
+                'performanceIndex': $(this).find('td:eq(5)').text(),
             };
             data.push(datum);
         });
@@ -209,21 +183,21 @@ $(document).ready(function() {
         });
         for (let i = 0; i < data.length; i++) {
             let datum = data[i];
-            let tr = $('.player-performance-table tr:eq(' + (i + 1) + ')');
+            let tr = $('#player-performance-table tr:eq(' + (i + 1) + ')');
             tr.get(0).dataset.playerId = datum['playerId'];
-            tr.find('td:eq(0)').html(datum['rank']);
+            tr.find('td:eq(0)').text(datum['rank']);
             tr.find('td:eq(1)').html(datum['name']);
             tr.find('td:eq(2)').text(datum['games']);
             tr.find('td:eq(3)').text(datum['goals']);
             tr.find('td:eq(4)').text(datum['assists']);
-            tr.find('td:eq(5)').text(datum['rating']);
+            tr.find('td:eq(5)').text(datum['performanceIndex']);
         }
         this.dataset.sort = sortHow;
         $(this).siblings().each(function() {
-            this.dataset.sort = 'unsorted';
-            $(this).find('.table-arrow').css('display', 'none');
-            $(this).find('.table-unsorted-arrow').css('display', 'inline');
+            $(this).get(0).dataset.sort = 'unsorted';
+            $(this).removeClass('clicked');
         });
+        recolorAttributes();
     });
 
     $('.rating-span').each(function() {
@@ -272,4 +246,16 @@ function styleLeagueTable() {
     leagueTable.find(`tr:nth-last-child(${numProRel})`).css(
         'borderTop', '1px dashed black'
     );
+}
+
+function recolorAttributes() {
+    $('.player-rating, .pp-attributes').each(function() {
+        let subtractFrom = $(this).hasClass('pp-attributes') ? 125 : 100;
+        let val = subtractFrom - $(this).html();
+        let hue = Math.floor((100 - val) * 120 / 100);
+        let saturation = Math.abs(val - 50) / 50 * 100;
+        $(this).css({
+            'color': `hsl(${hue}, ${saturation}%, 50%)`,
+        });
+    });
 }
