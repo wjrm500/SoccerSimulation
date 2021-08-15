@@ -7,31 +7,19 @@
     <div style="flex: 2; overflow-y: auto; position: relative">
         <table id="club-player-performance-table" class="full-table player-performance-table">
             <tr>
-                <th style="display: none;">#</th>
+                <th>#</th>
                 <th>Name</th>
-                <th data-sort="unsorted" data-metric="games">
-                    <i class="fas fa-tshirt"></i><!-- <img src="/static/images/apps_icon.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
-                <th data-sort="unsorted" data-metric="goals">
-                    <i class="fas fa-futbol"></i><!-- <img src="/static/images/goal_icon.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
-                <th data-sort="unsorted" data-metric="assists">
-                    <i class="fab fa-angular"></i><!-- <img src="/static/images/assist_icon_2.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
-                <th data-sort="unsorted" data-metric="rating">
-                    <i class="fas fa-star-half-alt" style="color: goldenrod;"></i><!-- <img src="/static/images/rating_icon.png"> -->
-                    <span class="table-arrow table-unsorted-arrow">☰</span><span class="table-arrow table-up-arrow">▲</span><span class="table-arrow table-down-arrow">▼</span>
-                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="games"><i class="fas fa-tshirt"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="goals"><i class="fas fa-futbol"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="assists"><i class="fab fa-angular"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex"><i class="fas fa-star-half-alt" style="color: goldenrod;"></i></th>
             </tr>
             {% for player, performanceIndices in playerPerformanceItems.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">
-                    <td style="display: none;">{{ loop.index }}</td>
+                    <td>{{ loop.index }}</td>
                     <td>
                         <div class="player-row-top">
-                            {{ player.getProperName() }}
+                            <div>{{ player.getProperName() }}</div>
                         </div>
                         <div class="player-row-bottom">
                             <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.getRating()) }}</span> ·

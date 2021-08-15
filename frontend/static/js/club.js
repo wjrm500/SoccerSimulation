@@ -345,7 +345,7 @@ $(document).ready(function() {
     });
 
     $('#club-player-performance-table tr:not(:first-child)').mouseenter(function() {
-        let playerId = $(this).data('playerId');
+        let playerId = parseInt($(this).get(0).dataset.playerId);
         drawPitch(playerId);
     });
 

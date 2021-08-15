@@ -32,13 +32,10 @@ $(document).ready(function() {
 
     $('#league-table tr').click(function() {
         // Reset CSS
-        $('#league-table tr').each(function() {
-            $(this).find('td:nth-child(2)').css({'color': 'black', 'font-style': 'normal'});
-        })
         $('#results tr').css('display', 'table-row');
         $('#results .gap-row').data('gap-row-remove', false);
 
-        if (!controlPressed && !$(this).data('controlClicked')) {
+        if (!controlPressed && !$(this).hasClass('controlClicked')) {
             let iframe = document.getElementById('sometimes-iframe');
             let url = '/simulation/club/' + this.dataset.clubId;
             window.iframeHistory.push(url);
@@ -46,20 +43,15 @@ $(document).ready(function() {
             iframe.src = url;
         }
 
-        if (controlPressed && !$(this).data('controlClicked')) {
-            $(this).data('controlClicked', true);
+        if (controlPressed && !$(this).hasClass('controlClicked')) {
+            $(this).addClass('controlClicked');
 
             // Add / remove clubs from clubsPressed array, keeping a maximum length of 2
             if (clubsPressed.length === 2) {
                 let unpressedClub = clubsPressed.shift();
-                unpressedClub.data('controlClicked', false);
+                unpressedClub.removeClass('controlClicked');
             }
             clubsPressed.push($(this));
-            
-            // Style league table
-            for (let club of clubsPressed) {
-                club.find('td:nth-child(2)').css({'color': 'blue', 'font-style': 'italic'});
-            }
 
             // Highlight relevant results
             let clubIdsPressed = clubsPressed.map(x => x.data('clubId'));
@@ -96,9 +88,9 @@ $(document).ready(function() {
                 });
             }
         } else {
-            $(this).data('controlClicked', false);
+            $(this).removeClass('controlClicked');
             $(this).siblings().each(function() {
-                $(this).data('controlClicked', false);
+                $(this).removeClass('controlClicked');
             })
             clubsPressed = [];
         }

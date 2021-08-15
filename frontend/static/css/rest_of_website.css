@@ -237,6 +237,16 @@
     cursor: pointer;
 }
 
+#league-table tr.controlClicked {
+    color: blue;
+    font-style: italic;
+}
+
+#league-table tr.controlClicked:not(:first-child):hover {
+    color: blue;
+    cursor: revert;
+}
+
 #league-table td {
     padding: 2px;
 }
@@ -285,11 +295,12 @@
     height: 20px;
 }
 
-.player-performance-table th:first-child {
-    width: 40px;
+#club-player-performance-table th:first-child,
+#club-player-performance-table td:first-child {
+    display: none;
 }
 
-.player-performance-table th:nth-child(n + 3) {
+#club-player-performance-table th:nth-child(n + 3) {
     width: 40px;
 }
 
