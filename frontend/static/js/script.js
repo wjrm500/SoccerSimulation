@@ -136,7 +136,7 @@ $(document).ready(function() {
     )
 
     $('#player-performance-table th:nth-child(n + 3)').click(function() {
-        $(this).removeClass('clicked')
+        $(this).removeClass('clicked');
         if (this.dataset.sort === 'unsorted') {
             sortHow = 'sorted-descending';
             $(this).addClass('clicked');

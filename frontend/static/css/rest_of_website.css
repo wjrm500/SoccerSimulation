@@ -1217,11 +1217,13 @@ a.result-L:hover {
     color: white !important;
 }
 
+#club-player-performance-table th:nth-child(n + 3).hovered,
 #player-performance-table th:nth-child(n + 3).hovered {
     background-color: grey !important;
     color: white !important;
 }
 
+#club-player-performance-table th:nth-child(n + 3).clicked,
 #player-performance-table th:nth-child(n + 3).clicked {
     background-color: black;
     color: white !important;
