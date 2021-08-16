@@ -216,7 +216,7 @@ function getMousePos(evt) {
 
 function drawPitch(playerIdHovered) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, 0, 0, (rect.height - 10) / 500 * 362, (rect.height - 10));
+    ctx.drawImage(image, 0, 0, (rect.height - 10) / $('#football-pitch-container').height() * $('#football-pitch-container').width(), (rect.height - 10));
     let coords = calculateCoordsFromFormation(canvas.dataset.formation);//, null, {0: [3, 0, 0, 3], 2: [0, -3, -3, 0]});
     let players = JSON.parse(canvas.dataset.players);
     let playerPositions = {};
@@ -240,8 +240,13 @@ function drawPitch(playerIdHovered) {
 $(document).ready(function() {
     canvas = document.getElementById('football-pitch');
     rect = canvas.parentNode.getBoundingClientRect();
-    canvas.width = (rect.height - 10) / 500 * 362;
+    canvas.width = (rect.height - 10) / $('#football-pitch-container').height() * $('#football-pitch-container').width();
     canvas.height = (rect.height - 10);
+    window.onresize = function() {
+        canvas.width = (rect.height - 10) / $('#football-pitch-container').height() * $('#football-pitch-container').width();
+        canvas.height = (rect.height - 10);
+        drawPitch();
+    }
     ctx = canvas.getContext('2d');
     image = document.getElementById('football-pitch-image');
     drawPitch();
