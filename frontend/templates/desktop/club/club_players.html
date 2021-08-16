@@ -1,6 +1,6 @@
 <img id="football-pitch-image" src="/static/images/football_pitch_converted.png" style="display: none;">
 <div style="display: flex; flex-direction: column; height: 100%">
-    <div id="football-pitch-container" style="flex: 2;">
+    <div id="football-pitch-container" style="flex: 2; overflow-x: hidden; overflow-y: auto">
         <canvas id="football-pitch" data-formation="{{ formation }}" data-players="{{ players }}" style="object-fit: scale-down;">
         </canvas>
     </div>

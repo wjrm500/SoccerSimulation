@@ -7,19 +7,35 @@ $(document).ready(function() {
     }
 
     $('#refresh').click(function() {
+        $(parent.document.getElementById('sometimes-iframe')).hide();
+        $(parent.document.getElementById('spinner')).show();
         window.frameElement.contentWindow.location.reload();
+        document.onload = function () {
+            $(parent.document.getElementById('spinner')).hide();
+            $(parent.document.getElementById('sometimes-iframe')).show();
+        }
     });
 
     $('#history-back').click(function() {
         parent.iframeHistoryPointer -= 1;
+        $(parent.document.getElementById('sometimes-iframe')).hide();
+        $(parent.document.getElementById('spinner')).show();
         document.location.href = parent.iframeHistory[parent.iframeHistoryPointer];
+        document.onload = function () {
+            $(parent.document.getElementById('spinner')).hide();
+            $(parent.document.getElementById('sometimes-iframe')).show();
+        }
     });
 
     $('#history-forward').click(function() {
-        console.log(parent.iframeHistoryPointer);
-        console.log(parent.iframeHistory);
+        $(parent.document.getElementById('sometimes-iframe')).hide();
+        $(parent.document.getElementById('spinner')).show();
         parent.iframeHistoryPointer += 1;
         document.location.href = parent.iframeHistory[parent.iframeHistoryPointer];
+        document.onload = function () {
+            $(parent.document.getElementById('spinner')).hide();
+            $(parent.document.getElementById('sometimes-iframe')).show();
+        }
     });
 
     $('a').click(function(e) {
@@ -41,8 +57,14 @@ $(document).ready(function() {
         } else {
             parent.iframeHistory.push(url);
         }
+        $(parent.document.getElementById('sometimes-iframe')).hide();
+        $(parent.document.getElementById('spinner')).show();
         parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
         document.location.href = url;
+        document.onload = function () {
+            $(parent.document.getElementById('spinner')).hide();
+            $(parent.document.getElementById('sometimes-iframe')).show();
+        }
     });
 
     $('.rating-span').each(function() {
@@ -152,8 +174,14 @@ function sendIFrameToUrl(url) {
     } else {
         parent.iframeHistory.push(url);
     }
+    $(parent.document.getElementById('sometimes-iframe')).hide();
+    $(parent.document.getElementById('spinner')).show();
     parent.iframeHistoryPointer = parent.iframeHistory.length - 1;
     document.location.href = url;
+    document.onload = function () {
+        $(parent.document.getElementById('spinner')).hide();
+        $(parent.document.getElementById('sometimes-iframe')).show();
+    }
 }
 
 function recolorAttributes() {

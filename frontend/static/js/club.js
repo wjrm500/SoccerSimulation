@@ -238,63 +238,65 @@ function drawPitch(playerIdHovered) {
 }
 
 $(document).ready(function() {
-    canvas = document.getElementById('football-pitch');
-    rect = canvas.parentNode.getBoundingClientRect();
-    canvas.width = (rect.height - 10) / $('#football-pitch-container').height() * $('#football-pitch-container').width();
-    canvas.height = (rect.height - 10);
-    window.onresize = function() {
+    setTimeout(function () {
+        canvas = document.getElementById('football-pitch');
+        rect = canvas.parentNode.getBoundingClientRect();
         canvas.width = (rect.height - 10) / $('#football-pitch-container').height() * $('#football-pitch-container').width();
         canvas.height = (rect.height - 10);
+        window.onresize = function() {
+            canvas.width = (rect.height - 10) / $('#football-pitch-container').height() * $('#football-pitch-container').width();
+            canvas.height = (rect.height - 10);
+            drawPitch();
+        }
+        ctx = canvas.getContext('2d');
+        image = document.getElementById('football-pitch-image');
         drawPitch();
-    }
-    ctx = canvas.getContext('2d');
-    image = document.getElementById('football-pitch-image');
-    drawPitch();
-    $('#club-player-performance-table .clickable-row').click(function() {
-        let url = '/simulation/player/' + this.dataset.playerId;
-        sendIFrameToUrl(url);
-    });
-
-    $('#club-player-performance-table tr:not(:first-child)').mouseenter(function() {
-        let playerId = parseInt($(this).get(0).dataset.playerId);
-        drawPitch(playerId);
-    });
-
-    $('.club-score-container').each(function() {
-        let result = $(this).data('result');
-        let resultColorMapping = {
-            win: 'lightgreen',
-            draw: 'lemonchiffon',
-            loss: 'lightpink'
-        }
-        $(this).css('backgroundColor', resultColorMapping[result]);
-    });
-
-    $('#club-results .clickable-row').click(function() {
-        let fixtureId = $(this).data('fixtureId');
-        let url = '/simulation/fixture/' + fixtureId;
-        sendIFrameToUrl(url);
-    });
-
-    $('.home-away-button').click(function() {
-        let homeAway = $(this).data('homeAway');
-        $('#club-results tr').each(function() {
-            $(this).css('display', '');
+        $('#club-player-performance-table .clickable-row').click(function() {
+            let url = '/simulation/player/' + this.dataset.playerId;
+            sendIFrameToUrl(url);
         });
-        $(this).addClass('clicked');
-        $('.home-away-button').not('#' + $(this).attr('id')).each((x, y) => $(y).removeClass('clicked'));
-        if (homeAway === 'home') {
+
+        $('#club-player-performance-table tr:not(:first-child)').mouseenter(function() {
+            let playerId = parseInt($(this).get(0).dataset.playerId);
+            drawPitch(playerId);
+        });
+
+        $('.club-score-container').each(function() {
+            let result = $(this).data('result');
+            let resultColorMapping = {
+                win: 'lightgreen',
+                draw: 'lemonchiffon',
+                loss: 'lightpink'
+            }
+            $(this).css('backgroundColor', resultColorMapping[result]);
+        });
+
+        $('#club-results .clickable-row').click(function() {
+            let fixtureId = $(this).data('fixtureId');
+            let url = '/simulation/fixture/' + fixtureId;
+            sendIFrameToUrl(url);
+        });
+
+        $('.home-away-button').click(function() {
+            let homeAway = $(this).data('homeAway');
             $('#club-results tr').each(function() {
-                if ($(this).data('atHome') === 'False') {
-                    $(this).css('display', 'none');
-                }
+                $(this).css('display', '');
             });
-        } else if (homeAway === 'away') {
-            $('#club-results tr').each(function() {
-                if ($(this).data('atHome') === 'True') {
-                    $(this).css('display', 'none');
-                }
-            });
-        }
-    });
+            $(this).addClass('clicked');
+            $('.home-away-button').not('#' + $(this).attr('id')).each((x, y) => $(y).removeClass('clicked'));
+            if (homeAway === 'home') {
+                $('#club-results tr').each(function() {
+                    if ($(this).data('atHome') === 'False') {
+                        $(this).css('display', 'none');
+                    }
+                });
+            } else if (homeAway === 'away') {
+                $('#club-results tr').each(function() {
+                    if ($(this).data('atHome') === 'True') {
+                        $(this).css('display', 'none');
+                    }
+                });
+            }
+        });
+    }, 1500);
 });

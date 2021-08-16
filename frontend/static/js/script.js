@@ -36,10 +36,16 @@ $(document).ready(function() {
         $('#results .gap-row').data('gap-row-remove', false);
 
         if (!controlPressed && !$(this).hasClass('controlClicked')) {
+            $('#sometimes-iframe').hide();
+            $('#sometimes-data-container #spinner').show();
             let iframe = document.getElementById('sometimes-iframe');
             let url = '/simulation/club/' + this.dataset.clubId;
             window.iframeHistory.push(url);
             window.iframeHistoryPointer = window.iframeHistory.length - 1;
+            iframe.onload = function () {
+                $('#sometimes-data-container #spinner').hide();
+                $('#sometimes-iframe').show();
+            }
             iframe.src = url;
         }
 
@@ -98,6 +104,8 @@ $(document).ready(function() {
 
     $('#main a').click(function(e) {
         e.preventDefault();
+        $('#sometimes-iframe').hide();
+        $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
         let url = $(this).data('url');
         if (window.iframeHistoryPointer !== (window.iframeHistory.length - 1)) {
@@ -107,22 +115,38 @@ $(document).ready(function() {
             window.iframeHistory.push(url);
         }
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
+        iframe.onload = function () {
+            $('#sometimes-data-container #spinner').hide();
+            $('#sometimes-iframe').show();
+        }
         iframe.src = url;
     });
 
     $('.player-performance-table .clickable-row').click(function() {
+        $('#sometimes-iframe').hide();
+        $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/player/' + this.dataset.playerId;
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
+        iframe.onload = function () {
+            $('#sometimes-data-container #spinner').hide();
+            $('#sometimes-iframe').show();
+        }
         iframe.src = url;
     });
 
     $('#results .clickable-row').click(function() {
+        $('#sometimes-iframe').hide();
+        $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/fixture/' + this.dataset.fixtureId;
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
+        iframe.onload = function () {
+            $('#sometimes-data-container #spinner').hide();
+            $('#sometimes-iframe').show();
+        }
         iframe.src = url;
     });
 
