@@ -301,7 +301,7 @@
 }
 
 #club-player-performance-table th:nth-child(n + 3) {
-    width: 40px;
+    width: 35px;
 }
 
 @media (max-width: 1500px) {
@@ -443,7 +443,10 @@ td.result-away-club-name {
     font-style: italic;
 }
 
-.player-performance-table .clickable-row:hover .player-row-top-club-name {
+.player-performance-table .clickable-row:hover .player-row-top-club-name,
+.player-performance-table .clickable-row:hover .player-row-bottom,
+.player-performance-table .clickable-row:hover .player-rating,
+.player-performance-table .clickable-row:hover .pp-attributes {
     color: white !important;
 }
 
@@ -1071,8 +1074,29 @@ a.result-L:hover {
     width: 100%;
 }
 
+@media (max-width: 1500px) {
+    #club-player-performance-table {
+        font-size: 0.75em;
+    }
+}
+
+#club-player-performance-table .player-row-top {
+    padding-left: 2px;
+}
+
+#club-player-performance-table .player-row-bottom {
+    font-size: 0.9em;
+    padding-left: 2px;
+}
+
 #club-player-performance-table tr:hover .player-row-bottom {
     color: white !important;
+}
+
+@media (max-width: 1500px) {
+    .player-row-span:last-child {
+        display: none;
+    }
 }
 
 .rating-span {

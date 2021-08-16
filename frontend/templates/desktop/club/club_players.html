@@ -22,9 +22,9 @@
                             <div>{{ player.getProperName() }}</div>
                         </div>
                         <div class="player-row-bottom">
-                            <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.getRating()) }}</span> ·
-                            <span>Age: {{ player.getAge() }}</span> ·
-                            <span>Pos: {{ player.getBestPosition() }}</span>
+                            <span class="player-row-span"><i class="fas fa-crosshairs"></i> {{ player.getBestPosition() }}</span> ·
+                            <span class="player-row-span"><i class="far fa-chart-bar"></i> <span class="rating-span">{{ player.getRating()|int }}</span></span>
+                            <span class="player-row-span"> ·<i class="fas fa-baby-carriage"></i> {{ player.getAge() }}</span>
                         </div>
                     </td>
                     <td>{{ performanceIndices['games'] }}</td>

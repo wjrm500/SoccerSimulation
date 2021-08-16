@@ -426,6 +426,8 @@ def contact():
 def add_universes_to_session():
     if 'universes' not in session:
         session['universes'] = {}
+    if session['activeUniverseKey']:
+        session['universes'] = {session['activeUniverseKey']: session['universes'][session['activeUniverseKey']]}
 
 ### For versioning CSS to prevent browser cacheing
 @app.context_processor
