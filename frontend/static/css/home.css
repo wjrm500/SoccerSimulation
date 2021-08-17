@@ -199,6 +199,14 @@ input[type=file] {
     border-right: 0.5px solid darkgrey;
 }
 
+#dont-fancy-waiting-text.desktop {
+    display: block;
+}
+
+#dont-fancy-waiting-text.mobile {
+    display: none;
+}
+
 #dont-fancy-waiting-text {
     font-size: 0.9em;
     margin-bottom: 10px;
@@ -210,8 +218,12 @@ input[type=file] {
 }
 
 @media (max-width: 500px) {
-    #dont-fancy-waiting-text {
+    #dont-fancy-waiting-text.desktop {
         display: none;
+    }
+
+    #dont-fancy-waiting-text.mobile {
+        display: block;
     }
 
     #dont-fancy-waiting-container {

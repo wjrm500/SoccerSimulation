@@ -1,11 +1,11 @@
 from .models.Universe import Universe
 from .models.Database import Database
 import gridfs
-import pickle
 import os
 import redis
 from .send_email import send_email
 import ss.utils as utils
+import time
 
 ON_HEROKU = 'ON_HEROKU' in os.environ
 if ON_HEROKU:
@@ -21,12 +21,14 @@ def simulate(customConfig, systemId, universeKey):
     print(daysToTimeTravel)
     print(universe.systems[0].name)
     universe.timeTravel(daysToTimeTravel, r)
-    if r.exists('email_' + universeKey):
-        recipient_address = r.get('email_' + universeKey).decode('utf-8')
-        send_email(recipient_address, universeKey)
     pickledUniverse = utils.joblibDumps(universe)
     db = Database.getInstance()
     cnx = db.cnx.grid_file
     fs = gridfs.GridFS(cnx)
     fs.put(pickledUniverse, filename = universeKey)
+    if r.exists('email_' + universeKey):
+        while not Database.getInstance().universeKeyExists(universeKey):
+            time.sleep(5)
+        recipient_address = r.get('email_' + universeKey).decode('utf-8')
+        send_email(recipient_address, universeKey)
     r.flushall()

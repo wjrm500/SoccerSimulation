@@ -73,7 +73,15 @@ $(document).ready(function() {
             $(this).get(0).dataset.sort = 'unsorted';
             $(this).removeClass('clicked');
         });
-        recolorAttributes();
+    });
+
+    $('.rating-span').each(function() {
+        let val = 100 - $(this).html();
+        let hue = Math.floor((100 - val) * 120 / 100);
+        let saturation = Math.abs(val - 50) / 50 * 100;
+        $(this).css({
+            'backgroundColor': `hsl(${hue}, ${saturation}%, 50%)`,
+        });
     });
 });
 
@@ -113,16 +121,4 @@ function styleLeagueTable() {
     leagueTable.find(`tr:nth-last-child(${numProRel})`).css(
         'borderTop', '1px dashed black'
     );
-}
-
-function recolorAttributes() {
-    $('.player-rating, .pp-attributes').each(function() {
-        let subtractFrom = $(this).hasClass('pp-attributes') ? 125 : 100;
-        let val = subtractFrom - $(this).html();
-        let hue = Math.floor((100 - val) * 120 / 100);
-        let saturation = Math.abs(val - 50) / 50 * 100;
-        $(this).css({
-            'color': `hsl(${hue}, ${saturation}%, 50%)`,
-        });
-    });
 }

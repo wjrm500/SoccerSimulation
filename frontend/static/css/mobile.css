@@ -30,8 +30,12 @@
     padding: 0px;
 }
 
-.player-row-bottom {
+.player-row-bottom.desktop {
     display: none;
+}
+
+.player-row-bottom.mobile {
+    display: block;
 }
 
 .grid-item {

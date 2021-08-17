@@ -354,6 +354,10 @@
     white-space: nowrap;
 }
 
+.player-row-bottom.mobile {
+    display: none;
+}
+
 /* Results */
 
 #results {
@@ -438,7 +442,7 @@ td.result-away-club-name {
 }
 
 .player-row-top-club-name {
-    color: darkgrey;
+    color: #999999;
     font-size: 0.75em;
     font-style: italic;
 }
