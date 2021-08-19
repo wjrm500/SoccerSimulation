@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    window.onresize = function(){ location.reload(); }
+    // window.onresize = function(){ location.reload(); }
 
     $('#copy-simulation-key').click(function() {
         let textToCopy = $('#input-simulation-key').html();

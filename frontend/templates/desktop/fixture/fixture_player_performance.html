@@ -9,12 +9,54 @@
             <table class="full-table">
                 <tr>
                     <th>Name</th>
-                    <th><i class="fas fa-crosshairs"></i></th> <!-- Position -->
-                    <th><i class="fas fa-chart-bar"></i></th> <!-- Rating -->
-                    <th><i class="fas fa-chart-line"></i></th> <!-- Form-->
-                    <th><i class="fas fa-futbol"></i><!-- <img class="match-icon" src="/static/images/goal_icon.png"> --></th>
-                    <th><i class="fab fa-angular"></i><!--<img class="match-icon" src="/static/images/assist_icon.png"> --></th>
-                    <th><i class="fas fa-star"></i><!-- <img class="match-icon" src="/static/images/motm_icon.png"> --></th>
+                    <th>
+                        <div class="my-tooltip">
+                            <i class="fas fa-crosshairs"></i>
+                            <span class="my-tooltiptext below">
+                                Position
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="my-tooltip">
+                            <i class="fas fa-chart-bar"></i>
+                            <span class="my-tooltiptext below">
+                                Rating
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="my-tooltip">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="my-tooltiptext below">
+                                Form
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="my-tooltip">
+                            <i class="fas fa-futbol"></i>
+                            <span class="my-tooltiptext below">
+                                Goals
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="my-tooltip">
+                            <i class="fab fa-angular"></i>
+                            <span class="my-tooltiptext to-left">
+                                Assists
+                            </span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="my-tooltip">
+                            <i class="fas fa-star"></i>
+                            <span class="my-tooltiptext to-left">
+                                Performance Index
+                            </span>
+                        </div>
+                    </th>
                 </tr>
                 {% for player, data in clubData['players'].items() %}
                     <tr data-man-of-the-match="{{ data['manOfTheMatch'] }}">

@@ -9,10 +9,38 @@
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="games"><i class="fas fa-tshirt"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="goals"><i class="fas fa-futbol"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="assists"><i class="fab fa-angular"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex"><i class="fas fa-star-half-alt" style="color: goldenrod;"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="games">
+                    <div class="my-tooltip">
+                        <i class="fas fa-tshirt"></i>
+                        <span class="my-tooltiptext below">
+                            Appearances
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="goals">
+                    <div class="my-tooltip">
+                        <i class="fas fa-futbol"></i>
+                        <span class="my-tooltiptext below">
+                            Goals
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="assists">
+                    <div class="my-tooltip">
+                        <i class="fab fa-angular"></i>
+                        <span class="my-tooltiptext below-left left-91-percent">
+                            Assists
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex">
+                    <div class="my-tooltip">
+                        <i class="fas fa-star-half-alt" style="color: goldenrod;"></i>
+                        <span class="my-tooltiptext below-left">
+                            Average Performance Index
+                        </span>
+                    </div>
+                </th>
             </tr>
             {% for player, performanceIndices in playerPerformanceItems.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">

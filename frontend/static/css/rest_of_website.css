@@ -1285,6 +1285,10 @@ a.result-L:hover {
 /* Generic tooltip styling */
 
 .my-tooltip {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
     position: relative;
 }
 
@@ -1298,21 +1302,55 @@ a.result-L:hover {
     padding: 5px;
     position: absolute;
     z-index: 1;
+    font-size: 0.8em;
+}
+
+.my-tooltip .my-tooltiptext.below {
     top: 150%;
     left: 50%;
     margin-left: -75px;
-    font-size: 0.8em;
+}
+
+.my-tooltip .my-tooltiptext.to-left {
+    top: -2px;
+    right: 115%;
+    margin-left: -75px;
+}
+
+.my-tooltip .my-tooltiptext.below-left {
+    top: 150%;
+    left: -150%;
+    margin-left: -75px;
 }
 
 .my-tooltip .my-tooltiptext::after {
     content: "";
     position: absolute;
-    bottom: 100%;
-    left: 50%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
+}
+
+.my-tooltip .my-tooltiptext.below::after {
+    bottom: 100%;
+    left: 50%;
     border-color: transparent transparent black transparent;
+}
+
+.my-tooltip .my-tooltiptext.to-left::after {
+    margin-left: -7.5px;
+    top: 20%;
+    left: 105%;
+    border-color: transparent transparent transparent black;
+}
+
+.my-tooltip .my-tooltiptext.below-left::after {
+    bottom: 100%;
+    border-color: transparent transparent black transparent;
+}
+
+.left-91-percent::after {
+    left: 91%;
 }
 
 .my-tooltip:hover .my-tooltiptext {

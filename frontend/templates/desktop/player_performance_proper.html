@@ -72,20 +72,76 @@
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th><i class="fas fa-crosshairs"></i></th> <!-- Position -->
-                <th data-sort="unsorted" data-metric="age"><i class="fas fa-baby-carriage"></i></th> <!-- Age -->
-                <th data-sort="unsorted" data-metric="rating"><i class="far fa-chart-bar"></i></th> <!-- Rating -->
+                <th>
+                    <div class="my-tooltip">
+                        <i class="fas fa-crosshairs"></i>
+                        <span class="my-tooltiptext below">
+                            Position
+                        </span>
+                    </div>
+                </th>
+                <th data-sort="unsorted" data-metric="age">
+                    <div class="my-tooltip">
+                        <i class="fas fa-baby-carriage"></i>
+                        <span class="my-tooltiptext below">
+                            Age
+                        </span>
+                    </div>
+                </th>
+                <th data-sort="unsorted" data-metric="rating">
+                    <div class="my-tooltip">
+                        <i class="far fa-chart-bar"></i>
+                        <span class="my-tooltiptext below">
+                            Rating
+                        </span>
+                    </div>
+                </th>
                 <th class="pp-attributes" data-sort="unsorted" data-metric="offence">Off</th>
                 <th class="pp-attributes" data-sort="unsorted" data-metric="spark">Spa</th>
                 <th class="pp-attributes" data-sort="unsorted" data-metric="technique">Tec</th>
                 <th class="pp-attributes" data-sort="unsorted" data-metric="defence">Def</th>
                 <th class="pp-attributes" data-sort="unsorted" data-metric="authority">Aut</th>
                 <th class="pp-attributes" data-sort="unsorted" data-metric="fitness">Fit</th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="games"><i class="fas fa-tshirt"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="goals"><i class="fas fa-futbol"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="assists"><i class="fab fa-angular"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="mvps"><i class="fas fa-star"></i></th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex"><i class="fas fa-star-half-alt" style="color: goldenrod;"></i></th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="games">
+                    <div class="my-tooltip">
+                        <i class="fas fa-tshirt"></i>
+                        <span class="my-tooltiptext below">
+                            Appearances
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="goals">
+                    <div class="my-tooltip">
+                        <i class="fas fa-futbol"></i>
+                        <span class="my-tooltiptext below">
+                            Goals
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="assists">
+                    <div class="my-tooltip">
+                        <i class="fab fa-angular"></i>
+                        <span class="my-tooltiptext below">
+                            Assists
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="mvps">
+                    <div class="my-tooltip">
+                        <i class="fas fa-star"></i>
+                        <span class="my-tooltiptext below">
+                            MVP Awards
+                        </span>
+                    </div>
+                </th>
+                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex">
+                    <div class="my-tooltip">
+                        <i class="fas fa-star-half-alt" style="color: goldenrod;"></i>
+                        <span class="my-tooltiptext to-left">
+                            Average Performance Index
+                        </span>
+                    </div>
+                </th>
             </tr>
             {% for player, performanceIndices in playerPerformanceItems.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">
