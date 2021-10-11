@@ -6,6 +6,7 @@ import redis
 from .send_email import send_email
 import ss.utils as utils
 import time
+import sys
 
 ON_HEROKU = 'ON_HEROKU' in os.environ
 if ON_HEROKU:
@@ -18,17 +19,25 @@ def simulate(customConfig, systemId, universeKey):
     universe = Universe(customConfig = customConfig, systemIds = [systemId])
     universe.universeKey = universeKey
     daysToTimeTravel = 300
-    print(daysToTimeTravel)
-    print(universe.systems[0].name)
     universe.timeTravel(daysToTimeTravel, r)
-    pickledUniverse = utils.joblibDumps(universe)
-    db = Database.getInstance()
-    cnx = db.cnx.grid_file
-    fs = gridfs.GridFS(cnx)
-    fs.put(pickledUniverse, filename = universeKey)
-    if r.exists('email_' + universeKey):
-        while not Database.getInstance().universeKeyExists(universeKey):
-            time.sleep(5)
-        recipient_address = r.get('email_' + universeKey).decode('utf-8')
-        send_email(recipient_address, universeKey)
-    r.flushall()
+    try:
+        pickledUniverse = utils.joblibDumps(universe)
+    except:
+        print("Universe object could not be pickled")
+    try:
+        db = Database.getInstance()
+        cnx = db.cnx.grid_file
+        fs = gridfs.GridFS(cnx)
+        fs.put(pickledUniverse, filename = universeKey)
+    except:
+        print("Pickled universe could not be persisted to MongoDB")
+    try:
+        if r.exists('email_' + universeKey):
+            while not Database.getInstance().universeKeyExists(universeKey):
+                time.sleep(5)
+            recipient_address = r.get('email_' + universeKey).decode('utf-8')
+            send_email(recipient_address, universeKey)
+        r.flushall()
+    except:
+        print("Problem involving Redis")
+    sys.stdout.flush()
