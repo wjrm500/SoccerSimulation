@@ -1285,9 +1285,6 @@ a.result-L:hover {
 /* Generic tooltip styling */
 
 .my-tooltip {
-    align-items: center;
-    display: flex;
-    justify-content: center;
     height: 100%;
     position: relative;
 }
