@@ -7,7 +7,7 @@ $(document).ready(function () {
         window.location.href = $(this).data('url');
     });
 
-    $('.simulation-form').submit(function (e) {
+    $('#existing-simulation-form').submit(function (e) {
         let simulateButton = $(this).find('.simulate-button')
         simulateButton.find('#text').hide();
         simulateButton.find('#spinner').show();
@@ -70,6 +70,9 @@ $(document).ready(function () {
             $('#custom-club-error').html('Too many custom clubs specified');
             return false;
         }
+        let simulateButton = $(this).find('.simulate-button')
+        simulateButton.find('#text').hide();
+        simulateButton.find('#spinner').show();
         let hiddenInput = $('<input type="hidden">');
         hiddenInput.attr('name', 'custom-clubs');
         hiddenInput.attr('value', JSON.stringify(customClubs));

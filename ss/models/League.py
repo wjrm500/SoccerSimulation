@@ -19,11 +19,12 @@ class League:
             {'$match': {'system_id': self.system.id}},
             {'$sample': {'size': numClubsPerLeague}}
         ])
+        cities = list(cities)
         customClubs = self.system.universe.config['customClubs']
         if len(customClubs) > 0:
-            for customClub in customClubs:
-                city = {}
-                cities.insert(city)
+            for i, customClub in enumerate(customClubs, 0):
+                customCity = {'_id': 1_000_000 + i, 'system_id': self.system.id, 'city_name': customClub}
+                cities.insert(0, customCity)
                 cities.pop()
         for city in cities:
             club = Club(self, city)

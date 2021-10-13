@@ -4,14 +4,14 @@ body {
 }
 
 #home-container {
+    overflow-y: auto;
+    width: 100%;
+    padding: 25px;
+    max-width: 500px;
     align-items: center;
     display: flex;
     flex-direction: column;
-    left: 50%;
-    position: fixed;
-    top: 40%;
-    transform: translate(-50%, -50%);
-    width: 500px;
+    min-height: 500px;
 }
 
 .home-sub-container {
@@ -24,9 +24,6 @@ body {
 }
 
 @media (max-width: 500px) {
-    #home-container {
-        width: 90%;
-    }
 
     #home-buttons-container {
         flex-direction: column;
@@ -152,13 +149,24 @@ input[type=file] {
     width: 100%;
 }
 
+@media (max-height: 550px) {
+    #links {
+        display: none !important;
+    }
+}
+
 @media (max-width: 500px) {
+
     .simulation-form label {
         margin-right: 5px;
     }
 
     #new-simulation-form label {
-        flex: 2;
+        flex: 1;
+        font-size: 0.8em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     #new-simulation-form input {
@@ -167,12 +175,13 @@ input[type=file] {
 }
 
 #links {
-    bottom: 0;
+    top: 0;
     display: flex;
     justify-content: center;
     padding: 10px;
     position: fixed;
     width: 100%;
+    font-size: 0.8em;
 }
 
 #links a {
@@ -249,6 +258,7 @@ input[type=file] {
     height: 100%;
     justify-content: center;
     margin: 0px 0px 0px 10px;
+    max-width: 50%;
     padding: 0px;
     width: 50px;                    
 }
