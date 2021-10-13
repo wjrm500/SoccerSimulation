@@ -18,6 +18,7 @@ from worker import conn
 import redis
 from datetime import timedelta
 from io import BytesIO
+import json
 
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
@@ -106,7 +107,8 @@ def postNewSimulation():
     customConfig = {
         'numLeaguesPerSystem': None,
         'numClubsPerLeague': int(request.form['num-clubs']),
-        'numPlayersPerClub': int(request.form['num-players-per-club'])
+        'numPlayersPerClub': int(request.form['num-players-per-club']),
+        'customClubs': json.loads(request.form['custom-clubs'])
     }
     universeKey = utils.makeUniverseKey()
     r.set('simulation_progress_' + universeKey, 0)

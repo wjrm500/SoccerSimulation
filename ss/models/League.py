@@ -19,6 +19,12 @@ class League:
             {'$match': {'system_id': self.system.id}},
             {'$sample': {'size': numClubsPerLeague}}
         ])
+        customClubs = self.system.universe.config['customClubs']
+        if len(customClubs) > 0:
+            for customClub in customClubs:
+                city = {}
+                cities.insert(city)
+                cities.pop()
         for city in cities:
             club = Club(self, city)
             self.clubs.append(club)

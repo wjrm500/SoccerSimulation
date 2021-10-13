@@ -236,3 +236,61 @@ input[type=file] {
         margin-bottom: 10px;
     }
 }
+
+#add-custom-club-button {
+    align-items: center;
+    background-color: limegreen;
+    border: 0px;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    font-size: 18px;
+    font-weight: bold;
+    height: 100%;
+    justify-content: center;
+    margin: 0px 0px 0px 10px;
+    padding: 0px;
+    width: 50px;                    
+}
+
+#add-custom-club-button:hover {
+    background-color: #28a428;
+}
+
+#add-custom-club-button div {
+    bottom: 2px;
+    position: relative;
+}
+
+#custom-clubs {
+    display: none;
+}
+
+#custom-club-error {
+    color: red;
+    font-size: 0.8em;
+}
+
+#custom-clubs-list {
+    padding: 5px 0px 0px 0px;
+}
+
+.custom-club-container {
+    background-color: grey;
+    border-radius: 5px;
+    display: inline-flex;
+    font-size: 0.8em;
+    margin: 2px;
+    padding: 5px;
+}
+
+.custom-club-remove-button {
+    color: white;
+    font-weight: bold;
+    padding: 0px 5px;
+}
+
+.custom-club-remove-button:hover {
+    cursor: pointer;
+    color: red;
+}

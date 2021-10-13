@@ -7,25 +7,47 @@
                 <label for="system">
                     System
                 </label>
-                <select id="system-select" name="system">
-                    {% for system in systems %}
-                        <option value="{{ system._id }}">
-                            {{ system.system_name }}
-                        </option>
-                    {% endfor %}
-                </select>
+                <div>
+                    <select id="system-select" name="system">
+                        {% for system in systems %}
+                            <option value="{{ system._id }}">
+                                {{ system.system_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label for="num-clubs">
                     Number of clubs
                 </label>
-                <input type="number" name="num-clubs" min="8" max="32" step="2" required>
+                <div>
+                    <input type="number" id="num-clubs" name="num-clubs" min="8" max="32" step="2" required>
+                </div>
             </div>
             <div class="form-group">
                 <label for="num-players-per-club">
                     Number of players per club
                 </label>
-                <input type="number" name="num-players-per-club" min="15" max="40" required>
+                <div>
+                    <input type="number" name="num-players-per-club" min="15" max="40" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="custom-club">
+                    Add custom club
+                </label>
+                <div style="display: flex; height: 25px;">
+                    <input type="text" id="custom-club" name="custom-club" spellcheck="false">
+                    <button id="add-custom-club-button">
+                        <div>+</div>
+                    </button>
+                </div>
+            </div>
+            <div id="custom-clubs">
+                <div id="custom-club-error"></div>
+                <div id="custom-clubs-heading">Custom clubs:</div>
+                <div id="custom-clubs-list"></div>
             </div>
             <hr>
             <div class="form-group">
