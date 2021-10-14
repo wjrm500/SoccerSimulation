@@ -42,16 +42,26 @@ def showSimulation():
     league = universe.systems[0].leagues[0]
 
     ### Get standings
-    leagueTable = league.getLeagueTable()
+    gameweek = request.args.get('gameweek') or ''
+    lastGameweek = (len(league.clubs) - 1) * 2
+    searchGameweek = lastGameweek
+    if gameweek.isnumeric():
+        gameweek = int(gameweek)
+        if gameweek <= lastGameweek:
+            searchGameweek = gameweek
+
+    leagueTable = league.getLeagueTable(searchGameweek)
     leagueTableItems = list(leagueTable.items())
     leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
 
     # Get player performance
-    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex', gameweek = searchGameweek)
 
     ### Get results
     dates = {}
     for matchReport in league.matchReports:
+        if matchReport['gameweek'] > searchGameweek:
+            break
         clubA, clubB = matchReport['clubs'].keys()
         match = list(matchReport['clubs'].values())[0]['match']
         scoreA, scoreB = match['goalsFor'], match['goalsAgainst']
