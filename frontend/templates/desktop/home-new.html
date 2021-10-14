@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label for="num-clubs">
-                    Num clubs
+                    Num. clubs
                 </label>
                 <div>
                     <input type="number" id="num-clubs" name="num-clubs" min="8" max="32" step="2" required>
@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label for="num-players-per-club">
-                    Num players per club
+                    Num. players per club
                 </label>
                 <div>
                     <input type="number" name="num-players-per-club" min="15" max="40" required>
@@ -40,12 +40,13 @@
                 <div style="display: flex; height: 25px;">
                     <input type="text" id="custom-club" name="custom-club" spellcheck="false">
                     <button id="add-custom-club-button">
-                        <div>+</div>
+                        <i class="fas fa-plus" style="font-size: 0.7em;"></i>
                     </button>
                 </div>
             </div>
             <div id="custom-club-error"></div>
             <div id="custom-clubs">
+                <hr>
                 <div id="custom-clubs-heading">Custom clubs:</div>
                 <div id="custom-clubs-list"></div>
             </div>

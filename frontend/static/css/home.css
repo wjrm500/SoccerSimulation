@@ -267,13 +267,9 @@ input[type=file] {
     background-color: #28a428;
 }
 
-#add-custom-club-button div {
-    bottom: 2px;
-    position: relative;
-}
-
 #custom-clubs {
     display: none;
+    font-size: 0.8em;
 }
 
 #custom-club-error {
@@ -289,7 +285,6 @@ input[type=file] {
     background-color: grey;
     border-radius: 5px;
     display: inline-flex;
-    font-size: 0.8em;
     margin: 2px;
     padding: 5px;
 }

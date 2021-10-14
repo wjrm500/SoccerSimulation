@@ -33,12 +33,12 @@ $(document).ready(function () {
         let customClub = $('#custom-club').val();
         $('#custom-club').val('').focus();
         customClub = customClub.charAt(0).toUpperCase() + customClub.slice(1);
-        let regex = new RegExp('^[A-Za-z]+$');
-        let passedRegex = regex.test(customClub);
+        customClub = customClub.trim();
+        let passedRegex = /^[A-Za-z\u00C0-\u024F\s-]+$/.test(customClub);
         let notDuplicate = !customClubs.includes(customClub);
         let errors = [];
         if (!passedRegex) {
-            errors.push('Custom club names can only include standard English alphabetic characters')
+            errors.push('Custom club names can only include alphabetic characters')
         }
         if (!notDuplicate) {
             errors.push('Custom club names must be unique');
