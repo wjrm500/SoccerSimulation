@@ -23,11 +23,9 @@ $(document).ready(function() {
         let thisThing = $(this);
         playerSearchTimeout = setTimeout(function() {
             $('#player-performance-proper-table tr:not(:first-child)').show();
-            console.log(thisThing);
             let searchVal = thisThing.val().toLowerCase();
             $('#player-performance-proper-table tr:not(:first-child)').each(function() {
-                let playerName = $(this).find('td:nth-child(2)').html().toLowerCase();
-                playerName = playerName.substring(0, playerName.indexOf('<'));
+                let playerName = $(this).find('td:nth-child(2)').find('.player-row-top').html().replaceAll('\n', '').trim().toLowerCase();
                 if (!playerName.includes(searchVal)) {
                     $(this).hide();
                 }
