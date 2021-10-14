@@ -34,11 +34,11 @@ $(document).ready(function () {
         $('#custom-club').val('').focus();
         customClub = customClub.charAt(0).toUpperCase() + customClub.slice(1);
         customClub = customClub.trim();
-        let passedRegex = /^[A-Za-z\u00C0-\u024F\s-]+$/.test(customClub);
+        let passedRegex = /^[A-Za-z\u00C0-\u024F]+[A-Za-z\u00C0-\u024F\s-\.']{2,24}$/.test(customClub);
         let notDuplicate = !customClubs.includes(customClub);
         let errors = [];
         if (!passedRegex) {
-            errors.push('Custom club names can only include alphabetic characters')
+            errors.push('Custom club names must be 3-25 characters long, can only include alphabetic characters, hyphens, full stops and apostrophes, and must begin with an alphabetic character')
         }
         if (!notDuplicate) {
             errors.push('Custom club names must be unique');
