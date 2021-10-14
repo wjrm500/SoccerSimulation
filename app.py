@@ -199,15 +199,17 @@ def player(id):
     player = universe.playerController.getPlayerById(id)
     searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
     performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex', gameweek = searchGameweek)[player]
-    maxDate = player.club.league.gameweekDates[searchGameweek]
+    maxDate = None
+    if request.args.get('gameweek'):
+        maxDate = player.club.league.gameweekDates[searchGameweek]
     injuries = []
     for injury in player.injuries:
         startDate = injury[0]
-        if startDate > maxDate:
+        if maxDate is not None and startDate > maxDate:
             continue
         injuryLength = injury[1]
         endDate = startDate + timedelta(int(injuryLength))
-        if endDate > maxDate:
+        if maxDate is not None and endDate > maxDate:
             injuryText = 'Since {}'.format(startDate.strftime('%d %b'))
         else:
             injuryText = 'Between {} and {} ({} days)'.format(
@@ -248,7 +250,8 @@ def playerRadar(playerId):
     player = universe.playerController.getPlayerById(playerId)
     league = universe.systems[0].leagues[0]
     searchGameweek = getSearchGameweek(league)
-    maxDate = league.gameweekDates[searchGameweek]
+    if request.args.get('gameweek'):
+        maxDate = league.gameweekDates[searchGameweek]
     date = maxDate if request.args.get('gameweek') else None
     fig = player_utils.showSkillDistribution(player, date = date, projection = True)
     output = io.BytesIO()
@@ -268,9 +271,11 @@ def playerFormGraph(playerId):
 def playerDevelopmentGraph(playerId):
     universe = pickle.loads(session['universes'][session['activeUniverseKey']])
     league = universe.systems[0].leagues[0]
-    searchGameweek = getSearchGameweek(league)
-    maxDate = league.gameweekDates[searchGameweek]
-    date = maxDate if request.args.get('gameweek') else None
+    date = None
+    if request.args.get('gameweek'):
+        searchGameweek = getSearchGameweek(league)
+        maxDate = league.gameweekDates[searchGameweek]
+        date = maxDate
     player = universe.playerController.getPlayerById(playerId)
     fig = player_utils.showPlayerDevelopment(player, date = date)
     output = io.BytesIO()
