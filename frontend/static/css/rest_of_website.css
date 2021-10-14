@@ -534,6 +534,7 @@ td.result-away-club-name {
 
 #player-game-table {
     font-size: 0.9em;
+    height: auto;
     table-layout: fixed;
 }
 

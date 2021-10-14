@@ -199,33 +199,44 @@ def player(id):
     player = universe.playerController.getPlayerById(id)
     searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
     performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex', gameweek = searchGameweek)[player]
+    maxDate = player.club.league.gameweekDates[searchGameweek]
     injuries = []
     for injury in player.injuries:
         startDate = injury[0]
+        if startDate > maxDate:
+            continue
         injuryLength = injury[1]
         endDate = startDate + timedelta(int(injuryLength))
-        injuryText = 'Between {} and {} ({} days)'.format(
-            startDate.strftime('%d %b'),
-            endDate.strftime('%d %b'),
-            injuryLength
-        )
+        if endDate > maxDate:
+            injuryText = 'Since {}'.format(startDate.strftime('%d %b'))
+        else:
+            injuryText = 'Between {} and {} ({} days)'.format(
+                startDate.strftime('%d %b'),
+                endDate.strftime('%d %b'),
+                injuryLength
+            )
         injuries.append(injuryText)
     performanceIndices['injuries'] = injuries
     yR = [val['rating'] for val in list(player.ratings.values())]
     yPR = [val['peakRating'] for val in list(player.ratings.values())]
     playerDevelopment = {
         'rating': {
-            'start': yR[0], 'end': yR[-1]
+            'start': yR[0], 'end': player.ratings[maxDate]['rating'] if request.args.get('gameweek') else yR[-1]
         },
         'peakRating': {
-            'start': yPR[0], 'end': yPR[-1]
+            'start': yPR[0], 'end': player.ratings[maxDate]['peakRating'] if request.args.get('gameweek') else yPR[-1]
         }
     }
+    playerBestPosition = player.getBestPosition(player.getSkillDistribution(player.getAgeOnDate(maxDate))) if request.args.get('gameweek') else player.getBestPosition()
     return render_template(
         'desktop/player/player.html',
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['iframe.js', 'player.js'],
         player = player,
+        playerBestPosition = playerBestPosition,
+        playerRating = player.ratings[maxDate]['rating'] if request.args.get('gameweek') else player.getRating(),
+        playerPeakRating = player.ratings[maxDate]['peakRating'] if request.args.get('gameweek') else player.peakRating,
+        playerAge = player.getAgeOnDate(maxDate, 2) if request.args.get('gameweek') else player.getAge(2),
         playerReports = player.getPlayerReports(searchGameweek),
         performanceIndices = performanceIndices,
         playerDevelopment = playerDevelopment
@@ -235,7 +246,11 @@ def player(id):
 def playerRadar(playerId):
     universe = pickle.loads(session['universes'][session['activeUniverseKey']])
     player = universe.playerController.getPlayerById(playerId)
-    fig = player_utils.showSkillDistribution(player, projection = True)
+    league = universe.systems[0].leagues[0]
+    searchGameweek = getSearchGameweek(league)
+    maxDate = league.gameweekDates[searchGameweek]
+    date = maxDate if request.args.get('gameweek') else None
+    fig = player_utils.showSkillDistribution(player, date = date, projection = True)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
@@ -252,8 +267,12 @@ def playerFormGraph(playerId):
 @app.route('/simulation/player/<playerId>/development-graph')
 def playerDevelopmentGraph(playerId):
     universe = pickle.loads(session['universes'][session['activeUniverseKey']])
+    league = universe.systems[0].leagues[0]
+    searchGameweek = getSearchGameweek(league)
+    maxDate = league.gameweekDates[searchGameweek]
+    date = maxDate if request.args.get('gameweek') else None
     player = universe.playerController.getPlayerById(playerId)
-    fig = player_utils.showPlayerDevelopment(player)
+    fig = player_utils.showPlayerDevelopment(player, date = date)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')

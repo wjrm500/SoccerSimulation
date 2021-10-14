@@ -38,7 +38,7 @@ def showPredictedRatings(player):
     )
     plt.show()
 
-def plotPlayer(player, axes, config):
+def plotPlayer(player, axes, config, date = None):
     labelsOn, positionTextRotated, projectionOn, scaleForOverallRatingOn = [value for value in list(config.values())]
     blank = True if player is None else False
     axes.set(aspect='equal')
@@ -47,7 +47,7 @@ def plotPlayer(player, axes, config):
 
     if not blank:
         ### Calculate vertices
-        skillDistribution = player.skillDistribution
+        skillDistribution = player.getSkillDistribution(player.getAgeOnDate(date))
         playerRating = player.rating
         points = {}
         for j, (skill, value) in enumerate(skillDistribution.items()):
@@ -196,7 +196,7 @@ def plotPlayer(player, axes, config):
     #             rotation = 90
     #         )
 
-def showSkillDistribution(players, labels = None, projection = False, scaleForOverallRating = True):
+def showSkillDistribution(players, date = None, labels = None, projection = False, scaleForOverallRating = True):
     if not isinstance(players, list):
         players = [players]
     numPlayers = len(players)
@@ -219,18 +219,18 @@ def showSkillDistribution(players, labels = None, projection = False, scaleForOv
     cols = math.ceil(numPlayers / rows)
     fig, axes = plt.subplots(nrows = rows, ncols = cols)
     if numPlayers == 1:
-        plotPlayer(players[0], axes, plotConfig)
+        plotPlayer(players[0], axes, plotConfig, date)
     elif numPlayers == 2:
         for i in range(cols):
-            plotPlayer(players[i], axes[i], plotConfig)
+            plotPlayer(players[i], axes[i], plotConfig, date)
     else:
         p = 0
         for i in range(rows):
             for j in range(cols):
                 if p < numPlayers:
-                    plotPlayer(players[p], axes[i][j], plotConfig)
+                    plotPlayer(players[p], axes[i][j], plotConfig, date)
                 else:
-                    plotPlayer(None, axes[i][j], plotConfig)
+                    plotPlayer(None, axes[i][j], plotConfig, date)
                 p += 1
 
     # ### Show plot
@@ -248,12 +248,17 @@ def showPlayerForm(player):
     plt.plot_date(x, y, 'b-')
     return fig
 
-def showPlayerDevelopment(player):
+def showPlayerDevelopment(player, date = None):
     fig = plt.figure()
     fig.add_subplot(111)
-    x = range(len(player.ratings.keys()))
-    yR = [val['rating'] for val in list(player.ratings.values())]
-    yPR = [val['peakRating'] for val in list(player.ratings.values())]
+    if date is not None:
+        x = range(len([k for k in player.ratings.keys() if k <= date]))
+        yR = [v['rating'] for k, v in player.ratings.items() if k <= date]
+        yPR = [v['peakRating'] for k, v in player.ratings.items() if k <= date]
+    else:
+        x = range(len(player.ratings.keys()))
+        yR = [v['rating'] for v in player.ratings.values()]
+        yPR = [v['peakRating'] for v in player.ratings.values()]
     plt.title('Development Graph', fontsize = 14)
     plt.xlabel('Day', fontsize = 12, labelpad = 8)
     plt.ylabel('Rating', fontsize = 12, labelpad = 8)

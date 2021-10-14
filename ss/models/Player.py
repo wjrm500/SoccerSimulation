@@ -28,6 +28,7 @@ class Player:
         self.form = 0
         self.ratings = {}
         self.forms = {}
+        self.storeRatingsAndForm()
         
     def setBirthDate(self):
         agMin, agMax = config.playerConfig['age']['min'], config.playerConfig['age']['max']
@@ -36,6 +37,13 @@ class Player:
     
     def getAge(self, dp = None):
         return round(self.age, dp) if dp is not None and dp > 0 else int(self.age)
+    
+    def getAgeOnDate(self, date = None, dp = None):
+        if date is None:
+            return self.getAge(dp)
+        td = date - self.birthDate
+        age = td.days / 365.25
+        return round(age, dp) if dp is not None and dp > 0 else int(age)
     
     def setAge(self):
         td = self.controller.universe.currentDate - self.birthDate

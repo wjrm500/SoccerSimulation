@@ -35,6 +35,7 @@ class Scheduler:
         gameweek = 1
         gameDayOfYear = 1
         gameInterval = 300 / len(schedule)
+        league.gameweekDates = {}
         while True:
             if not schedule.get(gameweek): ### Exit loop when fixtures have been exhausted
                 return
@@ -42,6 +43,7 @@ class Scheduler:
             for game in schedule[gameweek]:
                 clubX, clubY = game['home'], game['away']
                 cls.scheduleFixture(gameDate, gameweek, league, clubX, clubY)
+            league.gameweekDates[gameweek] = gameDate
             gameweek += 1
             gameDayOfYear += gameInterval
     
