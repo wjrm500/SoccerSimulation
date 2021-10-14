@@ -1114,7 +1114,7 @@ a.result-L:hover {
     height: 100%;
     table-layout: fixed;
     left: 0px;
-    height: 100%;
+    height: auto;
     padding: 5px;
     position: absolute;
     width: 100%;

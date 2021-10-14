@@ -119,6 +119,7 @@ function plotCoords(zip, playerIdHovered) {
             let {playerId, centerX, centerY, radius} = hoverPlace;
             if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < radius) {
                 let url = '/simulation/player/' + playerId;
+                url = getUrlWithParams(url);
                 sendIFrameToUrl(url);
             }
         }
@@ -238,6 +239,12 @@ function drawPitch(playerIdHovered) {
 }
 
 $(document).ready(function() {
+    // Add URL params for filtering by gameweek
+    let clubId = $('#club-positions-graph-image').data('clubId');
+    let originalSrc = `/simulation/club/${clubId}/position-graph`
+    let newSrc = getUrlWithParams(originalSrc);
+    $('#club-positions-graph-image').prop('src', newSrc);
+
     setTimeout(function () {
         canvas = document.getElementById('football-pitch');
         rect = canvas.parentNode.getBoundingClientRect();
@@ -253,6 +260,7 @@ $(document).ready(function() {
         drawPitch();
         $('#club-player-performance-table .clickable-row').click(function() {
             let url = '/simulation/player/' + this.dataset.playerId;
+            url = getUrlWithParams(url);
             sendIFrameToUrl(url);
         });
 
@@ -274,6 +282,7 @@ $(document).ready(function() {
         $('#club-results .clickable-row').click(function() {
             let fixtureId = $(this).data('fixtureId');
             let url = '/simulation/fixture/' + fixtureId;
+            url = getUrlWithParams(url);
             sendIFrameToUrl(url);
         });
 

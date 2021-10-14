@@ -28,7 +28,7 @@ class Match:
     def play(self):
         report = self.matchReport
         for club in self.clubs:
-            if report['clubs'][club]['team'] == None:
+            if report['clubs'][club]['team'] is None:
                 continue
             report['clubs'][club]['match'] = {}
             potential = report['clubs'][club]['potential']

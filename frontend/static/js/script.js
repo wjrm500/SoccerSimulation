@@ -40,6 +40,7 @@ $(document).ready(function() {
             $('#sometimes-data-container #spinner').show();
             let iframe = document.getElementById('sometimes-iframe');
             let url = '/simulation/club/' + this.dataset.clubId;
+            url = getUrlWithParams(url);
             window.iframeHistory.push(url);
             window.iframeHistoryPointer = window.iframeHistory.length - 1;
             iframe.onload = function () {
@@ -108,6 +109,7 @@ $(document).ready(function() {
         $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
         let url = $(this).data('url');
+        url = getUrlWithParams(url);
         if (window.iframeHistoryPointer !== (window.iframeHistory.length - 1)) {
             window.iframeHistory.pop();
             window.iframeHistory.push(url);
@@ -127,6 +129,7 @@ $(document).ready(function() {
         $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/player/' + this.dataset.playerId;
+        url = getUrlWithParams(url);
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
         iframe.onload = function () {
@@ -141,6 +144,7 @@ $(document).ready(function() {
         $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
         let url = '/simulation/fixture/' + this.dataset.fixtureId;
+        url = getUrlWithParams(url);
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
         iframe.onload = function () {
@@ -274,4 +278,8 @@ function recolorAttributes() {
             'color': `hsl(${hue}, ${saturation}%, 50%)`,
         });
     });
+}
+
+function getUrlWithParams(url) {
+    return url + window.location.search;
 }

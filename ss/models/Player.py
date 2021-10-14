@@ -243,6 +243,11 @@ class Player:
             self.playerReports.append(playerReport)
             self.fatigue += playerReport['fatigueIncrease']
             self.form += playerReport['gravitatedMatchForm']
+        
+    def getPlayerReports(self, gameweek = None):
+        if gameweek is None:
+            return self.playerReports
+        return [playerReport for playerReport in self.playerReports if playerReport['gameweek'] <= gameweek]
     
     def getProperName(self, forenameStyle = 'Whole', surnameStyle = 'Whole'):
         ### Both forenameStyle and surnameStyle arguments can be set to either 'Empty', 'Shortened' or 'Whole'

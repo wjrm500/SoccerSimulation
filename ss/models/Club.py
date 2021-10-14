@@ -79,5 +79,8 @@ class Club:
     def getRating(self, decimalPlaces = 2):
         return round(np.mean([player.rating for player in self.players]), decimalPlaces)
     
-    def getMatchReports(self):
-        return [matchReport for matchReport in self.league.matchReports if self in matchReport['clubs']]
+    def getMatchReports(self, gameweek = None):
+        matchReports = [matchReport for matchReport in self.league.matchReports if self in matchReport['clubs']]
+        if gameweek is None:
+            return matchReports
+        return [matchReport for matchReport in matchReports if matchReport['gameweek'] <= gameweek]

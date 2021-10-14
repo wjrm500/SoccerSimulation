@@ -195,3 +195,7 @@ function recolorAttributes() {
         });
     });
 }
+
+function getUrlWithParams(url) {
+    return url + window.location.search;
+}

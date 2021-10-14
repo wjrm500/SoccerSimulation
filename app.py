@@ -36,12 +36,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 Mobility(app)
 
-def showSimulation():
-    activeUniverseKey = session['activeUniverseKey']
-    universe = pickle.loads(session['universes'][activeUniverseKey])
-    league = universe.systems[0].leagues[0]
-
-    ### Get standings
+def getSearchGameweek(league):
     gameweek = request.args.get('gameweek') or ''
     lastGameweek = (len(league.clubs) - 1) * 2
     searchGameweek = lastGameweek
@@ -49,7 +44,15 @@ def showSimulation():
         gameweek = int(gameweek)
         if gameweek <= lastGameweek:
             searchGameweek = gameweek
+    return searchGameweek
 
+def showSimulation():
+    activeUniverseKey = session['activeUniverseKey']
+    universe = pickle.loads(session['universes'][activeUniverseKey])
+    league = universe.systems[0].leagues[0]
+
+    searchGameweek = getSearchGameweek(league)
+    ### Get standings
     leagueTable = league.getLeagueTable(searchGameweek)
     leagueTableItems = list(leagueTable.items())
     leagueTableItems.sort(key = lambda x: (x[1]['Pts'], x[1]['GD']), reverse = True)
@@ -194,7 +197,8 @@ def default():
 def player(id):
     universe = pickle.loads(session['universes'][session['activeUniverseKey']])
     player = universe.playerController.getPlayerById(id)
-    performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex')[player]
+    searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
+    performanceIndices = player.club.league.getPerformanceIndices(sortBy = 'performanceIndex', gameweek = searchGameweek)[player]
     injuries = []
     for injury in player.injuries:
         startDate = injury[0]
@@ -222,6 +226,7 @@ def player(id):
         cssFiles = ['rest_of_website.css', 'iframe.css'],
         jsFiles = ['iframe.js', 'player.js'],
         player = player,
+        playerReports = player.getPlayerReports(searchGameweek),
         performanceIndices = performanceIndices,
         playerDevelopment = playerDevelopment
     )
@@ -366,10 +371,11 @@ def club(clubId):
         'position': select.position,
         'rating': select.rating
         } for select in selection])
-    playerPerformanceItems = club.league.getPerformanceIndices(sortBy = 'performanceIndex', clubs = club)
+    searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
+    playerPerformanceItems = club.league.getPerformanceIndices(sortBy = 'performanceIndex', gameweek = searchGameweek, clubs = club)
 
     results = []
-    for matchReport in club.getMatchReports():
+    for matchReport in club.getMatchReports(searchGameweek):
         atHome = club == list(matchReport['clubs'].keys())[0]
         oppClub = [x for x in list(matchReport['clubs'].keys()) if x != club][0]
         clubScore = matchReport['clubs'][club]['match']['goalsFor']
@@ -400,7 +406,8 @@ def club(clubId):
 def playerPerformance():
     universe = pickle.loads(session['universes'][session['activeUniverseKey']])
     league = universe.systems[0].leagues[0]
-    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex')
+    searchGameweek = getSearchGameweek(league)
+    playerPerformanceItems = league.getPerformanceIndices(sortBy = 'performanceIndex', gameweek = searchGameweek)
     filterClubs = sorted([{'id': club.id, 'name': club.name} for club in league.clubs], key = lambda x: x['name'])
     # filterPlayers = [{'id': player.id, 'name': player.getProperName()} for club in league.clubs for player in club.players]
     filterPositions = list(playerConfig['positions'].keys())
@@ -417,7 +424,8 @@ def playerPerformance():
 def clubPositionGraph(clubId):
     universe = pickle.loads(session['universes'][session['activeUniverseKey']])
     club = universe.getClubById(clubId)
-    fig = club_utils.showClubPositions(club)
+    searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
+    fig = club_utils.showClubPositions(club, gameweek = searchGameweek)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')

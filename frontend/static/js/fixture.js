@@ -27,6 +27,7 @@ $(document).ready(function() {
 
     $('.fixture-players-club table td:first-child').click(function() {
         let url = '/simulation/player/' + this.dataset.playerId;
+        url = getUrlWithParams(url);
         sendIFrameToUrl(url);
     });
 

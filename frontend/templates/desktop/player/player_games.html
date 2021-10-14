@@ -1,4 +1,4 @@
-{% if player.playerReports %}
+{% if playerReports %}
     <table id="player-game-table" class="full-table">
         <tr>
             <th>GW</th>
@@ -6,7 +6,7 @@
             <th>Actions</th>
             <th>Rating</th>
         </tr>
-        {% for playerReport in player.playerReports %}
+        {% for playerReport in playerReports %}
             <tr class="clickable-row" data-fixture-id="{{ playerReport['fixtureId'] }}">
                 <td>{{ playerReport['gameweek'] }}</td>
                 <td>

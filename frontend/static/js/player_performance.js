@@ -64,6 +64,7 @@ $(document).ready(function() {
 
     $('#player-performance-proper-table .clickable-row').click(function() {
         let url = '/simulation/player/' + this.dataset.playerId;
+        url = getUrlWithParams(url);
         sendIFrameToUrl(url);
     });
 
