@@ -48,7 +48,7 @@ def plotPlayer(player, axes, config, date = None):
     if not blank:
         ### Calculate vertices
         skillDistribution = player.getSkillDistribution(player.getAgeOnDate(date))
-        playerRating = player.rating
+        playerRating = player.ratings[date]['rating'] if date is not None else player.rating
         points = {}
         for j, (skill, value) in enumerate(skillDistribution.items()):
             if scaleForOverallRatingOn:
