@@ -364,11 +364,10 @@
     border-collapse: separate;
     border-spacing: 0px 10px;
     font-size: 0.9em;
-    height: 100%;
+    height: auto;
     table-layout: fixed;
     top: -25px;
     left: 0px;
-    height: 100%;
     padding: 5px;
     position: absolute;
     width: 100%;
