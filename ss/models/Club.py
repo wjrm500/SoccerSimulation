@@ -16,7 +16,20 @@ class Club:
             player = self.league.system.universe.playerController.createPlayer()
             self.players.append(player)
             player.club = self
+            self.alterPlayerRatingEasterEgg(player)
         self.favouriteFormation = self.setFavouriteFormation()
+    
+    def alterPlayerRatingEasterEgg(self, player):
+        if self.name in ['Arsenal', 'Arsenal FC', 'Gunners', 'The Gunners', 'Newcastle', 'Newcastle United', 'Newcastle United FC', 'The Toon', 'Toon Army']:
+            player.peakRating -= 10
+            player.setRating()
+            player.setSkillValues()
+            player.setPositionRatings()
+        elif self.name in ['Liverpool', 'Liverpool FC', 'Liverpool']:
+            player.peakRating += 10
+            player.setRating()
+            player.setSkillValues()
+            player.setPositionRatings()
     
     def getProvisionalShortName(self, precedence = 0):
         ### If precedence = 0, use all available consonants

@@ -28,7 +28,6 @@ class Player:
         self.form = 0
         self.ratings = {}
         self.forms = {}
-        self.storeRatingsAndForm()
         
     def setBirthDate(self):
         agMin, agMax = config.playerConfig['age']['min'], config.playerConfig['age']['max']
@@ -64,7 +63,8 @@ class Player:
         self.retirementThreshold = utils.limitedRandNorm(config.playerConfig['retirementThreshold'])
 
     def setPeakRating(self):
-        self.peakRating = utils.limitedRandNorm(config.playerConfig['peakRating'])
+        d = config.playerConfig['peakRating']
+        self.peakRating = utils.limitedRandNorm(d)
 
     def adjustPeakRating(self):
         mn, mx = config.playerConfig['peakRating']['min'], config.playerConfig['peakRating']['max']
@@ -244,6 +244,7 @@ class Player:
         self.setRating()
         self.setSkillDistribution()
         self.setSkillValues()
+        self.setPositionRatings()
         self.storeRatingsAndForm()
     
     def handlePlayerReport(self, playerReport):
