@@ -25,7 +25,7 @@ class Club:
             player.setRating()
             player.setSkillValues()
             player.setPositionRatings()
-        elif self.name in ['Liverpool', 'Liverpool FC', 'Liverpool']:
+        elif self.name in ['Liverpool', 'Liverpool FC']:
             player.peakRating += 10
             player.setRating()
             player.setSkillValues()
