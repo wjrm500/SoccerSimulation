@@ -1,5 +1,9 @@
 let customClubs = [];
 
+$(window).bind('pageshow', function(e) {
+    $('#spinner').hide();
+});
+
 $(document).ready(function () {
     $('.simulation-button').click(function () {
         $(this).find('#text').hide();
