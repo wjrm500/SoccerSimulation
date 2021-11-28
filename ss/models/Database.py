@@ -36,9 +36,9 @@ class Database:
     
     def connect(self):
         load_dotenv()
-        url = 'mongodb+srv://{user}:{pwd}@cluster0.tfn03.mongodb.net/{db}?retryWrites=true&w=majority'.format(
+        url = 'mongodb+srv://{user}:{pwd}@cluster0.tfn03.mongodb.net/{db}?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE'.format(
             user = os.environ.get('MONGO_USER'),
             pwd = os.environ.get('MONGO_PWD'),
             db = os.environ.get('MONGO_DB')
         )
-        self.cnx = MongoClient(url)
+        self.cnx = MongoClient(url, connect = False)
