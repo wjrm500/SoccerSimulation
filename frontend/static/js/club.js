@@ -40,7 +40,7 @@ function calculateCoordsFromFormation(formation, customXCoords, customYCoords) {
     return res;
 }
 
-function drawPlayer(player, centerX, centerY, radius, hoverState) {
+function drawPlayer(player, centerX, centerY, radius, textOffset, hoverState) {
     let largeScreen = screen.width > 1500;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -61,7 +61,6 @@ function drawPlayer(player, centerX, centerY, radius, hoverState) {
     ctx.font = hoverState ? `normal 900 ${fontSize} Arial, sans-serif` : `${fontSize} Arial, sans-serif`;
     ctx.fillText(parseInt(player.rating), centerX, centerY);
     ctx.fillStyle = 'black';
-    let textOffset = largeScreen ? 30 : 25; 
     ctx.fillText(player.name, centerX, centerY + textOffset);
 }
 
@@ -72,6 +71,10 @@ function plotCoords(zip, playerIdHovered) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     let hoverPlaces = [];
+    
+    let radiuses = zip.map(zipItem => ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2)));
+    let maxRadius = Math.max.apply(null, radiuses);
+    let maxTextOffset = maxRadius + 10;
     for (let zipItem of zip) {
         const centerX = ctx.canvas.width / 32 * zipItem.coords.x;
         const centerY = ctx.canvas.height / 32 * zipItem.coords.y;
@@ -83,7 +86,7 @@ function plotCoords(zip, playerIdHovered) {
             radius
         });
         hoverState = playerIdHovered === zipItem.player.id;
-        drawPlayer(zipItem.player, centerX, centerY, radius, hoverState);
+        drawPlayer(zipItem.player, centerX, centerY, radius, maxTextOffset, hoverState);
     }
     $(canvas).unbind();
     $(canvas).mousemove(function(evt) {
