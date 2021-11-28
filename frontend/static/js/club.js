@@ -78,7 +78,10 @@ function plotCoords(zip, playerIdHovered) {
     for (let zipItem of zip) {
         const centerX = ctx.canvas.width / 32 * zipItem.coords.x;
         const centerY = ctx.canvas.height / 32 * zipItem.coords.y;
-        const radius = ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2));
+        let radius = ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2));
+        let noSmallerThan = ctx.canvas.width / 30;
+        let noBiggerThan = ctx.canvas.width / 15;
+        radius = Math.max(Math.min(radius, noBiggerThan), noSmallerThan)
         hoverPlaces.push({
             playerId: zipItem.player.id,
             centerX,
