@@ -1,13 +1,14 @@
 let customClubs = [];
 
 $(window).bind('pageshow', function(e) {
-    $('#spinner').hide();
+    $('.spinner').hide();
+    $('.text').show();
 });
 
 $(document).ready(function () {
     $('.simulation-button').click(function () {
-        $(this).find('#text').hide();
-        $(this).find('#spinner').show();
+        $(this).find('.text').hide();
+        $(this).find('.spinner').show();
         window.location.href = $(this).data('url');
     });
 
