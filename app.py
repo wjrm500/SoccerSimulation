@@ -20,13 +20,12 @@ from datetime import timedelta
 from io import BytesIO
 import json
 
+ON_AWS = 'ON_AWS' in os.environ and os.environ['ON_AWS'] == 'True'
+BASE_PATH = "/soccer-simulation" if ON_AWS else ""
+
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
-ON_HEROKU = 'ON_HEROKU' in os.environ
-if ON_HEROKU:
-    r = redis.from_url(os.environ.get('REDIS_URL'))
-else:
-    r = redis.Redis()
+r = redis.Redis(host='soccer-sim-redis', port=6379)
 
 template_folder = os.path.abspath('frontend/templates')
 static_folder = os.path.abspath('frontend/static')
@@ -107,7 +106,8 @@ def getHome():
 @app.route('/', methods = ['POST'])
 def postHome():
     universeKey = request.form['universe_key']
-    return redirect(url_for('simulation/' + universeKey))
+    url = BASE_PATH + url_for('simulation', universeKey = universeKey)
+    return redirect(url)
 
 @app.route('/new-simulation', methods = ['GET'])
 def getNewSimulation():
@@ -139,8 +139,8 @@ def postExistingSimulation():
     if existingHow == 'in-the-cloud':
         universeKey = request.form.get('universe-key')
         if db.universeKeyExists(universeKey):
-            session['activeUniverseKey'] = universeKey
-            return redirect(url_for('simulation', universeKey = universeKey))
+            url = BASE_PATH + url_for('simulation', universeKey = universeKey)
+            return redirect(url)
         error += 'Universe Key {} does not exist'.format(universeKey)
     elif existingHow == 'on-my-computer':
         file = request.files.get('upload-file')
@@ -187,7 +187,7 @@ def simulation(universeKey):
 def download(universeKey):
     universe = session['universes'][universeKey]
     attachmentFilename = 'universe_' + universeKey
-    return send_file(BytesIO(universe), attachment_filename = attachmentFilename, as_attachment = True)
+    return send_file(BytesIO(universe), download_name = attachmentFilename, as_attachment = True)
 
 @app.route('/simulation/default-iframe')
 def default():
@@ -473,18 +473,20 @@ def add_universes_to_session():
     if 'activeUniverseKey' in session:
         session['universes'] = {session['activeUniverseKey']: session['universes'][session['activeUniverseKey']]}
 
-### For versioning CSS to prevent browser cacheing
+### randomString is for versioning CSS to prevent browser caching
+### basePath is for setting the correct URL for AJAX requests and static files
 @app.context_processor
 def inject_dict_for_all_templates():
     randomString = utils.generateRandomDigits(5)
-    return {'randomString': randomString}
+    return {'randomString': randomString, 'basePath': BASE_PATH}
 
 ### Dev methods for convenience
 @app.route('/clear', methods = ['GET'])
 def clearSession():
     session.clear()
-    return redirect(url_for('getHome'))
+    url = BASE_PATH + url_for('getHome')
+    return redirect(url)
 
-debug_setting = not ON_HEROKU
+debug_setting = not ON_AWS
 if __name__ == '__main__':
-    app.run(debug = debug_setting)
+    app.run(host = '0.0.0.0', debug = debug_setting)

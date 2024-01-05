@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     $('.pre-match-form').each(function() {
         let val = $(this).html();
         let prefix = val.charAt(0);
@@ -26,7 +25,7 @@ $(document).ready(function() {
     });
 
     $('.fixture-players-club table td:first-child').click(function() {
-        let url = '/simulation/player/' + this.dataset.playerId;
+        let url = basePath + '/simulation/player/' + this.dataset.playerId;
         url = getUrlWithParams(url);
         sendIFrameToUrl(url);
     });

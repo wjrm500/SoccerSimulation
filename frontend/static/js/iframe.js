@@ -45,12 +45,12 @@ $(document).ready(function() {
     });
 
     $('.fixture-summary-goal-player').click(function() {
-        let url = '/simulation/player/' + this.dataset.playerId;
+        let url = basePath + '/simulation/player/' + this.dataset.playerId;
         sendIFrameToUrl(url);
     });
 
     $('#player-game-table .clickable-row').click(function() {
-        let url = '/simulation/fixture/' + this.dataset.fixtureId;
+        let url = basePath + '/simulation/fixture/' + this.dataset.fixtureId;
         if (parent.iframeHistoryPointer !== (parent.iframeHistory.length - 1)) {
             parent.iframeHistory.pop();
             parent.iframeHistory.push(url);

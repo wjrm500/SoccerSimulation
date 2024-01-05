@@ -7,13 +7,13 @@
 <div id="fixture-summary-result" class="fixture-summary-container">
     <div id="fixture-summary-result-headline">
         <div id="fixture-summary-home-team-name" class="fixture-summary-team-name">
-            <a data-url="/simulation/club/{{ homeClubData['id'] }}">{{ homeClubData['name'] }}</a>
+            <a data-url="{{ basePath }}/simulation/club/{{ homeClubData['id'] }}">{{ homeClubData['name'] }}</a>
         </div>
         <div id="fixture-summary-score">
             {{ '{} - {}'.format(homeClubData['match']['goalsFor'], awayClubData['match']['goalsFor']) }}
         </div>
         <div id="fixture-summary-away-team-name" class="fixture-summary-team-name">
-            <a data-url="/simulation/club/{{ awayClubData['id'] }}">{{ awayClubData['name'] }}</a>
+            <a data-url="{{ basePath }}/simulation/club/{{ awayClubData['id'] }}">{{ awayClubData['name'] }}</a>
         </div>
     </div>
     <div id="fixture-summary-goals">
@@ -62,6 +62,6 @@
         </div>
     </div>
 </div>
-<a href="/simulation/fixture/{{ reverseFixture.fixtureId }}" id="fixture-summary-footer-container">
+<a href="#" id="fixture-summary-footer-container" data-url="{{ basePath }}/simulation/fixture/{{ reverseFixture.fixtureId }}">
     {{ 'Reverse fixture: {} {} - {} {}'.format(reverseFixture['homeTeam'], reverseFixture['homeGoals'], reverseFixture['awayGoals'], reverseFixture['awayTeam']) }}
 </a>

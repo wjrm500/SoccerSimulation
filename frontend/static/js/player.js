@@ -1,6 +1,6 @@
 $(document).ready(function() {
     let playerId = $('#player-radar-image').data('playerId');
-    let originalSrc = `/simulation/player/${playerId}/radar`;
+    let originalSrc = basePath + `/simulation/player/${playerId}/radar`;
     let newSrc = getUrlWithParams(originalSrc);
     $('#player-radar-image').prop('src', newSrc);
 
@@ -10,7 +10,7 @@ $(document).ready(function() {
         let playerId = $(this).data('playerId');
         let img = document.createElement('img');
         img.id = 'player-development-graph-image';
-        let imgSrc = `/simulation/player/${playerId}/development-graph`;
+        let imgSrc = basePath + `/simulation/player/${playerId}/development-graph`;
         imgSrc = getUrlWithParams(imgSrc);
         img.src = imgSrc;
         $(img).on('load', function() {

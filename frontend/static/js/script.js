@@ -39,7 +39,7 @@ $(document).ready(function() {
             $('#sometimes-iframe').hide();
             $('#sometimes-data-container #spinner').show();
             let iframe = document.getElementById('sometimes-iframe');
-            let url = '/simulation/club/' + this.dataset.clubId;
+            let url = basePath + '/simulation/club/' + this.dataset.clubId;
             url = getUrlWithParams(url);
             window.iframeHistory.push(url);
             window.iframeHistoryPointer = window.iframeHistory.length - 1;
@@ -128,7 +128,7 @@ $(document).ready(function() {
         $('#sometimes-iframe').hide();
         $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
-        let url = '/simulation/player/' + this.dataset.playerId;
+        let url = basePath + '/simulation/player/' + this.dataset.playerId;
         url = getUrlWithParams(url);
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;
@@ -143,7 +143,7 @@ $(document).ready(function() {
         $('#sometimes-iframe').hide();
         $('#sometimes-data-container #spinner').show();
         let iframe = document.getElementById('sometimes-iframe');
-        let url = '/simulation/fixture/' + this.dataset.fixtureId;
+        let url = basePath + '/simulation/fixture/' + this.dataset.fixtureId;
         url = getUrlWithParams(url);
         window.iframeHistory.push(url);
         window.iframeHistoryPointer = window.iframeHistory.length - 1;

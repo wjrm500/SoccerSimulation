@@ -5,7 +5,7 @@ $(document).ready(function() {
     let checkProgress = setInterval(
         function () {
             $.get(
-                `/simulation/check-progress/${universeKey}`,
+                basePath + `/simulation/check-progress/${universeKey}`,
                 function (progress) {
                     progress *= 100;
                     if (progress === 100) {
@@ -18,11 +18,11 @@ $(document).ready(function() {
                         let checkDatabase = setInterval(
                             function() {
                                 $.get(
-                                    `/simulation/check-universe-key-exists-in-database/${universeKey}`,
+                                    basePath + `/simulation/check-universe-key-exists-in-database/${universeKey}`,
                                     function (complete) {
                                         if (JSON.parse(complete)) {
                                             clearInterval(checkDatabase);
-                                            window.location.href = `/simulation/${universeKey}`;
+                                            window.location.href = basePath + `/simulation/${universeKey}`;
                                         }
                                     }
                                 )
@@ -54,7 +54,7 @@ $(document).ready(function() {
         let emailInput = $('#email-input').val();
         if (validateEmail(emailInput)) {
             $.post(
-                '/simulation/store-email',
+                basePath + '/simulation/store-email',
                 {
                     universe_key: universeKey,
                     email_input: emailInput

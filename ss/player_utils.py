@@ -272,7 +272,7 @@ def showPlayerDevelopment(player, date = None):
                     (1 / fadeRange) * i, ### xmax
                     color = colorTuple + [strength],
                     linestyle = '--',
-                    linewidth = strength
+                    linewidth = max(strength, 0.1)
                 )
     plt.plot(x, yR, 'b-')
     plt.plot(x, yPR, color = 'lightblue', linestyle = 'solid')

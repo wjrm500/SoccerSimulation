@@ -8,7 +8,7 @@
             <p>This website is designed to showcase the latest incarnation of a football simulation project that has been a lifelong passion of mine. You might like to discover more by reading <a href="https://wjrm500.com/a-history-of-one-mans-inexplicable-obsession-with-football-simulation/" style="color: blue; text-decoration: underline;">this article</a>.</p>
             <h5>How to create your own simulation</h5>
             <ol class="about-list">
-                <li>Go to the <a href="/new-simulation" style="color: blue; text-decoration: underline;">New Simulation</a> page</li>
+                <li>Go to the <a href="{{ basePath }}/new-simulation" style="color: blue; text-decoration: underline;">New Simulation</a> page</li>
                 <li>Here you will be presented with four different fields...</li>
                 <ul>
                     <li>The <b>System</b> you choose determines from which pool of randomly generated city names the clubs in the simulation have their names drawn from</li>
@@ -27,11 +27,11 @@
                 <li><b>The simulation page is best viewed on a laptop or desktop computer</b>. On mobile devices one cannot view Club, Result or Player pages</li>
                 <li>Due to the website running off Heroku's free dynos, which go to sleep after 30 minutes of inactivity, initial page load time can be extremely slow. Read more about this in my article <a href="https://wjrm500.com/2021/09/20/heroku-and-the-irreplicable-problem-of-the-sleeping-dyno" style="color: blue; text-decoration: underline;">Heroku and the Irreplicable Problem of the Sleeping Dyno</a></li>
                 <li>Simulations are by default stored on a free MongoDB instance with a limited capacity of 512 MB. Because of these constraints, <b>all simulations are automatically deleted from the server after 12 hours</b></li>
-                <li>If you want to persist your simulation indefinitely, you can download it as a binary file by clicking "Download" in the top-right corner of the simulation page, and then access the simulation via this application at a later date by uploading the binary file on the <a href="/existing-simulation" style="color: blue; text-decoration: underline;">Existing Simulation</a> page and hitting submit</li>
+                <li>If you want to persist your simulation indefinitely, you can download it as a binary file by clicking "Download" in the top-right corner of the simulation page, and then access the simulation via this application at a later date by uploading the binary file on the <a href="{{ basePath }}/existing-simulation" style="color: blue; text-decoration: underline;">Existing Simulation</a> page and hitting submit</li>
                 <li>Or, if you are a rabid Pythonista and want to explore the simulation on your own computer, one way to do this would be to read in and de-pickle (<i>pickle.loads()</i>) the file in Python</li>
             </ul>
             <p>Happy simulating!</p>
-            <img src="/static/images/my_signature.png" style="width: 150px;">
+            <img src="{{ basePath }}/static/images/my_signature.png" style="width: 150px;">
         </div>
     </div>
        

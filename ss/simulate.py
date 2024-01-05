@@ -1,18 +1,12 @@
 from .models.Universe import Universe
 from .models.Database import Database
 import gridfs
-import os
 import redis
 from .send_email import send_email
 import ss.utils as utils
 import time
-import sys
 
-ON_HEROKU = 'ON_HEROKU' in os.environ
-if ON_HEROKU:
-    r = redis.from_url(os.environ.get('REDIS_URL'))
-else:
-    r = redis.Redis()
+r = redis.Redis(host='soccer-sim-redis', port=6379)
 
 def simulate(customConfig, systemId, universeKey):
     ### Create Universe, taking in input parameters from user

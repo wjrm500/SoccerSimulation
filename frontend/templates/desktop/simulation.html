@@ -14,7 +14,7 @@
             <div id="grid-item-performance" class="grid-item">
                 <div class="grid-item-title" style="align-items: center; display: flex; justify-content: space-between;">
                     <div>Player performance</div>
-                    <a data-url="/simulation/player-performance" style="font-size: 0.8em; text-decoration: underline;">
+                    <a data-url="{{ basePath }}/simulation/player-performance" style="font-size: 0.8em; text-decoration: underline;">
                         More data
                     </a>
                 </div>
@@ -35,9 +35,9 @@
     <div class="half-container">
         <div id="sometimes-data-container" class="data-container">
             <div id="spinner" style="display: none; padding: 10px;">
-                <img src="/static/images/spinner-cropped.gif" style="height: 30px;">
+                <img src="{{ basePath }}/static/images/spinner-cropped.gif" style="height: 30px;">
             </div>
-            <iframe src="/simulation/default-iframe" id="sometimes-iframe"></iframe>
+            <iframe src="{{ basePath }}/simulation/default-iframe" id="sometimes-iframe"></iframe>
         </div>
     </div>
 </div>
