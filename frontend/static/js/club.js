@@ -124,7 +124,7 @@ function plotCoords(zip, playerIdHovered) {
         for (let hoverPlace of hoverPlaces) {
             let {playerId, centerX, centerY, radius} = hoverPlace;
             if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < radius) {
-                let url = basePath + '/simulation/player/' + playerId;
+                let url = '/simulation/player/' + playerId;
                 url = getUrlWithParams(url);
                 sendIFrameToUrl(url);
             }
@@ -247,7 +247,7 @@ function drawPitch(playerIdHovered) {
 $(document).ready(function() {
     // Add URL params for filtering by gameweek
     let clubId = $('#club-positions-graph-image').data('clubId');
-    let originalSrc = basePath + `/simulation/club/${clubId}/position-graph`
+    let originalSrc = `/simulation/club/${clubId}/position-graph`
     let newSrc = getUrlWithParams(originalSrc);
     $('#club-positions-graph-image').prop('src', newSrc);
 
@@ -265,7 +265,7 @@ $(document).ready(function() {
         image = document.getElementById('football-pitch-image');
         drawPitch();
         $('#club-player-performance-table .clickable-row').click(function() {
-            let url = basePath + '/simulation/player/' + this.dataset.playerId;
+            let url = '/simulation/player/' + this.dataset.playerId;
             url = getUrlWithParams(url);
             sendIFrameToUrl(url);
         });
@@ -287,7 +287,7 @@ $(document).ready(function() {
 
         $('#club-results .clickable-row').click(function() {
             let fixtureId = $(this).data('fixtureId');
-            let url = basePath + '/simulation/fixture/' + fixtureId;
+            let url = '/simulation/fixture/' + fixtureId;
             url = getUrlWithParams(url);
             sendIFrameToUrl(url);
         });

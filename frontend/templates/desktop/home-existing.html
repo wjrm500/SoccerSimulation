@@ -2,7 +2,7 @@
 
 {% block home_body %}
     <div class="button-container">
-        <form method="post" action="{{ basePath }}/existing-simulation" id="existing-simulation-form" class="simulation-form" enctype="multipart/form-data">
+        <form method="post" action="/existing-simulation" id="existing-simulation-form" class="simulation-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Where is the simulation stored</label>
                 <select id="existing-how" name="existing-how" style="width: 100%;" required>
@@ -25,7 +25,7 @@
                         Submit
                     </div>
                     <div id="spinner" style="display: none; padding: 10px;">
-                        <img src="{{ basePath }}/static/images/spinner-cropped.gif" style="height: 15px;">
+                        <img src="/static/images/spinner-cropped.gif" style="height: 15px;">
                     </div>
                 </button>
             </div>

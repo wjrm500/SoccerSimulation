@@ -2,8 +2,8 @@
 {% block body %}
 <div style="align-items: center; display: flex; height: 100%; justify-content: center;">
     <div id="home-container">
-        <a href="{{ basePath or '/' }}" id="logo-title-container" class="home-sub-container">
-            <img id="logo" class="logo-title-element" src="{{ basePath }}/static/images/soccersim_logo.png">
+        <a href="/" id="logo-title-container" class="home-sub-container">
+            <img id="logo" class="logo-title-element" src="/static/images/soccersim_logo.png">
             <div id="title" class="logo-title-element">Soccer Simulation</div>
         </a>
         <div id="home-buttons-container" class="home-sub-container">
@@ -13,10 +13,10 @@
     </div>
     <div id="links">
         <div class="link">
-            <a href="{{ basePath }}/about">About</a>
+            <a href="/about">About</a>
         </div>
         <div class="link">
-            <a href="{{ basePath }}/contact">Contact</a>
+            <a href="/contact">Contact</a>
         </div>
     </div>
 </div>

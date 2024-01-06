@@ -6,12 +6,12 @@
         {% for club, data in recentResults.items() %}
            <div class="form-results-row">
                 <div class="form-results-club-name">
-                    <a data-url="{{ basePath }}/simulation/club/{{ club.id }}">{{ club.name }}</a>
+                    <a data-url="/simulation/club/{{ club.id }}">{{ club.name }}</a>
                 </div>
                 <div class="form-results-boxes">
                     {% for result in data['results'] %}
                         <div class="my-tooltip">
-                            <a href="#" class="form-results-box result-{{ result['result'] }}" data-url="{{ basePath }}/simulation/fixture/{{ result['fixtureId'] }}">
+                            <a href="#" class="form-results-box result-{{ result['result'] }}" data-url="/simulation/fixture/{{ result['fixtureId'] }}">
                                 {{ result['result'] }}
                             </a>
                             <span class="my-tooltiptext below">
@@ -54,7 +54,7 @@
                             {% for item in table %}
                                 <tr class="{{ item[1]['colorParams'] }}">
                                     <td>{{ item[1]['#'] }}</td>
-                                    <td><a data-url="{{ basePath }}/simulation/club/{{ item[0].id }}">{{ item[0].name }}</a></td>
+                                    <td><a data-url="/simulation/club/{{ item[0].id }}">{{ item[0].name }}</a></td>
                                     <td>{{ item[1]['GD'] }}</td>
                                     <td>{{ item[1]['Pts'] }}</td>
                                 </tr>

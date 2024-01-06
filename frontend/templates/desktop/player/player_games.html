@@ -22,13 +22,13 @@
                 </td>
                 <td>
                     {% for _ in range(playerReport['goals']) %}
-                        <i class="fas fa-futbol"></i><!-- <img class="match-icon" src="{{ basePath }}/static/images/goal_icon.png"> -->
+                        <i class="fas fa-futbol"></i><!-- <img class="match-icon" src="/static/images/goal_icon.png"> -->
                     {% endfor %}
                     {% for _ in range(playerReport['assists']) %}
-                        <i class="fab fa-angular" style="color: grey;"></i><!-- <img class="match-icon" src="{{ basePath }}/static/images/assist_icon.png"> -->
+                        <i class="fab fa-angular" style="color: grey;"></i><!-- <img class="match-icon" src="/static/images/assist_icon.png"> -->
                     {% endfor %}
                     {% if playerReport['manOfTheMatch'] %}
-                        <i class="fas fa-star" style="color: green;"></i><!-- <img class="match-icon" src="{{ basePath }}/static/images/motm_icon.png"> -->
+                        <i class="fas fa-star" style="color: green;"></i><!-- <img class="match-icon" src="/static/images/motm_icon.png"> -->
                     {% endif %}
                 </td>
                 <td>{{ '{0:.2f}'.format(playerReport['performanceIndex']) }}</td>

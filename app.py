@@ -20,9 +20,6 @@ from datetime import timedelta
 from io import BytesIO
 import json
 
-ON_AWS = 'ON_AWS' in os.environ and os.environ['ON_AWS'] == 'True'
-BASE_PATH = "/soccer-simulation" if ON_AWS else ""
-
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
 r = redis.Redis(host='soccer-sim-redis', port=6379)
@@ -106,7 +103,7 @@ def getHome():
 @app.route('/', methods = ['POST'])
 def postHome():
     universeKey = request.form['universe_key']
-    url = BASE_PATH + url_for('simulation', universeKey = universeKey)
+    url = url_for('simulation', universeKey = universeKey)
     return redirect(url)
 
 @app.route('/new-simulation', methods = ['GET'])
@@ -139,7 +136,7 @@ def postExistingSimulation():
     if existingHow == 'in-the-cloud':
         universeKey = request.form.get('universe-key')
         if db.universeKeyExists(universeKey):
-            url = BASE_PATH + url_for('simulation', universeKey = universeKey)
+            url = url_for('simulation', universeKey = universeKey)
             return redirect(url)
         error += 'Universe Key {} does not exist'.format(universeKey)
     elif existingHow == 'on-my-computer':
@@ -474,19 +471,17 @@ def add_universes_to_session():
         session['universes'] = {session['activeUniverseKey']: session['universes'][session['activeUniverseKey']]}
 
 ### randomString is for versioning CSS to prevent browser caching
-### basePath is for setting the correct URL for AJAX requests and static files
 @app.context_processor
 def inject_dict_for_all_templates():
     randomString = utils.generateRandomDigits(5)
-    return {'randomString': randomString, 'basePath': BASE_PATH}
+    return {'randomString': randomString}
 
 ### Dev methods for convenience
 @app.route('/clear', methods = ['GET'])
 def clearSession():
     session.clear()
-    url = BASE_PATH + url_for('getHome')
+    url = url_for('getHome')
     return redirect(url)
 
-debug_setting = not ON_AWS
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', debug = debug_setting)
+    app.run(host = '0.0.0.0', debug = True)
