@@ -1,6 +1,6 @@
 version: "3"
 services:
-  soccer-sim-web:
+  web:
     image: wjrm500/soccer-sim:latest
     command: python app.py
     ports:
@@ -8,23 +8,23 @@ services:
     env_file:
       - .env
     depends_on:
-      - soccer-sim-redis
+      - redis
 
-  soccer-sim-worker:
+  worker:
     image: wjrm500/soccer-sim:latest
     command: python worker.py
     env_file:
       - .env
     depends_on:
-      - soccer-sim-redis
+      - redis
 
-  soccer-sim-cron:
+  cron:
     image: wjrm500/soccer-sim:latest
     command: /bin/sh -c "while :; do sleep 43200; python delete_12_hour_mongodb_data.py; done"
     env_file:
       - .env
     depends_on:
-      - soccer-sim-redis
+      - redis
 
-  soccer-sim-redis:
+  redis:
     image: "redis:alpine"

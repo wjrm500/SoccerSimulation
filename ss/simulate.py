@@ -6,7 +6,7 @@ from .send_email import send_email
 import ss.utils as utils
 import time
 
-r = redis.Redis(host='soccer-sim-redis', port=6379)
+r = redis.Redis(host='redis', port=6379)
 
 def simulate(customConfig, systemId, universeKey):
     ### Create Universe, taking in input parameters from user

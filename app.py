@@ -22,7 +22,7 @@ import json
 
 db = Database.getInstance() ### MongoDB
 q = Queue(connection=conn)
-r = redis.Redis(host='soccer-sim-redis', port=6379)
+r = redis.Redis(host='redis', port=6379)
 
 template_folder = os.path.abspath('frontend/templates')
 static_folder = os.path.abspath('frontend/static')
