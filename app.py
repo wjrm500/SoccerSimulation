@@ -1,24 +1,25 @@
-from ss.models.Universe import Universe
-from flask import Flask, abort, session, render_template, request, url_for, redirect, Response, jsonify, send_file
-from flask_mobility import Mobility
-from flask_session import Session
-from ss.config import playerConfig
-from ss.simulate import simulate
-import ss.utils as utils
-import ss.player_utils as player_utils
-import ss.club_utils as club_utils
-from ss.models.Database import Database
+from datetime import timedelta
 import io
+import json
 import os
 import pickle
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import json
-from rq import Queue
-from worker import conn
-import redis
-from datetime import timedelta
 from io import BytesIO
-import json
+
+from flask import (Flask, Response, abort, jsonify, redirect, render_template,
+                  request, send_file, session, url_for)
+from flask_mobility import Mobility
+from flask_session import Session
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import redis
+from rq import Queue
+
+import ss.club_utils as club_utils
+from ss.config import playerConfig
+import ss.player_utils as player_utils
+from ss.models.Database import Database
+from ss.simulate import simulate
+import ss.utils as utils
+from worker import conn
 
 db = Database.getInstance()  ### MongoDB
 q = Queue(connection=conn)
