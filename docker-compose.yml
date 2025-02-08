@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    image: wjrm500/soccer-sim:latest
+    build: .
     command: python app.py
     ports:
       - "5001:5000"
@@ -11,7 +11,7 @@ services:
       - redis
 
   worker:
-    image: wjrm500/soccer-sim:latest
+    build: .
     command: python worker.py
     env_file:
       - .env
@@ -19,7 +19,7 @@ services:
       - redis
 
   cron:
-    image: wjrm500/soccer-sim:latest
+    build: .
     command: /bin/sh -c "while :; do sleep 43200; python delete_12_hour_mongodb_data.py; done"
     env_file:
       - .env
