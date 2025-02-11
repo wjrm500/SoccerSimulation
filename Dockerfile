@@ -11,3 +11,6 @@ COPY ss /app/ss/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Run app.py when the container launches
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
