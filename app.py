@@ -9,6 +9,7 @@ from flask import (Flask, Response, abort, jsonify, redirect, render_template,
                   request, send_file, session, url_for)
 from flask_mobility import Mobility
 from flask_session import Session
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import redis
 from rq import Queue
@@ -284,6 +285,7 @@ def playerRadar(playerId):
     fig = player_utils.showSkillDistribution(player, date=date, projection=True)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
+    plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 @app.route("/simulation/player/<playerId>/form-graph")
@@ -293,6 +295,7 @@ def playerFormGraph(playerId):
     fig = player_utils.showPlayerForm(player)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
+    plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 @app.route("/simulation/player/<playerId>/development-graph")
@@ -308,6 +311,7 @@ def playerDevelopmentGraph(playerId):
     fig = player_utils.showPlayerDevelopment(player, date=date)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
+    plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 @app.route("/simulation/fixture/<fixtureId>")
@@ -484,6 +488,7 @@ def clubPositionGraph(clubId):
     fig = club_utils.showClubPositions(club, gameweek=searchGameweek)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
+    plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 @app.route("/about", methods=["GET"])
