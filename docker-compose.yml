@@ -8,6 +8,10 @@ services:
       - .env
     depends_on:
       - redis
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   worker:
     build: .
@@ -16,6 +20,10 @@ services:
       - .env
     depends_on:
       - redis
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   cron:
     build: .
@@ -24,6 +32,14 @@ services:
       - .env
     depends_on:
       - redis
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   redis:
     image: "redis:alpine"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
