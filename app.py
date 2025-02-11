@@ -5,7 +5,7 @@ import os
 import pickle
 from io import BytesIO
 
-from flask import (Flask, Response, abort, jsonify, redirect, render_template,
+from flask import (Flask, Response, abort, g, jsonify, redirect, render_template,
                   request, send_file, session, url_for)
 from flask_mobility import Mobility
 from flask_session import Session
@@ -35,15 +35,16 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 Mobility(app)
 
-def getUniverse(r):
-    active_key = session.get("activeUniverseKey")
-    if not active_key:
-        abort(400, description="Simulation not set")
-    sim_bytes = r.get("simulation_" + active_key)
-    if sim_bytes is None:
-        abort(404, description="Simulation data not found")
-    universe = pickle.loads(sim_bytes)
-    return universe, active_key
+def getUniverse():
+    if "universe" not in g:
+        active_key = session.get("activeUniverseKey")
+        if not active_key:
+            abort(400, description="Simulation not set")
+        sim_bytes = r.get("simulation_" + active_key)
+        if sim_bytes is None:
+            abort(404, description="Simulation data not found")
+        g.universe = pickle.loads(sim_bytes)
+    return g.universe
 
 def getSearchGameweek(league):
     gameweek = request.args.get("gameweek") or ""
@@ -220,7 +221,7 @@ def default():
 
 @app.route("/simulation/player/<id>")
 def player(id):
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
     player = universe.playerController.getPlayerById(id)
     performanceIndices = player.club.league.getPerformanceIndices(sortBy="performanceIndex", gameweek=searchGameweek)[player]
@@ -273,7 +274,7 @@ def player(id):
 
 @app.route("/simulation/player/<playerId>/radar")
 def playerRadar(playerId):
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     player = universe.playerController.getPlayerById(playerId)
     league = universe.systems[0].leagues[0]
     searchGameweek = getSearchGameweek(league)
@@ -290,7 +291,7 @@ def playerRadar(playerId):
 
 @app.route("/simulation/player/<playerId>/form-graph")
 def playerFormGraph(playerId):
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     player = universe.playerController.getPlayerById(playerId)
     fig = player_utils.showPlayerForm(player)
     output = io.BytesIO()
@@ -300,7 +301,7 @@ def playerFormGraph(playerId):
 
 @app.route("/simulation/player/<playerId>/development-graph")
 def playerDevelopmentGraph(playerId):
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     league = universe.systems[0].leagues[0]
     date = None
     if request.args.get("gameweek"):
@@ -420,7 +421,7 @@ def fixture(fixtureId):
 
 @app.route("/simulation/club/<clubId>")
 def club(clubId):
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     club = universe.getClubById(clubId)
     team = club.selectTeam(test=True)
     selection = team.selection
@@ -466,7 +467,7 @@ def club(clubId):
 
 @app.route("/simulation/player-performance")
 def playerPerformance():
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     league = universe.systems[0].leagues[0]
     searchGameweek = getSearchGameweek(league)
     playerPerformanceItems = league.getPerformanceIndices(sortBy="performanceIndex", gameweek=searchGameweek)
@@ -482,7 +483,7 @@ def playerPerformance():
 
 @app.route("/simulation/club/<clubId>/position-graph")
 def clubPositionGraph(clubId):
-    universe, _ = getUniverse(r)
+    universe = getUniverse()
     club = universe.getClubById(clubId)
     searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
     fig = club_utils.showClubPositions(club, gameweek=searchGameweek)
