@@ -132,7 +132,7 @@ def postHome():
 
 @app.route("/new-simulation", methods=["GET"])
 def getNewSimulation():
-    systems = db.cnx["soccersim"]["systems"].find()
+    systems = db.cnx["soccersim"]["systems"].find().sort("system_name", 1)
     return render_template("desktop/home-new.html", cssFiles=["home.css"], jsFiles=["home.js"], systems=systems)
 
 @app.route("/new-simulation", methods=["POST"])
@@ -157,13 +157,13 @@ def getExistingSimulation():
 def postExistingSimulation():
     error = "ERROR: "
     existingHow = request.form.get("existing-how")
-    if existingHow == "in-the-cloud":
+    if existingHow == "remote":
         universeKey = request.form.get("universe-key")
         if db.universeKeyExists(universeKey):
             url = url_for("simulation", universeKey=universeKey)
             return redirect(url)
         error += "Universe Key {} does not exist".format(universeKey)
-    elif existingHow == "on-my-computer":
+    elif existingHow == "local":
         file = request.files.get("upload-file")
         universe = file.read()
         new_key = utils.makeUniverseKey(9)

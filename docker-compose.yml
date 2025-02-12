@@ -8,6 +8,7 @@ services:
       - .env
     depends_on:
       - redis
+      - mongodb
     deploy:
       resources:
         limits:
@@ -20,6 +21,7 @@ services:
       - .env
     depends_on:
       - redis
+      - mongodb
     deploy:
       resources:
         limits:
@@ -32,14 +34,29 @@ services:
       - .env
     depends_on:
       - redis
+      - mongodb
     deploy:
       resources:
         limits:
           memory: 256M
 
   redis:
-    image: "redis:alpine"
+    image: redis:alpine
     deploy:
       resources:
         limits:
           memory: 512M
+
+  mongodb:
+    image: mongo
+    volumes:
+      - mongodb_data:/data/db
+      - ./atlas_backup:/docker-entrypoint-initdb.d/atlas_backup:ro
+      - ./init-mongorestore.sh:/docker-entrypoint-initdb.d/init-mongorestore.sh:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  mongodb_data:

@@ -1,9 +1,5 @@
 from pymongo import MongoClient
 import gridfs
-import pickle
-import os
-from dotenv import load_dotenv
-import gridfs
 
 class Database:
     __instance__ = None
@@ -33,10 +29,5 @@ class Database:
         return Database.__instance__
     
     def connect(self):
-        load_dotenv()
-        url = 'mongodb+srv://{user}:{pwd}@cluster0.tfn03.mongodb.net/{db}?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE'.format(
-            user = os.environ.get('MONGO_USER'),
-            pwd = os.environ.get('MONGO_PWD'),
-            db = os.environ.get('MONGO_DB')
-        )
-        self.cnx = MongoClient(url, connect = False)
+        url = f"mongodb://mongodb:27017/soccersim"
+        self.cnx = MongoClient(url, connect=False)
