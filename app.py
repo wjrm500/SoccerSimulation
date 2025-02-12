@@ -40,10 +40,10 @@ def getUniverse():
         active_key = session.get("activeUniverseKey")
         if not active_key:
             abort(400, description="Simulation not set")
-        sim_bytes = r.get("simulation_" + active_key)
-        if sim_bytes is None:
+        universe_data = db.getUniverseGridFile(active_key)
+        if universe_data is None:
             abort(404, description="Simulation data not found")
-        g.universe = pickle.loads(sim_bytes)
+        g.universe = pickle.loads(universe_data)
     return g.universe
 
 def getSearchGameweek(league):
@@ -57,13 +57,8 @@ def getSearchGameweek(league):
     return searchGameweek
 
 def showSimulation():
-    activeUniverseKey = session.get("activeUniverseKey")
-    if not activeUniverseKey:
-        return redirect(url_for("getHome"))
-    sim_bytes = r.get("simulation_" + activeUniverseKey)
-    if sim_bytes is None:
-        return "Simulation data not found", 404
-    universe = pickle.loads(sim_bytes)
+    activeUniverseKey = session["activeUniverseKey"]
+    universe = getUniverse()
     league = universe.systems[0].leagues[0]
 
     searchGameweek = getSearchGameweek(league)
@@ -200,20 +195,18 @@ def storeEmail():
 @app.route("/simulation/<universeKey>")
 def simulation(universeKey):
     session["activeUniverseKey"] = universeKey
-    if not r.exists("simulation_" + universeKey):
-        universe = db.getUniverseGridFile(universeKey)
-        if universe is None:
-            return "Universe not found", 404
-        r.setex("simulation_" + universeKey, TTL_SECONDS, universe)
+    universe_data = db.getUniverseGridFile(universeKey)
+    if universe_data is None:
+        return "Universe not found", 404
     return showSimulation()
 
 @app.route("/download/<universeKey>")
 def download(universeKey):
-    sim_bytes = r.get("simulation_" + universeKey)
-    if sim_bytes is None:
+    universe_data = db.getUniverseGridFile(universeKey)
+    if universe_data is None:
         return "Simulation data not found", 404
     attachmentFilename = "universe_" + universeKey
-    return send_file(BytesIO(sim_bytes), download_name=attachmentFilename, as_attachment=True)
+    return send_file(BytesIO(universe_data), download_name=attachmentFilename, as_attachment=True)
 
 @app.route("/simulation/default-iframe")
 def default():
@@ -317,13 +310,7 @@ def playerDevelopmentGraph(playerId):
 
 @app.route("/simulation/fixture/<fixtureId>")
 def fixture(fixtureId):
-    active_key = session.get("activeUniverseKey")
-    if not active_key:
-        return "Simulation not set", 400
-    sim_bytes = r.get("simulation_" + active_key)
-    if sim_bytes is None:
-        return "Simulation data not found", 404
-    universe = pickle.loads(sim_bytes)
+    universe = getUniverse()
     fixture = universe.getFixtureById(int(fixtureId))
     clubData = []
     for club, data in fixture.match.matchReport["clubs"].items():
