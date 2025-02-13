@@ -6,4 +6,4 @@ __pycache__/
  *.pyc
  .vscode
 venv/
-atlas_backup/
+static_data/

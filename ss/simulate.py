@@ -1,8 +1,8 @@
 from .models.Universe import Universe
 from .models.Database import Database
+from .email_service import EmailService
 import gridfs
 import redis
-from .send_email import send_email
 import ss.utils as utils
 import time
 
@@ -29,7 +29,8 @@ def simulate(customConfig, systemId, universeKey):
         while not Database.getInstance().universeKeyExists(universeKey):
             time.sleep(5)
         recipient_address = r.get("email_" + universeKey).decode("utf-8")
-        send_email(recipient_address, universeKey)
+        email_service = EmailService()
+        email_service.send_simulation_complete_email(recipient_address, universeKey)
     
     # Remove the data in the Redis cache no longer needed:
     r.delete("simulation_progress_" + universeKey)

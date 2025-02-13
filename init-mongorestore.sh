@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "Restoring Atlas backup data..."
-mongorestore --drop /docker-entrypoint-initdb.d/atlas_backup
+echo "Restoring static data..."
+mongorestore --drop /docker-entrypoint-initdb.d/static_data

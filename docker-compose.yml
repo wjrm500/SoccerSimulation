@@ -26,6 +26,8 @@ services:
       resources:
         limits:
           memory: 1G
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   cron:
     build: .
@@ -39,6 +41,8 @@ services:
       resources:
         limits:
           memory: 256M
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   redis:
     image: redis:alpine
@@ -51,7 +55,7 @@ services:
     image: mongo
     volumes:
       - mongodb_data:/data/db
-      - ./atlas_backup:/docker-entrypoint-initdb.d/atlas_backup:ro
+      - ./static_data:/docker-entrypoint-initdb.d/static_data:ro
       - ./init-mongorestore.sh:/docker-entrypoint-initdb.d/init-mongorestore.sh:ro
     deploy:
       resources:
