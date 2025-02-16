@@ -205,12 +205,6 @@ class Player:
 
     def setPositionRatings(self):
         self.positionRatings = self.getPositionRatings()
-
-    def retire(self):
-        self.retired = True
-        if hasattr(self, 'club') and self.club and self in self.club.players:
-            self.club.players.remove(self)
-            self.club = None
     
     def recover(self):
         fatigueReduction = np.sqrt(self.skillValues['fitness']) / 100
