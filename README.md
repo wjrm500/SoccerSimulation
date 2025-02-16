@@ -16,30 +16,20 @@ Time is managed by defining a start date and allowing the simulation to "time tr
 ## Detailed Player Development Model
 
 ### Initial Attributes
-Each player is created with an initial set of skill attributes across six key areas:
-* Offence
-* Spark
-* Technique
-* Defence
-* Authority
-* Fitness
 
-These attributes are initially sampled from a normal distribution defined in the configuration and then centralised and rebalanced to ensure consistency across the player pool.
+Each player is initialised with six key skill attributes – offence, spark, technique, defence, authority, and fitness. For each attribute, a raw value is drawn from a bounded normal distribution (with a mean of 1, standard deviation of 0.375, and limits between 0.25 and 1.75) and then adjusted by a normalising factor (mean 0.5, standard deviation 0.05, and capped between 0 and 0.5). After sampling, the distribution is centralised so that the average skill is set to 1, and a rebalancing routine ensures that no attribute exceeds its specified bounds. This careful normalisation and rebalancing ensure that the overall player pool maintains consistent and realistic skill profiles.
 
 ### Age and Development
-* Players are assigned an age (typically between 15 and 40) and a birth date derived relative to the simulation's start date
-* A **"peakAge"** and **"peakRating"** are generated using bounded random values
-* Current rating is calculated as a function of distance from peak age:
-  * Pre-peak: Rating increases
-  * Post-peak: Rating declines
-  * Rate of change controlled by configurable growth and decline parameters
+
+Upon creation, each player is assigned an age chosen randomly within a defined range (15 to 40 years). Their birth date is computed relative to the simulation’s start date, introducing a natural spread in ages. In addition, each player receives a peak age (typically around 27 years, with a standard deviation of 2 and limits from 22 to 32) and a corresponding peak rating (with an average of roughly 66.67, a standard deviation of 10, and bounded between 20 and 100). A player’s current rating is then computed as a function of their age relative to their peak age. During the pre-peak phase the rating increases gradually as the player develops, while after reaching peak age the rating declines. The rate of improvement and decline is determined by configurable growth speed factors (with mean values of about 0.75 for improvement and 0.875 for decline), allowing the simulation to capture diverse developmental trajectories.
 
 ### Skill Transitions
-The simulation includes a subtle "transition" mechanism where, as players age:
-* Certain skills (e.g., "spark") gradually decrease
-* Other skills (e.g., "authority") increase to represent accumulated game intelligence
 
-Visualisation tools produce plots of predicted ratings over time and radar charts displaying skill distribution.
+As players age, certain skills transition to reflect changing strengths. In particular, the simulation implements a gradual reduction in the “spark” attribute – which represents a player’s ability to create something from nothing – and a corresponding increase in “authority,” reflecting the gain in game intelligence and leadership. This transition is applied continuously during both the developmental (pre-peak) and ageing (post-peak) phases with a typical gradient of –0.01. Additionally, the fitness attribute is subject to a decline during the post-peak phase at a slightly steeper rate (around –0.015), representing the natural physical degradation with age.
+
+### Visualisation
+
+The system also provides visualisation tools that plot predicted ratings over time – marking the point of peak age – and generate radar charts to illustrate the distribution of skill attributes. These tools help users track individual development and maintain overall balance within the player pool.
 
 ## Team Formation and Tactical Selection
 
