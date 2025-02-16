@@ -47,18 +47,12 @@ The player with the highest computed selectRating for the position is then selec
 ## Match Simulation and Outcome Determination
 
 ### Match Process
-1. Team potential computation:
-   * Difference between offensive strength and opposing defensive strength
-2. Goal generation:
-   * Potential value indexes Gaussian probability distribution
-   * Home/away multipliers applied
+
+At the start of a match, each team’s potential is computed by subtracting the opposing team’s defensive strength from its own offensive strength. This differential quantifies the likelihood of generating scoring opportunities. The resulting potential value (rounded to an integer) is then used to look up a corresponding Gaussian probability distribution—with specific mean (mu) and standard deviation (sigma) parameters—preconfigured for goal scoring. A random sample from this distribution determines the number of goals a team scores, while venue factors (such as home or away status) further adjust the effective strength through multipliers applied earlier in team selection.
 
 ### Performance Tracking
-Individual player contributions tracked through:
-* Offensive/defensive contributions
-* Goal/assist likelihoods
-* Fatigue adjustments
-* Complex performance index calculations
+
+The simulation meticulously tracks individual player contributions during a match. Each player’s involvement is captured through detailed metrics including their offensive and defensive actions, and specific probabilities for scoring goals or providing assists—values that are modulated by their positional attributes. In addition, performance is influenced by fatigue, with increased fatigue reducing a player’s effective output. These factors are all integrated into a complex performance index that reflects overall contribution, ensuring that subsequent evaluations (such as player ratings and team selection) are grounded in realistic match dynamics.
 
 ## League Progression and Statistical Updates
 
