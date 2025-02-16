@@ -1,6 +1,6 @@
 # Soccer Simulation
 
-At its heart, the simulation is built on several layers of configuration and dynamic processes.
+This comprehensive soccer simulation system models the complex dynamics of football leagues, clubs, and player development through sophisticated statistical modeling and dynamic gameplay mechanics.
 
 ## Configuration and Setup
 
@@ -56,45 +56,20 @@ The simulation meticulously tracks individual player contributions during a matc
 
 ## League Progression and Statistical Updates
 
-After each match, the system:
-* Updates league tables
-* Maintains historical match records
-* Tracks key statistics:
-  * Games played
-  * Wins/draws/losses
-  * Goals for/against
-  * Goal difference
-  * Points
+After every match, the system automatically updates the league standings by processing match reports. It appends each match’s record to a historical log and recalculates key statistics for each club – including games played, wins, draws, losses, goals scored, goals conceded, goal difference (computed as the difference between goals for and against) and the total points tally. The system also checks whether all clubs have completed the current gameweek; if so, it creates a new league table for the next gameweek by deep‐copying the previous results, ensuring that historical data is preserved for longitudinal analysis.
 
 ## Persistence, Visualisation, and Notification
 
-The system features:
-* State serialisation using GridFS and database storage
-* Email notifications upon simulation completion
-* Detailed reports and visualisations
-* League position tracking over time
+The simulation’s state is serialised and stored using GridFS within a database, guaranteeing that the full state of the simulation can be retrieved or examined later. Once the simulation completes, an email notification is dispatched to the user—provided an email address has been specified—to signal completion. In addition, the system generates detailed reports and visualisations, such as tracking a club’s league position over time and displaying various performance metrics, offering users a comprehensive view of how the simulation has progressed.
 
 ## Additional Nuances and Easter Eggs
 
-The simulation includes special treatments for certain clubs, with adjusted peak ratings to emulate historical reputations.
+To add extra flavour and realism, the simulation includes special treatments for certain clubs. For example, clubs with storied reputations receive unique adjustments to player peak ratings—ensuring that historical strengths or weaknesses are emulated within the simulation. These subtle tweaks serve as Easter eggs that enrich the overall experience without compromising the underlying statistical framework.
 
 ## Summary
 
-The simulation achieves sophisticated balance through:
+A soccer simulation system that models leagues, clubs, and player development. Players are defined by six attributes (offence, spark, technique, defence, authority, fitness) that change as they age, with peak performance around age 27. Younger players gain skill while older players decline, with specific transitions like decreasing spark and increasing authority over time.
 
-1. **Detailed Statistical Models**
-   * Player growth and decline based on age
-   * Experience-based development
+Teams choose formations based on weighted probabilities and select players using ratings that account for position, fatigue, form, and home/away status. Matches are simulated by calculating offensive and defensive differentials between teams to determine scoring probabilities.
 
-2. **Tactical Formation Logic**
-   * Player condition consideration
-   * Optimal lineup selection
-
-3. **Probabilistic Match Simulation**
-   * Team potential translation
-   * Realistic goal outcomes
-
-4. **Continuous Updates**
-   * League standings
-   * Player performance metrics
-   * Gameweek progression
+The system tracks league standings, match statistics, and player performance over time. All data is stored in a database and can be visualised through various tools. The simulation includes special adjustments for certain historic clubs to maintain realism.
