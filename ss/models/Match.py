@@ -1,26 +1,42 @@
-from .. import goal_probability, utils
-import numpy as np
 import funcy
+import numpy as np
+
+from .. import goal_probability, utils
 from .PlayerReportEngine import PlayerReportEngine
 
+
 class Match:
-    def __init__(self, fixture, tournament, date, clubX, clubY, neutralVenue = False):
+    def __init__(self, fixture, tournament, date, clubX, clubY, neutralVenue=False):
         self.fixture = fixture
         self.tournament = tournament
         self.date = date
         self.clubX, self.clubY = clubX, clubY
         self.clubs = [self.clubX, self.clubY]
         self.neutralVenue = neutralVenue
-        self.matchReport = {'fixtureId': self.fixture.id, 'tournament': self.tournament, 'gameweek': self.fixture.gameweek, 'date': self.date, 'clubs': {club: {} for club in self.clubs}}
+        self.matchReport = {
+            "fixtureId": self.fixture.id,
+            "tournament": self.tournament,
+            "gameweek": self.fixture.gameweek,
+            "date": self.date,
+            "clubs": {club: {} for club in self.clubs},
+        }
         report = self.matchReport
-        homeAwayTuple = (None, None) if self.neutralVenue else ('home', 'away')
+        homeAwayTuple = (None, None) if self.neutralVenue else ("home", "away")
         for club, homeAway in zip(self.clubs, homeAwayTuple):
-            report['clubs'][club]['team'] = club.selectTeam(homeAway = homeAway)
-        report['clubs'][self.clubX]['potential'] = report['clubs'][self.clubX]['team'].offence - report['clubs'][self.clubY]['team'].defence
-        report['clubs'][self.clubY]['potential'] = report['clubs'][self.clubY]['team'].offence - report['clubs'][self.clubX]['team'].defence
+            report["clubs"][club]["team"] = club.selectTeam(homeAway=homeAway)
+        report["clubs"][self.clubX]["potential"] = (
+            report["clubs"][self.clubX]["team"].offence
+            - report["clubs"][self.clubY]["team"].defence
+        )
+        report["clubs"][self.clubY]["potential"] = (
+            report["clubs"][self.clubY]["team"].offence
+            - report["clubs"][self.clubX]["team"].defence
+        )
         for club in self.clubs:
             oppositionClub = self.getOppositionClub(club)
-            report['clubs'][club]['oppositionClub'] = funcy.omit(report['clubs'][oppositionClub], 'oppositionClub')
+            report["clubs"][club]["oppositionClub"] = funcy.omit(
+                report["clubs"][oppositionClub], "oppositionClub"
+            )
 
     def getOppositionClub(self, club):
         return self.clubs[1 - self.clubs.index(club)]
@@ -28,24 +44,34 @@ class Match:
     def play(self):
         report = self.matchReport
         for club in self.clubs:
-            if report['clubs'][club]['team'] is None:
+            if report["clubs"][club]["team"] is None:
                 continue
-            report['clubs'][club]['match'] = {}
-            potential = report['clubs'][club]['potential']
-            [mu, sigma] = [value for value in goal_probability.goalProbability[int(potential)].values()]
-            goalsFor = int(utils.limitValue(np.random.normal(mu, sigma), mn = 0, mx = 100))
-            report['clubs'][club]['match']['goalsFor'] = goalsFor
-            report['clubs'][club]['match']['goals'] = report['clubs'][club]['team'].getGoals(goalsFor)
+            report["clubs"][club]["match"] = {}
+            potential = report["clubs"][club]["potential"]
+            [mu, sigma] = list(goal_probability.goalProbability[int(potential)].values())
+            goalsFor = int(utils.limitValue(np.random.normal(mu, sigma), mn=0, mx=100))
+            report["clubs"][club]["match"]["goalsFor"] = goalsFor
+            report["clubs"][club]["match"]["goals"] = report["clubs"][club]["team"].getGoals(
+                goalsFor
+            )
         for club in self.clubs:
             oppositionClub = self.getOppositionClub(club)
-            report['clubs'][club]['match']['goalsAgainst'] = report['clubs'][oppositionClub]['match']['goalsFor']
-            if report['clubs'][club]['match']['goalsFor'] > report['clubs'][club]['match']['goalsAgainst']:
-                report['clubs'][club]['match']['outcome'] = 'win'
-                self.matchReport['winner'] = club
-            elif report['clubs'][club]['match']['goalsFor'] == report['clubs'][club]['match']['goalsAgainst']:
-                report['clubs'][club]['match']['outcome'] = 'draw'
+            report["clubs"][club]["match"]["goalsAgainst"] = report["clubs"][oppositionClub][
+                "match"
+            ]["goalsFor"]
+            if (
+                report["clubs"][club]["match"]["goalsFor"]
+                > report["clubs"][club]["match"]["goalsAgainst"]
+            ):
+                report["clubs"][club]["match"]["outcome"] = "win"
+                self.matchReport["winner"] = club
+            elif (
+                report["clubs"][club]["match"]["goalsFor"]
+                == report["clubs"][club]["match"]["goalsAgainst"]
+            ):
+                report["clubs"][club]["match"]["outcome"] = "draw"
             else:
-                report['clubs'][club]['match']['outcome'] = 'loss'
+                report["clubs"][club]["match"]["outcome"] = "loss"
         playerReportEngine = PlayerReportEngine(self)
         playerReportEngine.generatePlayerReports(report)
 

@@ -48,7 +48,7 @@ dev = [
 
 [tool.ruff]
 target-version = "py38"
-line-length = 88
+line-length = 100
 lint.select = [
     "E",
     "W",
@@ -58,4 +58,6 @@ lint.select = [
     "C",
     "UP",
 ]
-lint.ignore = []
+lint.ignore = [
+    "C901", # function too complex
+]
