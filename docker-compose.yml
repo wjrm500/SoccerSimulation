@@ -4,6 +4,8 @@ services:
     build: .
     ports:
       - "5001:5000"
+    volumes:
+      - .:/app
     env_file:
       - .env
     depends_on:
@@ -17,6 +19,8 @@ services:
   worker:
     build: .
     command: python worker.py
+    volumes:
+      - .:/app
     env_file:
       - .env
     depends_on:
@@ -32,6 +36,8 @@ services:
   cron:
     build: .
     command: /bin/sh -c "while :; do sleep 43200; python delete_12_hour_mongodb_data.py; done"
+    volumes:
+      - .:/app
     env_file:
       - .env
     depends_on:
