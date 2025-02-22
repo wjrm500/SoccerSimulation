@@ -4,6 +4,5 @@ flask_session/
 transfer_data_from_mysql_to_mongo_db.py
 __pycache__/
  *.pyc
- .vscode
 venv/
 static_data/

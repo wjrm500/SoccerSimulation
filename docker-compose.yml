@@ -2,8 +2,10 @@ version: "3"
 services:
   web:
     build: .
+    command: uv run debugpy --listen 0.0.0.0:5678 -m gunicorn --bind 0.0.0.0:5000 app:app
     ports:
       - "5001:5000"
+      - "5678:5678"
     volumes:
       - ./frontend:/app/frontend
       - ./ss:/app/ss
@@ -19,7 +21,9 @@ services:
 
   worker:
     build: .
-    command: python worker.py
+    command: uv run debugpy --listen 0.0.0.0:5679 worker.py
+    ports:
+      - "5679:5679"
     volumes:
       - ./frontend:/app/frontend
       - ./ss:/app/ss
