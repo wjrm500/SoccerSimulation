@@ -5,7 +5,8 @@ services:
     ports:
       - "5001:5000"
     volumes:
-      - .:/app
+      - ./frontend:/app/frontend
+      - ./ss:/app/ss
     env_file:
       - .env
     depends_on:
@@ -20,7 +21,8 @@ services:
     build: .
     command: python worker.py
     volumes:
-      - .:/app
+      - ./frontend:/app/frontend
+      - ./ss:/app/ss
     env_file:
       - .env
     depends_on:
@@ -37,7 +39,8 @@ services:
     build: .
     command: /bin/sh -c "while :; do sleep 43200; python delete_12_hour_mongodb_data.py; done"
     volumes:
-      - .:/app
+      - ./frontend:/app/frontend
+      - ./ss:/app/ss
     env_file:
       - .env
     depends_on:
