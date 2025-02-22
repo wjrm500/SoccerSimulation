@@ -16,30 +16,30 @@ from dateutil.relativedelta import relativedelta
 from .models.Database import Database
 
 
-def generateName(chars):
+def generate_name(chars):
     return "".join(random.choice(string.ascii_lowercase) for _ in range(chars))
 
 
-def loadPlayerNames():
-    db = Database.getInstance()
+def load_player_names():
+    db = Database.get_instance()
     results = db.cnx["soccersim"]["forenames"].find()
     results = list(results)
-    global forenames, forenameWeights
+    global forenames, forename_weights
     forenames = [record["forename"] for record in results]
-    forenameCounts = [record["count"] for record in results]
-    countSum = sum(forenameCounts)
-    forenameWeights = [record["count"] / countSum for record in results]
+    forename_counts = [record["count"] for record in results]
+    count_sum = sum(forename_counts)
+    forename_weights = [record["count"] / count_sum for record in results]
 
     results = db.cnx["soccersim"]["surnames"].find()
     results = list(results)
-    global surnames, surnameWeights
+    global surnames, surname_weights
     surnames = [record["surname"] for record in results]
-    surnameCounts = [record["count"] for record in results]
-    countSum = sum(surnameCounts)
-    surnameWeights = [record["count"] / countSum for record in results]
+    surname_counts = [record["count"] for record in results]
+    count_sum = sum(surname_counts)
+    surname_weights = [record["count"] / count_sum for record in results]
 
 
-def sortMcAndOApostrophe(name):
+def sort_mc_and_o_apostrophe(name):
     rx = re.compile(r"(?:(?<=Mc)|(?<=O\'))([a-z])")
 
     def repl(m):
@@ -49,20 +49,20 @@ def sortMcAndOApostrophe(name):
     return rx.sub(repl, name)
 
 
-def generatePlayerName():
+def generate_player_name():
     if "forenames" not in globals():
-        loadPlayerNames()
-    forename = np.random.choice(forenames, p=forenameWeights)
-    surname = np.random.choice(surnames, p=surnameWeights)
-    surname = sortMcAndOApostrophe(surname)
+        load_player_names()
+    forename = np.random.choice(forenames, p=forename_weights)
+    surname = np.random.choice(surnames, p=surname_weights)
+    surname = sort_mc_and_o_apostrophe(surname)
     return (forename, surname)
 
 
-def generateRandomDigits(n):
+def generate_random_digits(n):
     return "".join(random.choice(string.digits) for _ in range(n))
 
 
-def limitValue(value, mn=None, mx=None):
+def limit_value(value, mn=None, mx=None):
     if mn is not None:
         if value < mn:
             return mn
@@ -72,75 +72,75 @@ def limitValue(value, mn=None, mx=None):
     return value
 
 
-def limitedRandNorm(dictionary):
+def limited_rand_norm(dictionary):
     [mu, sigma, mn, mx] = list(dictionary.values())
-    return limitValue(np.random.normal(mu, sigma), mn, mx)
+    return limit_value(np.random.normal(mu, sigma), mn, mx)
 
 
-def updateConfig(existingConfig, newConfig):
-    for key, value in newConfig.items():
+def update_config(existing_config, new_config):
+    for key, value in new_config.items():
         if isinstance(value, collections.abc.Mapping):
-            existingConfig[key] = updateConfig(existingConfig.get(key, {}), value)
+            existing_config[key] = update_config(existing_config.get(key, {}), value)
         else:
-            existingConfig[key] = value
-    return existingConfig
+            existing_config[key] = value
+    return existing_config
 
 
-def getBirthDate(dateCreated, age):
-    startDate = dateCreated - relativedelta(years=age + 1) + relativedelta(days=1)
-    endDate = dateCreated - relativedelta(years=age)
-    ordinalStartDate = startDate.toordinal()
-    ordinalEndDate = endDate.toordinal()
-    randomOrdinalDate = random.randint(ordinalStartDate, ordinalEndDate)
-    randomDate = date.fromordinal(randomOrdinalDate)
-    return randomDate
+def get_birth_date(date_created, age):
+    start_date = date_created - relativedelta(years=age + 1) + relativedelta(days=1)
+    end_date = date_created - relativedelta(years=age)
+    ordinal_start_date = start_date.toordinal()
+    ordinal_end_date = end_date.toordinal()
+    random_ordinal_date = random.randint(ordinal_start_date, ordinal_end_date)
+    random_date = date.fromordinal(random_ordinal_date)
+    return random_date
 
 
-def typeAgnosticOmit(dictionary, omittedKeys):
+def type_agnostic_omit(dictionary, omitted_keys):
     """Omits given keys from dictionary."""
     output = copy.deepcopy(dictionary)
-    omittedKeys = omittedKeys if isinstance(omittedKeys, list) else [omittedKeys]
-    for omittedKey in omittedKeys:
+    omitted_keys = omitted_keys if isinstance(omitted_keys, list) else [omitted_keys]
+    for omitted_key in omitted_keys:
         try:
-            del output[omittedKey]
+            del output[omitted_key]
         except KeyError:
             continue
     return output
 
 
-def pickleObject(obj):
-    objName = type(obj).__name__ + str(generateRandomDigits(5))
-    outfile = open(objName, "wb")
+def pickle_object(obj):
+    obj_name = type(obj).__name__ + str(generate_random_digits(5))
+    outfile = open(obj_name, "wb")
     pickle.dump(obj, outfile)
     outfile.close()
 
 
-def pickleLargeObject(obj):
-    objName = type(obj).__name__ + str(generateRandomDigits(5))
-    outfile = open(objName, "wb")
+def pickle_large_object(obj):
+    obj_name = type(obj).__name__ + str(generate_random_digits(5))
+    outfile = open(obj_name, "wb")
     joblib.dump(obj, outfile, protocol=3)
     outfile.close()
-    return objName
+    return obj_name
 
 
-def joblibDumps(obj):
-    filename = pickleLargeObject(obj)
+def joblib_dumps(obj):
+    filename = pickle_large_object(obj)
     with open(filename, "rb") as file:
         obj = file.read()
     os.remove(filename)
     return obj
 
 
-def unpickleMostRecent(path):
+def unpickle_most_recent(path):
     files = glob.glob(path + "/*")
-    latestPickleFileName = max(files, key=os.path.getctime)
-    latestPickle = open(latestPickleFileName, "rb")
-    latestPickleUnpickled = pickle.load(latestPickle)
-    latestPickle.close()
-    return latestPickleUnpickled
+    latest_pickle_file_name = max(files, key=os.path.getctime)
+    latest_pickle = open(latest_pickle_file_name, "rb")
+    latest_pickle_unpickled = pickle.load(latest_pickle)
+    latest_pickle.close()
+    return latest_pickle_unpickled
 
 
-def getAllPowersOfTwoLessThan(n):
+def get_all_powers_of_two_less_than(n):
     results = []
     for i in range(n, 0, -1):
         if (i & (i - 1)) == 0:
@@ -148,7 +148,7 @@ def getAllPowersOfTwoLessThan(n):
     return results
 
 
-def getHighestPowerOfTwoLessThan(n):
+def get_highest_power_of_two_less_than(n):
     result = 0
     for i in range(n, 0, -1):
         if (i & (i - 1)) == 0:
@@ -157,5 +157,5 @@ def getHighestPowerOfTwoLessThan(n):
     return result
 
 
-def makeUniverseKey(length=10):
+def make_universe_key(length=10):
     return "".join(random.choice(ascii_lowercase) for _ in range(length))

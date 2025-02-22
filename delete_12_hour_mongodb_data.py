@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from ss.email_service import EmailService
 from ss.models.Database import Database
 
-db = Database.getInstance()
+db = Database.get_instance()
 my_client = db.cnx
 my_db = my_client["grid_file"]
 files = my_db["fs.files"]

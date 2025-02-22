@@ -72,13 +72,13 @@ function plotCoords(zip, playerIdHovered) {
     ctx.textBaseline = 'middle';
     let hoverPlaces = [];
     
-    let radiuses = zip.map(zipItem => ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2)));
+    let radiuses = zip.map(zipItem => ctx.canvas.width / 25 * (1 + (zipItem.player.adjusted_rating * 2)));
     let maxRadius = Math.max.apply(null, radiuses);
     let maxTextOffset = maxRadius + 10;
     for (let zipItem of zip) {
         const centerX = ctx.canvas.width / 32 * zipItem.coords.x;
         const centerY = ctx.canvas.height / 32 * zipItem.coords.y;
-        let radius = ctx.canvas.width / 25 * (1 + (zipItem.player.adjustedRating * 2));
+        let radius = ctx.canvas.width / 25 * (1 + (zipItem.player.adjusted_rating * 2));
         let noSmallerThan = ctx.canvas.width / 30;
         let noBiggerThan = ctx.canvas.width / 15;
         radius = Math.max(Math.min(radius, noBiggerThan), noSmallerThan)

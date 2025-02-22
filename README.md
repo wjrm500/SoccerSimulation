@@ -35,14 +35,14 @@ The system also provides visualisation tools that plot predicted ratings over ti
 
 Each club is first assigned a "favourite formation" by randomly selecting from the available formations – with the probability of selection weighted by each formation’s popularity. Once the formation is chosen, its personnel requirements (i.e. the number of players needed for each position) are deep‐copied from the configuration.
 
-The team selection algorithm then proceeds iteratively. While there are still unfilled positions, the system scans every required position with a remaining player quota. For each such position, it evaluates every available player (from the club’s squad) who is not already selected and, unless in test mode, is not injured. For each candidate, a "selectRating" is computed as follows:
+The team selection algorithm then proceeds iteratively. While there are still unfilled positions, the system scans every required position with a remaining player quota. For each such position, it evaluates every available player (from the club’s squad) who is not already selected and, unless in test mode, is not injured. For each candidate, a "select_rating" is computed as follows:
 
 - The player’s positional rating for the required position is used as the base value.
 - This rating is reduced by an amount proportional to the player’s fatigue.
 - It is then increased slightly based on the player’s recent form (with the increment scaled as one-tenth of the product of the rating and the form value).
 - Finally, the rating is multiplied by a home/away differential factor (for example, around 1.025 for home fixtures and 0.975 for away matches).
 
-The player with the highest computed selectRating for the position is then selected, and the required count for that position is decremented. This process repeats until all positions specified by the formation are filled. The final tactical lineup is then aggregated into a team object – which subsequently calculates overall offensive and defensive ratings based on the contributions of the selected players.
+The player with the highest computed select_rating for the position is then selected, and the required count for that position is decremented. This process repeats until all positions specified by the formation are filled. The final tactical lineup is then aggregated into a team object – which subsequently calculates overall offensive and defensive ratings based on the contributions of the selected players.
 
 ## Match Simulation and Outcome Determination
 

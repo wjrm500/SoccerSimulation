@@ -1,15 +1,15 @@
 import datetime
 
-systemConfig = {
-    "numSystems": 1,
-    "numLeaguesPerSystem": 1,
-    "numClubsPerLeague": 10,
-    "numPlayersPerClub": 25,
+system_config = {
+    "num_systems": 1,
+    "num_leagues_per_system": 1,
+    "num_clubs_per_league": 10,
+    "num_players_per_club": 25,
 }
 
-timeConfig = {"startDate": datetime.date(2000, 1, 1)}
+time_config = {"start_date": datetime.date(2000, 1, 1)}
 
-formationConfig = {
+formation_config = {
     "3-4-1-2": {
         "popularity": 0.0105,
         "personnel": {"CB": 3, "WB": 2, "CDM": 2, "COM": 1, "CF": 2},
@@ -74,18 +74,18 @@ formationConfig = {
     },
 }
 
-playerConfig = {
+player_config = {
     "age": {"min": 15, "max": 40},
-    "growthSpeed": {
+    "growth_speed": {
         "incline": {"mean": 0.75, "stDev": 0.1, "min": 0.25, "max": 1.25},
         "decline": {"mean": 0.875, "stDev": 0.1, "min": 0.375, "max": 1.375},
     },
-    "peakAge": {"mean": 27, "stDev": 2, "min": 22, "max": 32},
-    "peakRating": {"mean": (100 / 3 * 2), "stDev": 10, "min": 20, "max": 100},
+    "peak_age": {"mean": 27, "stDev": 2, "min": 22, "max": 32},
+    "peak_rating": {"mean": (100 / 3 * 2), "stDev": 10, "min": 20, "max": 100},
     "positions": {
         "CF": {
-            "realName": "Centre Forward",
-            "skillDistribution": {
+            "real_name": "Centre Forward",
+            "skill_distribution": {
                 "offence": 1.52,
                 "spark": 1.06,
                 "technique": 1.03,
@@ -95,8 +95,8 @@ playerConfig = {
             },
         },
         "WF": {
-            "realName": "Wing Forward",
-            "skillDistribution": {
+            "real_name": "Wing Forward",
+            "skill_distribution": {
                 "offence": 1.19,
                 "spark": 1.35,
                 "technique": 1.08,
@@ -106,8 +106,8 @@ playerConfig = {
             },
         },
         "COM": {
-            "realName": "Centre Offensive Midfielder",
-            "skillDistribution": {
+            "real_name": "Centre Offensive Midfielder",
+            "skill_distribution": {
                 "offence": 1.05,
                 "spark": 1.42,
                 "technique": 1.48,
@@ -117,8 +117,8 @@ playerConfig = {
             },
         },
         "WM": {
-            "realName": "Wing Midfielder",
-            "skillDistribution": {
+            "real_name": "Wing Midfielder",
+            "skill_distribution": {
                 "offence": 1.06,
                 "spark": 1.24,
                 "technique": 1.06,
@@ -128,8 +128,8 @@ playerConfig = {
             },
         },
         "CM": {
-            "realName": "Centre Midfielder",
-            "skillDistribution": {
+            "real_name": "Centre Midfielder",
+            "skill_distribution": {
                 "offence": 0.87,
                 "spark": 0.92,
                 "technique": 1.04,
@@ -139,8 +139,8 @@ playerConfig = {
             },
         },
         "CDM": {
-            "realName": "Centre Defensive Midfielder",
-            "skillDistribution": {
+            "real_name": "Centre Defensive Midfielder",
+            "skill_distribution": {
                 "offence": 0.73,
                 "spark": 0.84,
                 "technique": 0.95,
@@ -150,8 +150,8 @@ playerConfig = {
             },
         },
         "WB": {
-            "realName": "Wing Back",
-            "skillDistribution": {
+            "real_name": "Wing Back",
+            "skill_distribution": {
                 "offence": 0.75,
                 "spark": 1.03,
                 "technique": 1.03,
@@ -161,8 +161,8 @@ playerConfig = {
             },
         },
         "FB": {
-            "realName": "Full Back",
-            "skillDistribution": {
+            "real_name": "Full Back",
+            "skill_distribution": {
                 "offence": 0.73,
                 "spark": 0.92,
                 "technique": 0.94,
@@ -172,8 +172,8 @@ playerConfig = {
             },
         },
         "CB": {
-            "realName": "Centre Back",
-            "skillDistribution": {
+            "real_name": "Centre Back",
+            "skill_distribution": {
                 "offence": 0.72,
                 "spark": 0.77,
                 "technique": 0.92,
@@ -183,10 +183,10 @@ playerConfig = {
             },
         },
     },
-    "retirementThreshold": {"mean": 0.80, "stDev": 0.025, "min": 0.70, "max": 0.90},
+    "retirement_threshold": {"mean": 0.80, "stDev": 0.025, "min": 0.70, "max": 0.90},
     "skill": {
         "distribution": {"mean": 1, "stDev": 0.375, "min": 0.25, "max": 1.75},
-        "normalisingFactor": {"mean": 0.5, "stDev": 0.05, "min": 0, "max": 0.5},
+        "normalising_factor": {"mean": 0.5, "stDev": 0.05, "min": 0, "max": 0.5},
         "skills": [
             "offence",
             "spark",  ### A player's ability to create something from nothing
@@ -212,8 +212,8 @@ playerConfig = {
     },
 }
 
-matchConfig = {
-    "homeAwayDifferential": {"neutral": 1.00, "home": 1.025, "away": 0.975},
+match_config = {
+    "home_away_differential": {"neutral": 1.00, "home": 1.025, "away": 0.975},
     "contribution": {
         "offence": {"offence": 1.0, "defence": 0.0},
         "spark": {"offence": 0.9, "defence": 0.1},
@@ -222,7 +222,7 @@ matchConfig = {
         "authority": {"offence": 0.2, "defence": 0.8},
         "fitness": {"offence": 0.3, "defence": 0.7},
     },
-    "goalLikelihood": {
+    "goal_likelihood": {
         "CF": 1,
         "WF": 0.975,
         "COM": 0.95,

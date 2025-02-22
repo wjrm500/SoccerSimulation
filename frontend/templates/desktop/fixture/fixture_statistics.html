@@ -3,7 +3,7 @@
         <div id="form-results-title" class="fixture-statistics-title">
             Pre-match form
         </div>
-        {% for club, data in recentResults.items() %}
+        {% for club, data in recent_results.items() %}
            <div class="form-results-row">
                 <div class="form-results-club-name">
                     <a data-url="/simulation/club/{{ club.id }}">{{ club.name }}</a>
@@ -11,7 +11,7 @@
                 <div class="form-results-boxes">
                     {% for result in data['results'] %}
                         <div class="my-tooltip">
-                            <a href="#" class="form-results-box result-{{ result['result'] }}" data-url="/simulation/fixture/{{ result['fixtureId'] }}">
+                            <a href="#" class="form-results-box result-{{ result['result'] }}" data-url="/simulation/fixture/{{ result['fixture_id'] }}">
                                 {{ result['result'] }}
                             </a>
                             <span class="my-tooltiptext below">
@@ -40,9 +40,9 @@
                 Post-match
             </div>
         </div>
-        <div id="form-tables-grid" data-num-clubs="{{ numClubs }}">
-            {% for leagueTables in [preMatchLeagueTables, postMatchLeagueTables] %}
-                {% for club, table in leagueTables['data'].items() %}
+        <div id="form-tables-grid" data-num-clubs="{{ num_clubs }}">
+            {% for league_tables in [pre_match_league_tables, post_match_league_tables] %}
+                {% for club, table in league_tables['data'].items() %}
                     <div class="form-table-container">
                         <table class="form-table full-table">
                             <tr>

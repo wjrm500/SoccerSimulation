@@ -12,7 +12,7 @@ cnx = mysql.connector.connect(
 )
 cursor = cnx.cursor()
 
-db = Database.getInstance()
+db = Database.get_instance()
 cnx = db.cnx["soccersim"]
 
 firstname_sql = "SELECT `firstname`, `count`, `frequency` FROM `firstnames`"

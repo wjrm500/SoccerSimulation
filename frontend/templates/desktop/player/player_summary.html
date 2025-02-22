@@ -5,45 +5,45 @@
     </tr>
     <tr>
         <td class="table-label">Age</td>
-        <td class="table-value">{{ playerAge }}</td>
+        <td class="table-value">{{ player_age }}</td>
     </tr>
     <tr>
         <td class="table-label">Rating</td>
-        <td class="table-value">{{ '{0:.2f}'.format(playerRating) }}</td>
+        <td class="table-value">{{ '{0:.2f}'.format(player_rating) }}</td>
     </tr>
     <tr>
         <td class="table-label">Peak age</td>
-        <td class="table-value">{{ '{0:.2f}'.format(player.peakAge) }}</td>
+        <td class="table-value">{{ '{0:.2f}'.format(player.peak_age) }}</td>
     </tr>
     <tr>
         <td class="table-label">Peak rating</td>
-        <td class="table-value">{{ '{0:.2f}'.format(playerPeakRating) }}</td>
+        <td class="table-value">{{ '{0:.2f}'.format(player_peak_rating) }}</td>
     </tr>
     <tr>
         <td class="table-label">Best position</td>
-        <td class="table-value">{{ playerBestPosition }}</td>
+        <td class="table-value">{{ player_best_position }}</td>
     </tr>
     <tr>
         <td class="table-label">Games</td>
-        <td class="table-value">{{ performanceIndices['games'] }}</td>
+        <td class="table-value">{{ performance_indices['games'] }}</td>
     </tr>
     <tr>
         <td class="table-label">Goals</td>
-        <td class="table-value">{{ performanceIndices['goals'] }}</td>
+        <td class="table-value">{{ performance_indices['goals'] }}</td>
     </tr>
     <tr>
         <td class="table-label">Assists</td>
-        <td class="table-value">{{ performanceIndices['assists'] }}</td>
+        <td class="table-value">{{ performance_indices['assists'] }}</td>
     </tr>
     <tr>
         <td class="table-label">Average Performance Index</td>
-        <td class="table-value">{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+        <td class="table-value">{{ '{0:.2f}'.format(performance_indices['performance_index']) }}</td>
     </tr>
     <tr>
         <td class="table-label">Injuries</td>
         <td class="table-value">
             <ul style="font-size: 0.8em; margin-block-end: 0px; padding-inline-start: 10px;">
-                {% for injury in performanceIndices['injuries'] %}
+                {% for injury in performance_indices['injuries'] %}
                     <li>
                         {{ injury }}
                     </li>

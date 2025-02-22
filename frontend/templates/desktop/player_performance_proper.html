@@ -50,7 +50,7 @@
                     <select>
                         <option disabled selected value="">Select a position</option>
                         <option value="all">All positions</option>
-                        {% for position in filterPositions %}
+                        {% for position in filter_positions %}
                             <option value="{{ position }}">{{ position }}</option>
                         {% endfor %}
                     </select>
@@ -59,7 +59,7 @@
                     <select>
                         <option disabled selected value="">Select a club</option>
                         <option value="all">All clubs</option>
-                        {% for club in filterClubs %}
+                        {% for club in filter_clubs %}
                             <option value="{{ club.id }}">{{ club.name }}</option>
                         {% endfor %}
                     </select>
@@ -134,7 +134,7 @@
                         </span>
                     </div>
                 </th>
-                <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex">
+                <th class="pp-performance" data-sort="unsorted" data-metric="performance_index">
                     <div class="my-tooltip">
                         <i class="fas fa-star-half-alt" style="color: goldenrod;"></i>
                         <span class="my-tooltiptext to-left">
@@ -143,30 +143,30 @@
                     </div>
                 </th>
             </tr>
-            {% for player, performanceIndices in playerPerformanceItems.items() %}
+            {% for player, performance_indices in player_performance_items.items() %}
                 <tr class="clickable-row" data-player-id="{{ player.id }}">
                     <td>{{ loop.index }}</td>
                     <td>
                         <div class="player-row-top">
-                            {{ player.getProperName() }}
+                            {{ player.get_proper_name() }}
                         </div>
                         <div class="player-row-bottom" data-club-id="{{ player.club.id }}" style="color: darkgrey; font-size: 0.75em; font-style: italic;">
                             {{ player.club.name }}
                         </div>
-                    <td>{{ player.getBestPosition() }}</td>
-                    <td>{{ '{0:.2f}'.format(player.getAge(2)) }}</td>
-                    <td class="player-rating">{{ '{0:.2f}'.format(player.getRating()) }}</td>
-                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['offence']) }}</td>
-                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['spark']) }}</td>
-                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['technique']) }}</td>
-                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['defence']) }}</td>
-                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['authority']) }}</td>
-                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skillValues['fitness']) }}</td>
-                    <td class="pp-performance">{{ performanceIndices['games'] }}</td>
-                    <td class="pp-performance">{{ performanceIndices['goals'] }}</td>
-                    <td class="pp-performance">{{ performanceIndices['assists'] }}</td>
-                    <td class="pp-performance">{{ performanceIndices['mvps'] }}</td>
-                    <td class="pp-performance">{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+                    <td>{{ player.get_best_position() }}</td>
+                    <td>{{ '{0:.2f}'.format(player.get_age(2)) }}</td>
+                    <td class="player-rating">{{ '{0:.2f}'.format(player.get_rating()) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skill_values['offence']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skill_values['spark']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skill_values['technique']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skill_values['defence']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skill_values['authority']) }}</td>
+                    <td class="pp-attributes">{{ '{0:.1f}'.format(player.skill_values['fitness']) }}</td>
+                    <td class="pp-performance">{{ performance_indices['games'] }}</td>
+                    <td class="pp-performance">{{ performance_indices['goals'] }}</td>
+                    <td class="pp-performance">{{ performance_indices['assists'] }}</td>
+                    <td class="pp-performance">{{ performance_indices['mvps'] }}</td>
+                    <td class="pp-performance">{{ '{0:.2f}'.format(performance_indices['performance_index']) }}</td>
                 </tr>
             {% endfor %}
         </table>

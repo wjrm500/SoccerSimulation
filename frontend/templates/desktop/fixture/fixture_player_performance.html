@@ -1,9 +1,9 @@
 <div id="fixture-players-main">
-    {% for clubData in [homeClubData, awayClubData] %}
+    {% for club_data in [home_club_data, away_club_data] %}
         <div class="fixture-players-club">
             <div class="fixture-players-club-title">
-                <a data-url="/simulation/club/{{ clubData['team']['club'].id }}">
-                    {{ clubData['team']['club'].name }}
+                <a data-url="/simulation/club/{{ club_data['team']['club'].id }}">
+                    {{ club_data['team']['club'].name }}
                 </a>
             </div>
             <table class="full-table">
@@ -58,15 +58,15 @@
                         </div>
                     </th>
                 </tr>
-                {% for player, data in clubData['players'].items() %}
-                    <tr data-man-of-the-match="{{ data['manOfTheMatch'] }}">
-                        <td data-player-id="{{ player.id }}">{{ player.getProperName() }}</td>
+                {% for player, data in club_data['players'].items() %}
+                    <tr data-man-of-the-match="{{ data['man_of_the_match'] }}">
+                        <td data-player-id="{{ player.id }}">{{ player.get_proper_name() }}</td>
                         <td>{{ data['position'] }}</td>
-                        <td>{{ data['extraData']['selectRating'] }}</td>
-                        <td class="pre-match-form">{{ data['extraData']['preMatchForm'] }}</td>
+                        <td>{{ data['extra_data']['select_rating'] }}</td>
+                        <td class="pre-match-form">{{ data['extra_data']['pre_match_form'] }}</td>
                         <td>{{ data['goals'] }}</td>
                         <td>{{ data['assists'] }}</td>
-                        <td class="performance-index">{{ data['performanceIndex'] }}</td>
+                        <td class="performance-index">{{ data['performance_index'] }}</td>
                     </tr>
                 {% endfor %}
             </table>

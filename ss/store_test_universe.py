@@ -2,7 +2,7 @@ import sys
 
 from models.Database import Database
 
-db = Database.getInstance()
+db = Database.get_instance()
 collection = db.cnx["soccersim"]["universes"]
 print("Opening file universe_" + sys.argv[1])
 f = open("universe_" + sys.argv[1], "rb")

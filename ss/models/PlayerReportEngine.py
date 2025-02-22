@@ -6,12 +6,12 @@ from .. import goal_probability, utils
 class PlayerReportEngine:
     def __init__(self, match):
         self.match = match
-        self.manOfTheMatch = None
+        self.man_of_the_match = None
 
-    def generatePlayerReports(self, report):
-        meanFitness = np.mean(
+    def generate_player_reports(self, report):
+        mean_fitness = np.mean(
             [
-                select.player.skillValues["fitness"]
+                select.player.skill_values["fitness"]
                 for club in self.match.clubs
                 for select in report["clubs"][club]["team"].selection
             ]
@@ -21,180 +21,187 @@ class PlayerReportEngine:
             report["clubs"][club]["players"] = {}
             for select in team.selection:
                 player = select.player
-                report["clubs"][club]["players"][player] = self.getPlayerReport(
-                    club, team, select, meanFitness
+                report["clubs"][club]["players"][player] = self.get_player_report(
+                    club, team, select, mean_fitness
                 )
 
         ### Tag man of the match
-        manOfTheMatch = self.manOfTheMatch["player"]
+        man_of_the_match = self.man_of_the_match["player"]
         for club in self.match.clubs:
             team = report["clubs"][club]["team"]
             for select in team.selection:
                 player = select.player
-                report["clubs"][club]["players"][player]["manOfTheMatch"] = player == manOfTheMatch
+                report["clubs"][club]["players"][player]["man_of_the_match"] = (
+                    player == man_of_the_match
+                )
 
-    def getPlayerReport(self, club, team, select, meanFitness):
+    def get_player_report(self, club, team, select, mean_fitness):
         player = select.player
         position = select.position
-        playerReport = {}
-        playerGoalLikelihood = team.goalFactors[player]
-        playerAssistLikelihood = team.assistFactors[player]
-        playerReport["fixtureId"] = self.match.fixture.id
-        playerReport["homeAway"] = "H" if self.match.clubX == player.club else "A"
-        playerReport["tournament"] = (
+        player_report = {}
+        player_goal_likelihood = team.goal_factors[player]
+        player_assist_likelihood = team.assist_factors[player]
+        player_report["fixture_id"] = self.match.fixture.id
+        player_report["home_away"] = "H" if self.match.club_x == player.club else "A"
+        player_report["tournament"] = (
             self.match.tournament.tournament
             if type(self.match.tournament).__name__ == "Group"
             else self.match.tournament
         )
-        playerReport["date"] = self.match.date
-        playerReport["gameweek"] = self.match.fixture.gameweek
-        playerReport["position"] = position
-        playerReport["preMatchFatigue"] = player.fatigue
-        playerReport["preMatchForm"] = player.form
+        player_report["date"] = self.match.date
+        player_report["gameweek"] = self.match.fixture.gameweek
+        player_report["position"] = position
+        player_report["pre_match_fatigue"] = player.fatigue
+        player_report["pre_match_form"] = player.form
 
         club = player.club
-        oppositionClub = self.match.getOppositionClub(club)
-        clubReport = self.match.matchReport["clubs"][club]  ### TODO
-        oppositionClubReport = self.match.matchReport["clubs"][oppositionClub]
-        goals = clubReport["match"]["goals"]
-        playerReport["goals"] = (
+        opposition_club = self.match.get_opposition_club(club)
+        club_report = self.match.match_report["clubs"][club]  ### TODO
+        opposition_club_report = self.match.match_report["clubs"][opposition_club]
+        goals = club_report["match"]["goals"]
+        player_report["goals"] = (
             sum([1 for goal in goals if goal["scorer"] == player]) if goals is not None else 0
         )
-        playerReport["assists"] = (
+        player_report["assists"] = (
             sum([1 for goal in goals if goal["assister"] == player]) if goals is not None else 0
         )
 
-        playerReport["oppositionClub"] = oppositionClub
+        player_report["opposition_club"] = opposition_club
 
         ### Get player performance index
 
-        select = clubReport["team"].getSelectFromPlayer(player)
-        selectRating = clubReport["team"].getSelectRating(select)
-        oppositionTeamRating = oppositionClubReport["team"].averageRating
-        ratingAdvantage = selectRating - oppositionTeamRating
-        x = ratingAdvantage
-        baseRating = ((1 / (1 + np.power(np.e, (-x / 12.5)))) + 0.5) * 5
-        modulatedBaseRating = utils.limitedRandNorm(
-            {"mu": baseRating, "sg": 0.5, "mn": 2.5, "mx": 7.5}
+        select = club_report["team"].get_select_from_player(player)
+        select_rating = club_report["team"].get_select_rating(select)
+        opposition_team_rating = opposition_club_report["team"].average_rating
+        rating_advantage = select_rating - opposition_team_rating
+        x = rating_advantage
+        base_rating = ((1 / (1 + np.power(np.e, (-x / 12.5)))) + 0.5) * 5
+        modulated_base_rating = utils.limited_rand_norm(
+            {"mu": base_rating, "sg": 0.5, "mn": 2.5, "mx": 7.5}
         )
 
-        offensiveContribution = clubReport["team"].selectionOffensiveContributions[select]
-        defensiveContribution = clubReport["team"].selectionDefensiveContributions[select]
-        teamPredictedGoalsFor = utils.limitValue(
-            goal_probability.goalProbability[int(clubReport["potential"])]["mu"], mn=0
+        offensive_contribution = club_report["team"].selection_offensive_contributions[select]
+        defensive_contribution = club_report["team"].selection_defensive_contributions[select]
+        team_predicted_goals_for = utils.limit_value(
+            goal_probability.goal_probability[int(club_report["potential"])]["mu"], mn=0
         )  ### What if team predicted goals for was based on the individual's potential
-        teamActualGoalsFor = clubReport["match"]["goalsFor"]
-        teamOffensiveOutperformance = teamActualGoalsFor - teamPredictedGoalsFor
-        teamPredictedGoalsAgainst = utils.limitValue(
-            goal_probability.goalProbability[int(oppositionClubReport["potential"])]["mu"],
+        team_actual_goals_for = club_report["match"]["goals_for"]
+        team_offensive_outperformance = team_actual_goals_for - team_predicted_goals_for
+        team_predicted_goals_against = utils.limit_value(
+            goal_probability.goal_probability[int(opposition_club_report["potential"])]["mu"],
             mn=0,
         )
-        teamActualGoalsAgainst = oppositionClubReport["match"]["goalsFor"]
-        teamDefensiveOutperformance = teamPredictedGoalsAgainst - teamActualGoalsAgainst
-        offensiveBoost = utils.limitValue(
-            offensiveContribution * teamOffensiveOutperformance * 5, mn=-1.5, mx=1.5
+        team_actual_goals_against = opposition_club_report["match"]["goals_for"]
+        team_defensive_outperformance = team_predicted_goals_against - team_actual_goals_against
+        offensive_boost = utils.limit_value(
+            offensive_contribution * team_offensive_outperformance * 5, mn=-1.5, mx=1.5
         )
-        defensiveBoost = utils.limitValue(
-            defensiveContribution * teamDefensiveOutperformance * 5, mn=-1.5, mx=1.5
-        )
-
-        goalDifference = abs(
-            clubReport["match"]["goalsFor"] - oppositionClubReport["match"]["goalsFor"]
-        )
-        goalsScored = clubReport["match"]["goalsFor"] + oppositionClubReport["match"]["goalsFor"]
-        ratingBoostForGoal, ratingBoostForAssist = self.getRatingBoostsForGoalsAndAssists(
-            goalDifference, goalsScored
+        defensive_boost = utils.limit_value(
+            defensive_contribution * team_defensive_outperformance * 5, mn=-1.5, mx=1.5
         )
 
-        playerPredictedGoals = teamPredictedGoalsFor * playerGoalLikelihood
-        goalNegative = (
-            playerPredictedGoals * ratingBoostForGoal / 5
+        goal_difference = abs(
+            club_report["match"]["goals_for"] - opposition_club_report["match"]["goals_for"]
+        )
+        goals_scored = (
+            club_report["match"]["goals_for"] + opposition_club_report["match"]["goals_for"]
+        )
+        rating_boost_for_goal, rating_boost_for_assist = (
+            self.get_rating_boosts_for_goals_and_assists(goal_difference, goals_scored)
+        )
+
+        player_predicted_goals = team_predicted_goals_for * player_goal_likelihood
+        goal_negative = (
+            player_predicted_goals * rating_boost_for_goal / 5
         )  ### Dividing by 5 intended to boost goal involvements and help compensate for the
         ### disproportionate effects of any potential 10-cap
-        goalPositive = playerReport["goals"] * ratingBoostForGoal
+        goal_positive = player_report["goals"] * rating_boost_for_goal
 
-        playerPredictedAssists = teamPredictedGoalsFor * 0.9 * playerAssistLikelihood
-        assistNegative = playerPredictedAssists * ratingBoostForAssist / 5
-        assistPositive = playerReport["assists"] * ratingBoostForAssist
+        player_predicted_assists = team_predicted_goals_for * 0.9 * player_assist_likelihood
+        assist_negative = player_predicted_assists * rating_boost_for_assist / 5
+        assist_positive = player_report["assists"] * rating_boost_for_assist
 
-        performanceIndex = utils.limitValue(
-            modulatedBaseRating
-            + offensiveBoost
-            + defensiveBoost
-            - goalNegative
-            + goalPositive
-            - assistNegative
-            + assistPositive,
+        performance_index = utils.limit_value(
+            modulated_base_rating
+            + offensive_boost
+            + defensive_boost
+            - goal_negative
+            + goal_positive
+            - assist_negative
+            + assist_positive,
             mn=0,
             mx=10,
         )
-        playerReport["performanceIndex"] = performanceIndex
+        player_report["performance_index"] = performance_index
 
-        if self.manOfTheMatch is None or performanceIndex > self.manOfTheMatch["performanceIndex"]:
-            self.manOfTheMatch = {
+        if (
+            self.man_of_the_match is None
+            or performance_index > self.man_of_the_match["performance_index"]
+        ):
+            self.man_of_the_match = {
                 "player": player,
-                "performanceIndex": performanceIndex,
+                "performance_index": performance_index,
             }
 
         ### Handle fatigue
 
-        fitnessFromMean = utils.limitValue(
-            player.skillValues["fitness"] - meanFitness, mn=-35, mx=35
+        fitness_from_mean = utils.limit_value(
+            player.skill_values["fitness"] - mean_fitness, mn=-35, mx=35
         )
-        a = np.power(abs(fitnessFromMean) / 10, 2) / 25
+        a = np.power(abs(fitness_from_mean) / 10, 2) / 25
         b = np.power(a, 1.5)
-        if fitnessFromMean > 0:
+        if fitness_from_mean > 0:
             mu = 0.25 - a + b
         else:
             mu = 0.25 + a - b
-        fatigueIncrease = utils.limitedRandNorm({"mu": mu, "sg": 0.05, "mn": 0.05, "mx": 0.45})
-        playerReport["fatigueIncrease"] = fatigueIncrease
+        fatigue_increase = utils.limited_rand_norm({"mu": mu, "sg": 0.05, "mn": 0.05, "mx": 0.45})
+        player_report["fatigue_increase"] = fatigue_increase
 
         ### Handle form
 
-        outperformance = playerReport["performanceIndex"] - baseRating
-        ungravitatedMatchForm = outperformance / 5
+        outperformance = player_report["performance_index"] - base_rating
+        ungravitated_match_form = outperformance / 5
         gravity = player.form / 10
-        gravitatedMatchForm = ungravitatedMatchForm - gravity
-        playerReport["ungravitatedMatchForm"] = ungravitatedMatchForm
-        playerReport["gravitatedMatchForm"] = gravitatedMatchForm
+        gravitated_match_form = ungravitated_match_form - gravity
+        player_report["ungravitated_match_form"] = ungravitated_match_form
+        player_report["gravitated_match_form"] = gravitated_match_form
 
         ### Add extra data
 
-        playerReport["extraData"] = {}
-        playerReport["extraData"]["selectRating"] = selectRating
-        playerReport["extraData"]["oppositionTeamRating"] = oppositionTeamRating
-        playerReport["extraData"]["baseRating"] = baseRating
-        playerReport["extraData"]["modulatedBaseRating"] = modulatedBaseRating
-        playerReport["extraData"]["offensiveContribution"] = offensiveContribution
-        playerReport["extraData"]["defensiveContribution"] = defensiveContribution
-        playerReport["extraData"]["teamPredictedGoalsFor"] = teamPredictedGoalsFor
-        playerReport["extraData"]["teamActualGoalsFor"] = teamActualGoalsFor
-        playerReport["extraData"]["teamOffensiveOutperformance"] = teamOffensiveOutperformance
-        playerReport["extraData"]["teamPredictedGoalsAgainst"] = teamPredictedGoalsAgainst
-        playerReport["extraData"]["teamActualGoalsAgainst"] = teamActualGoalsAgainst
-        playerReport["extraData"]["teamDefensiveOutperformance"] = teamDefensiveOutperformance
-        playerReport["extraData"]["offensiveBoost"] = offensiveBoost
-        playerReport["extraData"]["defensiveBoost"] = defensiveBoost
-        playerReport["extraData"]["predictedGoals"] = playerPredictedGoals
-        playerReport["extraData"]["goalNegative"] = goalNegative
-        playerReport["extraData"]["goalPositive"] = goalPositive
-        playerReport["extraData"]["predictedAssists"] = playerPredictedAssists
-        playerReport["extraData"]["assistNegative"] = assistNegative
-        playerReport["extraData"]["assistPositive"] = assistPositive
+        player_report["extra_data"] = {}
+        player_report["extra_data"]["select_rating"] = select_rating
+        player_report["extra_data"]["opposition_team_rating"] = opposition_team_rating
+        player_report["extra_data"]["base_rating"] = base_rating
+        player_report["extra_data"]["modulated_base_rating"] = modulated_base_rating
+        player_report["extra_data"]["offensive_contribution"] = offensive_contribution
+        player_report["extra_data"]["defensive_contribution"] = defensive_contribution
+        player_report["extra_data"]["team_predicted_goals_for"] = team_predicted_goals_for
+        player_report["extra_data"]["team_actual_goals_for"] = team_actual_goals_for
+        player_report["extra_data"]["team_offensive_outperformance"] = team_offensive_outperformance
+        player_report["extra_data"]["team_predicted_goals_against"] = team_predicted_goals_against
+        player_report["extra_data"]["team_actual_goals_against"] = team_actual_goals_against
+        player_report["extra_data"]["team_defensive_outperformance"] = team_defensive_outperformance
+        player_report["extra_data"]["offensive_boost"] = offensive_boost
+        player_report["extra_data"]["defensive_boost"] = defensive_boost
+        player_report["extra_data"]["predicted_goals"] = player_predicted_goals
+        player_report["extra_data"]["goal_negative"] = goal_negative
+        player_report["extra_data"]["goal_positive"] = goal_positive
+        player_report["extra_data"]["predicted_assists"] = player_predicted_assists
+        player_report["extra_data"]["assist_negative"] = assist_negative
+        player_report["extra_data"]["assist_positive"] = assist_positive
 
-        return playerReport
+        return player_report
 
-    def getRatingBoostsForGoalsAndAssists(self, goalDifference, goalsScored):
-        goalDifferenceComponentOfRatingBoostForGoal = (
-            1.5 if goalDifference == 0 else 2.5 - np.power(goalDifference, (1 / 4))
+    def get_rating_boosts_for_goals_and_assists(self, goal_difference, goals_scored):
+        goal_difference_component_of_rating_boost_for_goal = (
+            1.5 if goal_difference == 0 else 2.5 - np.power(goal_difference, (1 / 4))
         )
-        goalsScoredComponentOfRatingBoostForGoal = (
-            1.5 if goalsScored == 0 else 1.5 - (goalsScored - 1) * (3 / 40)
+        goals_scored_component_of_rating_boost_for_goal = (
+            1.5 if goals_scored == 0 else 1.5 - (goals_scored - 1) * (3 / 40)
         )
-        ratingBoostForGoal = (
-            (goalDifferenceComponentOfRatingBoostForGoal * 2)
-            + goalsScoredComponentOfRatingBoostForGoal
+        rating_boost_for_goal = (
+            (goal_difference_component_of_rating_boost_for_goal * 2)
+            + goals_scored_component_of_rating_boost_for_goal
         ) / 3
-        ratingBoostForAssist = ratingBoostForGoal * 0.75
-        return [ratingBoostForGoal, ratingBoostForAssist]
+        rating_boost_for_assist = rating_boost_for_goal * 0.75
+        return [rating_boost_for_goal, rating_boost_for_assist]

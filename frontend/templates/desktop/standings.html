@@ -10,22 +10,22 @@
         <th>GD</th>
         <th>Pts</th>
     </tr>
-    {% for leagueTableItem in leagueTableItems %}
-        <tr data-club-id="{{ leagueTableItem[0].id }}">
+    {% for league_table_item in league_table_items %}
+        <tr data-club-id="{{ league_table_item[0].id }}">
             <td>{{ loop.index }}</td>
             <td>
-                <!-- <span style="color:#aaaaaa; display:inline-block; font-size:0.9em; font-weight:normal; width:40px">({{ leagueTableItem[0].getShortName() }})</span> -->
-                {{ leagueTableItem[0].name }}
+                <!-- <span style="color:#aaaaaa; display:inline-block; font-size:0.9em; font-weight:normal; width:40px">({{ league_table_item[0].get_short_name() }})</span> -->
+                {{ league_table_item[0].name }}
                 <!-- <img id="number-one-icon" class="league-table-number-icon" src="/static/images/number_one_icon.png">
                 <img id="number-two-icon" class="league-table-number-icon" src="/static/images/number_two_icon.png"> -->
             </td>
-            <td>{{ leagueTableItem[1]['W'] }}</td>
-            <td>{{ leagueTableItem[1]['D'] }}</td>
-            <td>{{ leagueTableItem[1]['L'] }}</td>
-            <td>{{ leagueTableItem[1]['GF'] }}</td>
-            <td>{{ leagueTableItem[1]['GA'] }}</td>
-            <td>{{ leagueTableItem[1]['GD'] }}</td>
-            <td>{{ leagueTableItem[1]['Pts'] }}</td>
+            <td>{{ league_table_item[1]['W'] }}</td>
+            <td>{{ league_table_item[1]['D'] }}</td>
+            <td>{{ league_table_item[1]['L'] }}</td>
+            <td>{{ league_table_item[1]['GF'] }}</td>
+            <td>{{ league_table_item[1]['GA'] }}</td>
+            <td>{{ league_table_item[1]['GD'] }}</td>
+            <td>{{ league_table_item[1]['Pts'] }}</td>
         </tr>
     {% endfor %}
 </table>

@@ -26,7 +26,7 @@
                 </span>
             </div>
         </th>
-        <th class="pp-performance" data-sort="unsorted" data-metric="performanceIndex">
+        <th class="pp-performance" data-sort="unsorted" data-metric="performance_index">
             <div class="my-tooltip">
                 <i class="fas fa-star-half-alt" style="color: goldenrod;"></i>
                 <span class="my-tooltiptext to-left">
@@ -35,31 +35,31 @@
             </div>
         </th>
     </tr>
-    {% for player, performanceIndices in playerPerformanceItems.items() %}
+    {% for player, performance_indices in player_performance_items.items() %}
         <tr class="clickable-row" data-player-id="{{ player.id }}">
             <td>{{ loop.index }}</td>
             <td>
                 <div class="player-row-top">
-                    <div>{{ player.getProperName() }}</div>
+                    <div>{{ player.get_proper_name() }}</div>
                     <div class="player-row-top-club-name">
                         {{ player.club.name }}
                     </div>
                 </div>
                 <div class="player-row-bottom desktop">
-                    <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.getRating()) }}</span> ·
-                    <span>Age: {{ player.getAge() }}</span> ·
-                    <span>Pos: {{ player.getBestPosition() }}</span>
+                    <span>Rat: </span><span class="rating-span">{{ '{0:.2f}'.format(player.get_rating()) }}</span> ·
+                    <span>Age: {{ player.get_age() }}</span> ·
+                    <span>Pos: {{ player.get_best_position() }}</span>
                 </div>
                 <div class="player-row-bottom mobile">
-                    <span class="player-row-span"><i class="far fa-chart-bar"></i> <span class="rating-span">{{ player.getRating()|int }}</span></span> ·
-                    <span class="player-row-span"><i class="fas fa-crosshairs"></i> {{ player.getBestPosition() }}</span>
-                    <span class="player-row-span"> ·<i class="fas fa-baby-carriage"></i> {{ player.getAge() }}</span>
+                    <span class="player-row-span"><i class="far fa-chart-bar"></i> <span class="rating-span">{{ player.get_rating()|int }}</span></span> ·
+                    <span class="player-row-span"><i class="fas fa-crosshairs"></i> {{ player.get_best_position() }}</span>
+                    <span class="player-row-span"> ·<i class="fas fa-baby-carriage"></i> {{ player.get_age() }}</span>
                 </div>
             </td>
-            <td>{{ performanceIndices['games'] }}</td>
-            <td>{{ performanceIndices['goals'] }}</td>
-            <td>{{ performanceIndices['assists'] }}</td>
-            <td>{{ '{0:.2f}'.format(performanceIndices['performanceIndex']) }}</td>
+            <td>{{ performance_indices['games'] }}</td>
+            <td>{{ performance_indices['goals'] }}</td>
+            <td>{{ performance_indices['assists'] }}</td>
+            <td>{{ '{0:.2f}'.format(performance_indices['performance_index']) }}</td>
         </tr>
     {% endfor %}
 </table>

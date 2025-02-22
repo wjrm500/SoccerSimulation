@@ -2,33 +2,33 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
 
-def showClubPositions(club, gameweek=None):
+def show_club_positions(club, gameweek=None):
     fig = plt.figure()
     fig.add_subplot(111)
     league = club.league
-    tables = league.leagueTables
+    tables = league.league_tables
     # Rank positions
-    rankedTables = []
+    ranked_tables = []
     for gw, table in tables.items():
         if gameweek is not None and gw > gameweek:
             break
-        rankedTable = []
-        tableItems = list(table.items())
-        tableItems.sort(key=lambda x: (x[1]["Pts"], x[1]["GD"]), reverse=True)
-        for i, tableItem in enumerate(tableItems, 1):
-            tableItem[1]["Rank"] = i
-            rankedTable.append(tableItem)
-        rankedTables.append(rankedTable)
+        ranked_table = []
+        table_items = list(table.items())
+        table_items.sort(key=lambda x: (x[1]["Pts"], x[1]["GD"]), reverse=True)
+        for i, table_item in enumerate(table_items, 1):
+            table_item[1]["Rank"] = i
+            ranked_table.append(table_item)
+        ranked_tables.append(ranked_table)
     ranks = []
-    for rankedTable in rankedTables[1:]:
-        for tableClub, tableData in rankedTable:
-            if club == tableClub:
-                ranks.append(tableData["Rank"])
+    for ranked_table in ranked_tables[1:]:
+        for table_club, table_data in ranked_table:
+            if club == table_club:
+                ranks.append(table_data["Rank"])
     x = list(range(1, len(ranks) + 1))
     y = ranks
     for i in range(len(league.clubs) + 1):
         plt.gca().axhline(i, color="#bbbbbb", linestyle="--", linewidth=0.75)
-    for i in range(len(rankedTables)):
+    for i in range(len(ranked_tables)):
         if i % 5 == 0:
             plt.gca().axvline(i, color="#bbbbbb", linestyle="--", linewidth=0.75)
     plt.plot(x, y, "-bo")

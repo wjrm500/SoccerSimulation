@@ -1,22 +1,22 @@
-from ..config import systemConfig
+from ..config import system_config
 from .Database import Database
 from .League import League
 
 
 class System:
-    def __init__(self, universe, systemId=None):
+    def __init__(self, universe, system_id=None):
         self.universe = universe
         self.leagues = []
-        if systemId is not None:
-            db = Database.getInstance()
-            systemData = db.cnx["soccersim"]["systems"].find_one({"_id": systemId})
+        if system_id is not None:
+            db = Database.get_instance()
+            system_data = db.cnx["soccersim"]["systems"].find_one({"_id": system_id})
         else:
             ### TODO: Get random untaken system
             pass
-        self.id = systemData["_id"]
-        self.name = systemData["system_name"]
-        numLeaguesPerSystem = (
-            universe.config["numLeaguesPerSystem"] or systemConfig["numLeaguesPerSystem"]
+        self.id = system_data["_id"]
+        self.name = system_data["system_name"]
+        num_leagues_per_system = (
+            universe.config["num_leagues_per_system"] or system_config["num_leagues_per_system"]
         )
-        for _ in range(numLeaguesPerSystem):
+        for _ in range(num_leagues_per_system):
             self.leagues.append(League(self))

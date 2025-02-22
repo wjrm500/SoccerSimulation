@@ -28,12 +28,12 @@ import ss.club_utils as club_utils
 import ss.player_utils as player_utils
 import ss.utils as utils
 from flask_session import Session
-from ss.config import playerConfig
+from ss.config import player_config
 from ss.models.Database import Database
 from ss.simulate import simulate
 from worker import conn
 
-db = Database.getInstance()  ### MongoDB
+db = Database.get_instance()  ### MongoDB
 q = Queue(connection=conn)
 r = redis.Redis(host="redis", port=6379)
 TTL_SECONDS = 3600  # store simulation data for one hour
@@ -47,533 +47,541 @@ Session(app)
 Mobility(app)
 
 
-def getUniverse():
+def get_universe():
     if "universe" not in g:
-        active_key = session.get("activeUniverseKey")
+        active_key = session.get("active_universe_key")
         if not active_key:
             abort(400, description="Simulation not set")
-        universe_data = db.getUniverseGridFile(active_key)
+        universe_data = db.get_universe_grid_file(active_key)
         if universe_data is None:
             abort(404, description="Simulation data not found")
         g.universe = pickle.loads(universe_data)
     return g.universe
 
 
-def getSearchGameweek(league):
+def get_search_gameweek(league):
     gameweek = request.args.get("gameweek") or ""
-    lastGameweek = (len(league.clubs) - 1) * 2
-    searchGameweek = lastGameweek
+    last_gameweek = (len(league.clubs) - 1) * 2
+    search_gameweek = last_gameweek
     if gameweek.isnumeric():
         gameweek = int(gameweek)
-        if gameweek <= lastGameweek:
-            searchGameweek = gameweek
-    return searchGameweek
+        if gameweek <= last_gameweek:
+            search_gameweek = gameweek
+    return search_gameweek
 
 
-def showSimulation():
-    activeUniverseKey = session["activeUniverseKey"]
-    universe = getUniverse()
+def show_simulation():
+    active_universe_key = session["active_universe_key"]
+    universe = get_universe()
     league = universe.systems[0].leagues[0]
 
-    searchGameweek = getSearchGameweek(league)
+    search_gameweek = get_search_gameweek(league)
     ### Get standings
-    leagueTable = league.getLeagueTable(searchGameweek)
-    leagueTableItems = list(leagueTable.items())
-    leagueTableItems.sort(key=lambda x: (x[1]["Pts"], x[1]["GD"]), reverse=True)
+    league_table = league.get_league_table(search_gameweek)
+    league_table_items = list(league_table.items())
+    league_table_items.sort(key=lambda x: (x[1]["Pts"], x[1]["GD"]), reverse=True)
 
     # Get player performance
-    playerPerformanceItems = league.getPerformanceIndices(
-        sortBy="performanceIndex", gameweek=searchGameweek
+    player_performance_items = league.get_performance_indices(
+        sort_by="performance_index", gameweek=search_gameweek
     )
 
     ### Get results
     dates = {}
-    for matchReport in league.matchReports:
-        if matchReport["gameweek"] > searchGameweek:
+    for match_report in league.match_reports:
+        if match_report["gameweek"] > search_gameweek:
             break
-        clubs = list(matchReport["clubs"].keys())
+        clubs = list(match_report["clubs"].keys())
         if len(clubs) >= 2:
-            clubA, clubB = clubs[0], clubs[1]
+            club_a, club_b = clubs[0], clubs[1]
         else:
-            clubA = clubs[0]
-            clubB = None
-        match = list(matchReport["clubs"].values())[0]["match"]
-        scoreA, scoreB = match["goalsFor"], match["goalsAgainst"]
+            club_a = clubs[0]
+            club_b = None
+        match = list(match_report["clubs"].values())[0]["match"]
+        score_a, score_b = match["goals_for"], match["goals_against"]
         result = {
-            "fixtureId": matchReport["fixtureId"],
-            "homeClub": clubA,
-            "awayClub": clubB,
-            "homeScore": scoreA,
-            "awayScore": scoreB,
+            "fixture_id": match_report["fixture_id"],
+            "home_club": club_a,
+            "away_club": club_b,
+            "home_score": score_a,
+            "away_score": score_b,
         }
-        if matchReport["date"] not in dates:
-            dates[matchReport["date"]] = []
-        dates[matchReport["date"]].append(result)
+        if match_report["date"] not in dates:
+            dates[match_report["date"]] = []
+        dates[match_report["date"]].append(result)
 
     if request.MOBILE:
         return render_template(
             "mobile/simulation.html",
-            cssFiles=["rest_of_website.css", "mobile.css"],
-            jsFiles=["mobile.js"],
-            universeKey=activeUniverseKey,
-            leagueTableItems=leagueTableItems,
-            playerPerformanceItems=playerPerformanceItems,
+            css_files=["rest_of_website.css", "mobile.css"],
+            js_files=["mobile.js"],
+            universe_key=active_universe_key,
+            league_table_items=league_table_items,
+            player_performance_items=player_performance_items,
             dates=dates,
         )
 
     return render_template(
         "desktop/simulation.html",
-        cssFiles=["rest_of_website.css"],
-        jsFiles=["script.js"],
-        universeKey=activeUniverseKey,
-        leagueTableItems=leagueTableItems,
-        playerPerformanceItems=playerPerformanceItems,
+        css_files=["rest_of_website.css"],
+        js_files=["script.js"],
+        universe_key=active_universe_key,
+        league_table_items=league_table_items,
+        player_performance_items=player_performance_items,
         dates=dates,
     )
 
 
 @app.route("/", methods=["GET"])
-def getHome():
-    return render_template("desktop/home-initial.html", cssFiles=["home.css"], jsFiles=["home.js"])
+def get_home():
+    return render_template(
+        "desktop/home-initial.html", css_files=["home.css"], js_files=["home.js"]
+    )
 
 
 @app.route("/", methods=["POST"])
-def postHome():
-    universeKey = request.form["universe_key"]
-    url = url_for("simulation", universeKey=universeKey)
+def post_home():
+    universe_key = request.form["universe_key"]
+    url = url_for("simulation", universe_key=universe_key)
     return redirect(url)
 
 
 @app.route("/new-simulation", methods=["GET"])
-def getNewSimulation():
+def get_new_simulation():
     systems = db.cnx["soccersim"]["systems"].find().sort("system_name", 1)
     return render_template(
         "desktop/home-new.html",
-        cssFiles=["home.css"],
-        jsFiles=["home.js"],
+        css_files=["home.css"],
+        js_files=["home.js"],
         systems=systems,
     )
 
 
 @app.route("/new-simulation", methods=["POST"])
-def postNewSimulation():
-    systemId = int(request.form["system"])
-    customConfig = {
-        "numLeaguesPerSystem": None,
-        "numClubsPerLeague": int(request.form["num-clubs"]),
-        "numPlayersPerClub": int(request.form["num-players-per-club"]),
-        "customClubs": json.loads(request.form["custom-clubs"]),
+def post_new_simulation():
+    system_id = int(request.form["system"])
+    custom_config = {
+        "num_leagues_per_system": None,
+        "num_clubs_per_league": int(request.form["num-clubs"]),
+        "num_players_per_club": int(request.form["num-players-per-club"]),
+        "custom_clubs": json.loads(request.form["custom-clubs"]),
     }
-    universeKey = utils.makeUniverseKey()
-    r.set("simulation_progress_" + universeKey, 0)
-    q.enqueue(simulate, customConfig, systemId, universeKey, job_timeout=3600)
+    universe_key = utils.make_universe_key()
+    r.set("simulation_progress_" + universe_key, 0)
+    q.enqueue(simulate, custom_config, system_id, universe_key, job_timeout=3600)
     return render_template(
         "desktop/waiting.html",
-        universeKey=universeKey,
-        cssFiles=["home.css"],
-        jsFiles=["waiting.js"],
+        universe_key=universe_key,
+        css_files=["home.css"],
+        js_files=["waiting.js"],
     )
 
 
 @app.route("/existing-simulation", methods=["GET"])
-def getExistingSimulation():
-    return render_template("desktop/home-existing.html", cssFiles=["home.css"], jsFiles=["home.js"])
+def get_existing_simulation():
+    return render_template(
+        "desktop/home-existing.html", css_files=["home.css"], js_files=["home.js"]
+    )
 
 
 @app.route("/existing-simulation", methods=["POST"])
-def postExistingSimulation():
+def post_existing_simulation():
     error = "ERROR: "
-    existingHow = request.form.get("existing-how")
-    if existingHow == "remote":
-        universeKey = request.form.get("universe-key")
-        if db.universeKeyExists(universeKey):
-            url = url_for("simulation", universeKey=universeKey)
+    existing_how = request.form.get("existing-how")
+    if existing_how == "remote":
+        universe_key = request.form.get("universe-key")
+        if db.universe_key_exists(universe_key):
+            url = url_for("simulation", universe_key=universe_key)
             return redirect(url)
-        error += f"Universe Key {universeKey} does not exist"
-    elif existingHow == "local":
+        error += f"Universe Key {universe_key} does not exist"
+    elif existing_how == "local":
         file = request.files.get("upload-file")
         universe = file.read()
-        new_key = utils.makeUniverseKey(9)
-        session["activeUniverseKey"] = new_key
+        new_key = utils.make_universe_key(9)
+        session["active_universe_key"] = new_key
         r.setex("simulation_" + new_key, TTL_SECONDS, universe)
         try:
-            return showSimulation()
+            return show_simulation()
         except Exception as e:
             error += "Invalid file upload: " + str(e)
     return render_template(
         "desktop/home-existing.html",
-        cssFiles=["home.css"],
-        jsFiles=["home.js"],
+        css_files=["home.css"],
+        js_files=["home.js"],
         error=error,
     )
 
 
-@app.route("/simulation/check-progress/<universeKey>", methods=["GET"])
-def checkSimulationProgress(universeKey):
-    redisKey = "simulation_progress_" + universeKey
-    if r.exists(redisKey):
-        return r.get(redisKey).decode("utf-8")
+@app.route("/simulation/check-progress/<universe_key>", methods=["GET"])
+def check_simulation_progress(universe_key):
+    redis_key = "simulation_progress_" + universe_key
+    if r.exists(redis_key):
+        return r.get(redis_key).decode("utf-8")
 
 
-@app.route("/simulation/check-universe-key-exists-in-database/<universeKey>", methods=["GET"])
-def checkUniverseKeyExistsInDatabase(universeKey):
-    universe = db.getUniverseGridFile(universeKey)
+@app.route("/simulation/check-universe-key-exists-in-database/<universe_key>", methods=["GET"])
+def check_universe_key_exists_in_database(universe_key):
+    universe = db.get_universe_grid_file(universe_key)
     if universe:
-        session["activeUniverseKey"] = universeKey
-        r.setex("simulation_" + universeKey, TTL_SECONDS, universe)
+        session["active_universe_key"] = universe_key
+        r.setex("simulation_" + universe_key, TTL_SECONDS, universe)
         return json.dumps(True)
     return json.dumps(False)
 
 
 @app.route("/simulation/store-email", methods=["POST"])
-def storeEmail():
+def store_email():
     email_input = request.form.get("email_input")
     universe_key = request.form.get("universe_key")
     r.set("email_" + universe_key, email_input)
     return jsonify("success")
 
 
-@app.route("/simulation/<universeKey>")
-def simulation(universeKey):
-    session["activeUniverseKey"] = universeKey
-    universe_data = db.getUniverseGridFile(universeKey)
+@app.route("/simulation/<universe_key>")
+def simulation(universe_key):
+    session["active_universe_key"] = universe_key
+    universe_data = db.get_universe_grid_file(universe_key)
     if universe_data is None:
         return "Universe not found", 404
-    return showSimulation()
+    return show_simulation()
 
 
-@app.route("/download/<universeKey>")
-def download(universeKey):
-    universe_data = db.getUniverseGridFile(universeKey)
+@app.route("/download/<universe_key>")
+def download(universe_key):
+    universe_data = db.get_universe_grid_file(universe_key)
     if universe_data is None:
         return "Simulation data not found", 404
-    attachmentFilename = "universe_" + universeKey
-    return send_file(BytesIO(universe_data), download_name=attachmentFilename, as_attachment=True)
+    attachment_filename = "universe_" + universe_key
+    return send_file(BytesIO(universe_data), download_name=attachment_filename, as_attachment=True)
 
 
 @app.route("/simulation/default-iframe")
 def default():
-    return render_template("desktop/default_iframe.html", cssFiles=["rest_of_website.css"])
+    return render_template("desktop/default_iframe.html", css_files=["rest_of_website.css"])
 
 
 @app.route("/simulation/player/<id>")
 def player(id):
-    universe = getUniverse()
-    searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
-    player = universe.playerController.getPlayerById(id)
-    performanceIndices = player.club.league.getPerformanceIndices(
-        sortBy="performanceIndex", gameweek=searchGameweek
+    universe = get_universe()
+    search_gameweek = get_search_gameweek(universe.systems[0].leagues[0])
+    player = universe.player_controller.get_player_by_id(id)
+    performance_indices = player.club.league.get_performance_indices(
+        sort_by="performance_index", gameweek=search_gameweek
     )[player]
-    maxDate = None
+    max_date = None
     if request.args.get("gameweek"):
-        maxDate = player.club.league.gameweekDates[searchGameweek]
+        max_date = player.club.league.gameweek_dates[search_gameweek]
     injuries = []
     for injury in player.injuries:
-        startDate = injury[0]
-        if maxDate is not None and startDate > maxDate:
+        start_date = injury[0]
+        if max_date is not None and start_date > max_date:
             continue
-        injuryLength = injury[1]
-        endDate = startDate + timedelta(int(injuryLength))
-        if maxDate is not None and endDate > maxDate:
-            injuryText = "Since {}".format(startDate.strftime("%d %b"))
+        injury_length = injury[1]
+        end_date = start_date + timedelta(int(injury_length))
+        if max_date is not None and end_date > max_date:
+            injury_text = "Since {}".format(start_date.strftime("%d %b"))
         else:
-            injuryText = "Between {} and {} ({} days)".format(
-                startDate.strftime("%d %b"), endDate.strftime("%d %b"), injuryLength
+            injury_text = "Between {} and {} ({} days)".format(
+                start_date.strftime("%d %b"), end_date.strftime("%d %b"), injury_length
             )
-        injuries.append(injuryText)
-    performanceIndices["injuries"] = injuries
+        injuries.append(injury_text)
+    performance_indices["injuries"] = injuries
     yR = [val["rating"] for val in list(player.ratings.values())]
-    yPR = [val["peakRating"] for val in list(player.ratings.values())]
-    playerDevelopment = {
+    yPR = [val["peak_rating"] for val in list(player.ratings.values())]
+    player_development = {
         "rating": {
             "start": yR[0],
-            "end": player.ratings[maxDate]["rating"] if request.args.get("gameweek") else yR[-1],
+            "end": player.ratings[max_date]["rating"] if request.args.get("gameweek") else yR[-1],
         },
-        "peakRating": {
+        "peak_rating": {
             "start": yPR[0],
-            "end": player.ratings[maxDate]["peakRating"]
+            "end": player.ratings[max_date]["peak_rating"]
             if request.args.get("gameweek")
-            else player.peakRating,
+            else player.peak_rating,
         },
     }
-    playerBestPosition = (
-        player.getBestPosition(player.getSkillDistribution(player.getAgeOnDate(maxDate)))
+    player_best_position = (
+        player.get_best_position(player.get_skill_distribution(player.get_age_on_date(max_date)))
         if request.args.get("gameweek")
-        else player.getBestPosition()
+        else player.get_best_position()
     )
     return render_template(
         "desktop/player/player.html",
-        cssFiles=["rest_of_website.css", "iframe.css"],
-        jsFiles=["iframe.js", "player.js"],
+        css_files=["rest_of_website.css", "iframe.css"],
+        js_files=["iframe.js", "player.js"],
         player=player,
-        playerBestPosition=playerBestPosition,
-        playerRating=player.ratings[maxDate]["rating"]
+        player_best_position=player_best_position,
+        player_rating=player.ratings[max_date]["rating"]
         if request.args.get("gameweek")
-        else player.getRating(),
-        playerPeakRating=player.ratings[maxDate]["peakRating"]
+        else player.get_rating(),
+        player_peak_rating=player.ratings[max_date]["peak_rating"]
         if request.args.get("gameweek")
-        else player.peakRating,
-        playerAge=player.getAgeOnDate(maxDate, 2)
+        else player.peak_rating,
+        player_age=player.get_age_on_date(max_date, 2)
         if request.args.get("gameweek")
-        else player.getAge(2),
-        playerReports=player.getPlayerReports(searchGameweek),
-        performanceIndices=performanceIndices,
-        playerDevelopment=playerDevelopment,
+        else player.get_age(2),
+        player_reports=player.get_player_reports(search_gameweek),
+        performance_indices=performance_indices,
+        player_development=player_development,
     )
 
 
-@app.route("/simulation/player/<playerId>/radar")
-def playerRadar(playerId):
-    universe = getUniverse()
-    player = universe.playerController.getPlayerById(playerId)
+@app.route("/simulation/player/<player_id>/radar")
+def player_radar(player_id):
+    universe = get_universe()
+    player = universe.player_controller.get_player_by_id(player_id)
     league = universe.systems[0].leagues[0]
-    searchGameweek = getSearchGameweek(league)
+    search_gameweek = get_search_gameweek(league)
     if request.args.get("gameweek"):
-        maxDate = league.gameweekDates[searchGameweek]
+        max_date = league.gameweek_dates[search_gameweek]
     else:
-        maxDate = None
-    date = maxDate if request.args.get("gameweek") else None
-    fig = player_utils.showSkillDistribution(player, date=date, projection=True)
+        max_date = None
+    date = max_date if request.args.get("gameweek") else None
+    fig = player_utils.show_skill_distribution(player, date=date, projection=True)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 
-@app.route("/simulation/player/<playerId>/form-graph")
-def playerFormGraph(playerId):
-    universe = getUniverse()
-    player = universe.playerController.getPlayerById(playerId)
-    fig = player_utils.showPlayerForm(player)
+@app.route("/simulation/player/<player_id>/form-graph")
+def player_form_graph(player_id):
+    universe = get_universe()
+    player = universe.player_controller.get_player_by_id(player_id)
+    fig = player_utils.show_player_form(player)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 
-@app.route("/simulation/player/<playerId>/development-graph")
-def playerDevelopmentGraph(playerId):
-    universe = getUniverse()
+@app.route("/simulation/player/<player_id>/development-graph")
+def player_development_graph(player_id):
+    universe = get_universe()
     league = universe.systems[0].leagues[0]
     date = None
     if request.args.get("gameweek"):
-        searchGameweek = getSearchGameweek(league)
-        maxDate = league.gameweekDates[searchGameweek]
-        date = maxDate
-    player = universe.playerController.getPlayerById(playerId)
-    fig = player_utils.showPlayerDevelopment(player, date=date)
+        search_gameweek = get_search_gameweek(league)
+        max_date = league.gameweek_dates[search_gameweek]
+        date = max_date
+    player = universe.player_controller.get_player_by_id(player_id)
+    fig = player_utils.show_player_development(player, date=date)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     plt.close(fig)
     return Response(output.getvalue(), mimetype="image/png")
 
 
-@app.route("/simulation/fixture/<fixtureId>")
-def fixture(fixtureId):
-    universe = getUniverse()
-    fixture = universe.getFixtureById(int(fixtureId))
-    clubData = []
-    for club, data in fixture.match.matchReport["clubs"].items():
-        clubDatum = data
-        clubDatum["id"] = club.id
-        clubDatum["name"] = club.name
-        clubData.append(clubDatum)
-    homeClubData, awayClubData = clubData
+@app.route("/simulation/fixture/<fixture_id>")
+def fixture(fixture_id):
+    universe = get_universe()
+    fixture = universe.get_fixture_by_id(int(fixture_id))
+    club_data = []
+    for club, data in fixture.match.match_report["clubs"].items():
+        club_datum = data
+        club_datum["id"] = club.id
+        club_datum["name"] = club.name
+        club_data.append(club_datum)
+    home_club_data, away_club_data = club_data
 
     def get_reverse_fixture(fixture):
-        for otherFixture in fixture.tournament.fixtures:
-            if fixture.clubX == otherFixture.clubY and fixture.clubY == otherFixture.clubX:
-                return otherFixture
+        for other_fixture in fixture.tournament.fixtures:
+            if fixture.club_x == other_fixture.club_y and fixture.club_y == other_fixture.club_x:
+                return other_fixture
 
     positions = ["CF", "WF", "COM", "WM", "CM", "CDM", "WB", "FB", "CB"]
-    for clubData in [homeClubData, awayClubData]:
-        reorderedPlayers = sorted(
-            clubData["players"].items(), key=lambda x: positions.index(x[1]["position"])
+    for club_data in [home_club_data, away_club_data]:
+        reordered_players = sorted(
+            club_data["players"].items(), key=lambda x: positions.index(x[1]["position"])
         )
-        clubData["players"] = dict(reorderedPlayers)
-        for player, data in clubData["players"].items():
-            preMatchForm = data["preMatchForm"]
-            prefix = "+" if preMatchForm > 0 else "±" if preMatchForm == 0 else ""
-            preMatchFormText = f"{prefix}{preMatchForm:.2f}"
-            clubData["players"][player]["extraData"]["preMatchForm"] = preMatchFormText
-            clubData["players"][player]["extraData"]["selectRating"] = "{:.2f}".format(
-                data["extraData"]["selectRating"]
+        club_data["players"] = dict(reordered_players)
+        for player, data in club_data["players"].items():
+            pre_match_form = data["pre_match_form"]
+            prefix = "+" if pre_match_form > 0 else "±" if pre_match_form == 0 else ""
+            pre_match_form_text = f"{prefix}{pre_match_form:.2f}"
+            club_data["players"][player]["extra_data"]["pre_match_form"] = pre_match_form_text
+            club_data["players"][player]["extra_data"]["select_rating"] = "{:.2f}".format(
+                data["extra_data"]["select_rating"]
             )
-            clubData["players"][player]["performanceIndex"] = "{:.2f}".format(
-                data["performanceIndex"]
+            club_data["players"][player]["performance_index"] = "{:.2f}".format(
+                data["performance_index"]
             )
 
-    reverseFixtureData = {}
-    reverseFixture = get_reverse_fixture(fixture)
-    reverseFixtureData["fixtureId"] = reverseFixture.id
-    reverseFixtureData["homeTeam"] = reverseFixture.clubX.name
-    reverseFixtureData["homeGoals"] = reverseFixture.match.matchReport["clubs"][
-        reverseFixture.clubX
-    ]["match"]["goalsFor"]
-    reverseFixtureData["awayTeam"] = reverseFixture.clubY.name
-    reverseFixtureData["awayGoals"] = reverseFixture.match.matchReport["clubs"][
-        reverseFixture.clubY
-    ]["match"]["goalsFor"]
+    reverse_fixture_data = {}
+    reverse_fixture = get_reverse_fixture(fixture)
+    reverse_fixture_data["fixture_id"] = reverse_fixture.id
+    reverse_fixture_data["homeTeam"] = reverse_fixture.club_x.name
+    reverse_fixture_data["homeGoals"] = reverse_fixture.match.match_report["clubs"][
+        reverse_fixture.club_x
+    ]["match"]["goals_for"]
+    reverse_fixture_data["awayTeam"] = reverse_fixture.club_y.name
+    reverse_fixture_data["awayGoals"] = reverse_fixture.match.match_report["clubs"][
+        reverse_fixture.club_y
+    ]["match"]["goals_for"]
 
-    recentResults = {}
-    preMatchLeagueTables = {"name": "Pre-match", "data": {}}
-    postMatchLeagueTables = {"name": "Post-match", "data": {}}
-    for club in fixture.match.matchReport["clubs"]:
-        recentResults[club] = {"points": 0, "results": []}
-        fixturesInvolvingClub = list(filter(lambda x: club in x.clubs, fixture.tournament.fixtures))
-        fixtureIndex = fixturesInvolvingClub.index(fixture)
-        for i, leagueTables in enumerate([preMatchLeagueTables, postMatchLeagueTables]):
-            leagueTable = (
-                fixture.tournament.getLeagueTable(fixtureIndex + i) if fixtureIndex > 0 else None
+    recent_results = {}
+    pre_match_league_tables = {"name": "Pre-match", "data": {}}
+    post_match_league_tables = {"name": "Post-match", "data": {}}
+    for club in fixture.match.match_report["clubs"]:
+        recent_results[club] = {"points": 0, "results": []}
+        fixtures_involving_club = list(
+            filter(lambda x: club in x.clubs, fixture.tournament.fixtures)
+        )
+        fixture_index = fixtures_involving_club.index(fixture)
+        for i, league_tables in enumerate([pre_match_league_tables, post_match_league_tables]):
+            league_table = (
+                fixture.tournament.get_league_table(fixture_index + i)
+                if fixture_index > 0
+                else None
             )
-            if leagueTable:
-                leagueTableItems = list(leagueTable.items())
-                leagueTableItems.sort(key=lambda x: (x[1]["Pts"], x[1]["GD"]), reverse=True)
-                for j, leagueTableItem in enumerate(leagueTableItems):
-                    leagueTableItem[1]["#"] = j + 1
-                    if leagueTableItem[0] == club:
-                        tableIndex = j
-                if tableIndex < 1:
-                    startTableIndex = 0
-                    endTableIndex = 3
-                elif tableIndex > (len(leagueTableItems) - 2):
-                    startTableIndex = len(leagueTableItems) - 3
-                    endTableIndex = len(leagueTableItems)
+            if league_table:
+                league_table_items = list(league_table.items())
+                league_table_items.sort(key=lambda x: (x[1]["Pts"], x[1]["GD"]), reverse=True)
+                for j, league_table_item in enumerate(league_table_items):
+                    league_table_item[1]["#"] = j + 1
+                    if league_table_item[0] == club:
+                        table_index = j
+                if table_index < 1:
+                    start_table_index = 0
+                    end_table_index = 3
+                elif table_index > (len(league_table_items) - 2):
+                    start_table_index = len(league_table_items) - 3
+                    end_table_index = len(league_table_items)
                 else:
-                    startTableIndex = tableIndex - 1
-                    endTableIndex = tableIndex + 2
-                leagueTable = leagueTableItems[startTableIndex:endTableIndex]
-                leagueTables["data"][club] = leagueTable
+                    start_table_index = table_index - 1
+                    end_table_index = table_index + 2
+                league_table = league_table_items[start_table_index:end_table_index]
+                league_tables["data"][club] = league_table
 
-        fixturesOfInterest = fixturesInvolvingClub[
-            fixtureIndex - min(fixtureIndex, 6) : fixtureIndex
+        fixtures_of_interest = fixtures_involving_club[
+            fixture_index - min(fixture_index, 6) : fixture_index
         ]
-        for fixtureOfInterest in fixturesOfInterest:
+        for fixture_of_interest in fixtures_of_interest:
             result = (
                 "D"
-                if "winner" not in fixtureOfInterest.match.matchReport
+                if "winner" not in fixture_of_interest.match.match_report
                 else "W"
-                if fixtureOfInterest.match.matchReport["winner"] == club
+                if fixture_of_interest.match.match_report["winner"] == club
                 else "L"
             )
-            recentResults[club]["points"] += 3 if result == "W" else 1 if result == "D" else 0
+            recent_results[club]["points"] += 3 if result == "W" else 1 if result == "D" else 0
             score = "{} {} - {} {}".format(
-                fixtureOfInterest.clubX.name,
-                fixtureOfInterest.match.matchReport["clubs"][fixtureOfInterest.clubX]["match"][
-                    "goalsFor"
-                ],
-                fixtureOfInterest.match.matchReport["clubs"][fixtureOfInterest.clubY]["match"][
-                    "goalsFor"
-                ],
-                fixtureOfInterest.clubY.name,
+                fixture_of_interest.club_x.name,
+                fixture_of_interest.match.match_report["clubs"][fixture_of_interest.club_x][
+                    "match"
+                ]["goals_for"],
+                fixture_of_interest.match.match_report["clubs"][fixture_of_interest.club_y][
+                    "match"
+                ]["goals_for"],
+                fixture_of_interest.club_y.name,
             )
-            fixtureId = fixtureOfInterest.id
-            recentResults[club]["results"].append(
-                {"result": result, "score": score, "fixtureId": fixtureId}
+            fixture_id = fixture_of_interest.id
+            recent_results[club]["results"].append(
+                {"result": result, "score": score, "fixture_id": fixture_id}
             )
 
     return render_template(
         "desktop/fixture/fixture.html",
-        cssFiles=["rest_of_website.css", "iframe.css"],
-        jsFiles=["fixture.js", "iframe.js"],
+        css_files=["rest_of_website.css", "iframe.css"],
+        js_files=["fixture.js", "iframe.js"],
         fixture=fixture,
-        homeClubData=homeClubData,
-        awayClubData=awayClubData,
-        reverseFixture=reverseFixtureData,
-        recentResults=recentResults,
-        preMatchLeagueTables=preMatchLeagueTables,
-        postMatchLeagueTables=postMatchLeagueTables,
-        numClubs=len(universe.systems[0].leagues[0].clubs),
+        home_club_data=home_club_data,
+        away_club_data=away_club_data,
+        reverse_fixture=reverse_fixture_data,
+        recent_results=recent_results,
+        pre_match_league_tables=pre_match_league_tables,
+        post_match_league_tables=post_match_league_tables,
+        num_clubs=len(universe.systems[0].leagues[0].clubs),
     )
 
 
-@app.route("/simulation/club/<clubId>")
-def club(clubId):
-    universe = getUniverse()
-    club = universe.getClubById(clubId)
-    team = club.selectTeam(test=True)
+@app.route("/simulation/club/<club_id>")
+def club(club_id):
+    universe = get_universe()
+    club = universe.get_club_by_id(club_id)
+    team = club.select_team(test=True)
     selection = team.selection
     formation = team.formation
-    averageSelectRating = sum([select.rating for select in selection]) / 10
+    average_select_rating = sum([select.rating for select in selection]) / 10
     players = json.dumps(
         [
             {
-                "adjustedRating": (select.rating - averageSelectRating) / averageSelectRating,
+                "adjusted_rating": (select.rating - average_select_rating) / average_select_rating,
                 "id": select.player.id,
-                "name": select.player.getClubSpecificName(),
+                "name": select.player.get_club_specific_name(),
                 "position": select.position,
                 "rating": select.rating,
             }
             for select in selection
         ]
     )
-    searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
-    playerPerformanceItems = club.league.getPerformanceIndices(
-        sortBy="performanceIndex", gameweek=searchGameweek, clubs=club
+    search_gameweek = get_search_gameweek(universe.systems[0].leagues[0])
+    player_performance_items = club.league.get_performance_indices(
+        sort_by="performance_index", gameweek=search_gameweek, clubs=club
     )
 
     results = []
-    for matchReport in club.getMatchReports(searchGameweek):
-        atHome = club == list(matchReport["clubs"].keys())[0]
-        oppClub = [x for x in list(matchReport["clubs"].keys()) if x != club][0]
-        clubScore = matchReport["clubs"][club]["match"]["goalsFor"]
-        oppClubScore = matchReport["clubs"][oppClub]["match"]["goalsFor"]
+    for match_report in club.get_match_reports(search_gameweek):
+        at_home = club == list(match_report["clubs"].keys())[0]
+        opp_club = [x for x in list(match_report["clubs"].keys()) if x != club][0]
+        club_score = match_report["clubs"][club]["match"]["goals_for"]
+        opp_club_score = match_report["clubs"][opp_club]["match"]["goals_for"]
         result = {
-            "atHome": atHome,
-            "fixtureId": matchReport["fixtureId"],
-            "gameweek": matchReport["gameweek"],
+            "at_home": at_home,
+            "fixture_id": match_report["fixture_id"],
+            "gameweek": match_report["gameweek"],
             "club": club,
-            "oppClub": oppClub,
-            "clubScore": clubScore,
-            "oppClubScore": oppClubScore,
+            "opp_club": opp_club,
+            "club_score": club_score,
+            "opp_club_score": opp_club_score,
             "result": "win"
-            if clubScore > oppClubScore
+            if club_score > opp_club_score
             else "loss"
-            if oppClubScore > clubScore
+            if opp_club_score > club_score
             else "draw",
         }
         results.append(result)
     return render_template(
         "desktop/club/club.html",
-        cssFiles=["rest_of_website.css", "iframe.css"],
-        jsFiles=["club.js", "iframe.js"],
+        css_files=["rest_of_website.css", "iframe.css"],
+        js_files=["club.js", "iframe.js"],
         club=club,
         formation=formation,
         players=players,
-        playerPerformanceItems=playerPerformanceItems,
+        player_performance_items=player_performance_items,
         results=results,
     )
 
 
 @app.route("/simulation/player-performance")
-def playerPerformance():
-    universe = getUniverse()
+def player_performance():
+    universe = get_universe()
     league = universe.systems[0].leagues[0]
-    searchGameweek = getSearchGameweek(league)
-    playerPerformanceItems = league.getPerformanceIndices(
-        sortBy="performanceIndex", gameweek=searchGameweek
+    search_gameweek = get_search_gameweek(league)
+    player_performance_items = league.get_performance_indices(
+        sort_by="performance_index", gameweek=search_gameweek
     )
-    filterClubs = sorted(
+    filter_clubs = sorted(
         [{"id": club.id, "name": club.name} for club in league.clubs],
         key=lambda x: x["name"],
     )
-    filterPositions = list(playerConfig["positions"].keys())
+    filter_positions = list(player_config["positions"].keys())
     return render_template(
         "desktop/player_performance_proper.html",
-        cssFiles=["rest_of_website.css", "iframe.css"],
-        jsFiles=["iframe.js", "player_performance.js"],
-        filterClubs=filterClubs,
-        filterPositions=filterPositions,
-        playerPerformanceItems=playerPerformanceItems,
+        css_files=["rest_of_website.css", "iframe.css"],
+        js_files=["iframe.js", "player_performance.js"],
+        filter_clubs=filter_clubs,
+        filter_positions=filter_positions,
+        player_performance_items=player_performance_items,
     )
 
 
-@app.route("/simulation/club/<clubId>/position-graph")
-def clubPositionGraph(clubId):
-    universe = getUniverse()
-    club = universe.getClubById(clubId)
-    searchGameweek = getSearchGameweek(universe.systems[0].leagues[0])
-    fig = club_utils.showClubPositions(club, gameweek=searchGameweek)
+@app.route("/simulation/club/<club_id>/position-graph")
+def club_position_graph(club_id):
+    universe = get_universe()
+    club = universe.get_club_by_id(club_id)
+    search_gameweek = get_search_gameweek(universe.systems[0].leagues[0])
+    fig = club_utils.show_club_positions(club, gameweek=search_gameweek)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     plt.close(fig)
@@ -583,9 +591,9 @@ def clubPositionGraph(clubId):
 @app.route("/about", methods=["GET"])
 def about():
     if request.MOBILE:
-        return render_template("mobile/about.html", cssFiles=["rest_of_website.css", "mobile.css"])
+        return render_template("mobile/about.html", css_files=["rest_of_website.css", "mobile.css"])
     return render_template(
-        "desktop/about.html", cssFiles=["rest_of_website.css"], jsFiles=["script.js"]
+        "desktop/about.html", css_files=["rest_of_website.css"], js_files=["script.js"]
     )
 
 
@@ -593,22 +601,22 @@ def about():
 def contact():
     if request.MOBILE:
         return render_template(
-            "mobile/contact.html", cssFiles=["rest_of_website.css", "mobile.css"]
+            "mobile/contact.html", css_files=["rest_of_website.css", "mobile.css"]
         )
     return render_template(
-        "desktop/contact.html", cssFiles=["rest_of_website.css"], jsFiles=["script.js"]
+        "desktop/contact.html", css_files=["rest_of_website.css"], js_files=["script.js"]
     )
 
 
 @app.context_processor
 def inject_dict_for_all_templates():
-    randomString = utils.generateRandomDigits(5)
-    return {"randomString": randomString}
+    random_string = utils.generate_random_digits(5)
+    return {"random_string": random_string}
 
 
 ### Dev methods for convenience
 @app.route("/clear", methods=["GET"])
-def clearSession():
+def clear_session():
     session.clear()
-    url = url_for("getHome")
+    url = url_for("get_home")
     return redirect(url)

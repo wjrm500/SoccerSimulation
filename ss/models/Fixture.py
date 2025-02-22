@@ -2,32 +2,32 @@ from .Match import Match
 
 
 class Fixture:
-    def __init__(self, fixtureId, tournament, date=None, clubX=None, clubY=None):
-        self.id = fixtureId
+    def __init__(self, fixture_id, tournament, date=None, club_x=None, club_y=None):
+        self.id = fixture_id
         self.tournament = tournament
         self.date = date
-        self.addClubs(clubX, clubY)
+        self.add_clubs(club_x, club_y)
         self.played = False
 
-    def addClubs(self, clubX, clubY):
-        self.clubX, self.clubY = clubX, clubY
-        self.clubs = [self.clubX, self.clubY]
+    def add_clubs(self, club_x, club_y):
+        self.club_x, self.club_y = club_x, club_y
+        self.clubs = [self.club_x, self.club_y]
 
-    def setDate(self, date):
+    def set_date(self, date):
         self.date = date
 
-    def setGameweek(self, gameweek):
+    def set_gameweek(self, gameweek):
         self.gameweek = gameweek
 
     def play(self):
-        self.match = Match(self, self.tournament, self.date, self.clubX, self.clubY)
+        self.match = Match(self, self.tournament, self.date, self.club_x, self.club_y)
         self.match.play()
-        self.match.fileMatchReport()
+        self.match.file_match_report()
         self.played = True
 
-    def handleMatchReport(self, matchReport):
+    def handle_match_report(self, match_report):
         self.goals = {}
-        clubX = list(matchReport["clubs"].keys())[0]
-        clubY = list(matchReport["clubs"].keys())[1]
-        self.goals[clubX] = matchReport["clubs"][clubX]["match"]["goalsFor"]
-        self.goals[clubY] = matchReport["clubs"][clubY]["match"]["goalsFor"]
+        club_x = list(match_report["clubs"].keys())[0]
+        club_y = list(match_report["clubs"].keys())[1]
+        self.goals[club_x] = match_report["clubs"][club_x]["match"]["goals_for"]
+        self.goals[club_y] = match_report["clubs"][club_y]["match"]["goals_for"]

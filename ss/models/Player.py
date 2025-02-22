@@ -17,238 +17,250 @@ class Player:
     def __init__(self, controller, id):
         self.controller = controller
         self.id = id
-        self.name = utils.generatePlayerName()
-        self.setBirthDate()
-        self.setAge()
+        self.name = utils.generate_player_name()
+        self.set_birth_date()
+        self.set_age()
         self.retired = False
-        self.setPeakAge()
-        self.setGrowthSpeed()
-        self.setRetirementThreshold()
-        self.setPeakRating()
-        self.setRating()
-        self.setUnderlyingSkillDistribution()
-        self.setSkillDistribution()
-        self.setSkillValues()
-        self.setPositionRatings()
+        self.set_peak_age()
+        self.set_growth_speed()
+        self.set_retirement_threshold()
+        self.set_peak_rating()
+        self.set_rating()
+        self.set_underlying_skill_distribution()
+        self.set_skill_distribution()
+        self.set_skill_values()
+        self.set_position_ratings()
         self.injured = False
         self.fatigue = 0
-        self.playerReports = []
+        self.player_reports = []
         self.injuries = []
         self.form = 0
         self.ratings = {}
         self.forms = {}
 
-    def setBirthDate(self):
+    def set_birth_date(self):
         agMin, agMax = (
-            config.playerConfig["age"]["min"],
-            config.playerConfig["age"]["max"],
+            config.player_config["age"]["min"],
+            config.player_config["age"]["max"],
         )
         age = random.randint(agMin, agMax)
-        self.birthDate = utils.getBirthDate(config.timeConfig["startDate"], age)
+        self.birth_date = utils.get_birth_date(config.time_config["start_date"], age)
 
-    def getAge(self, dp=None):
+    def get_age(self, dp=None):
         return round(self.age, dp) if dp is not None and dp > 0 else int(self.age)
 
-    def getAgeOnDate(self, date=None, dp=None):
+    def get_age_on_date(self, date=None, dp=None):
         if date is None:
-            return self.getAge(dp)
-        td = date - self.birthDate
+            return self.get_age(dp)
+        td = date - self.birth_date
         age = td.days / 365.25
         return round(age, dp) if dp is not None and dp > 0 else int(age)
 
-    def setAge(self):
-        td = self.controller.universe.currentDate - self.birthDate
+    def set_age(self):
+        td = self.controller.universe.current_date - self.birth_date
         self.age = td.days / 365.25
 
-    def setPeakAge(self):
-        self.peakAge = utils.limitedRandNorm(config.playerConfig["peakAge"])
+    def set_peak_age(self):
+        self.peak_age = utils.limited_rand_norm(config.player_config["peak_age"])
 
-    def setGrowthSpeed(self):
-        randIncline = utils.limitedRandNorm(config.playerConfig["growthSpeed"]["incline"])
-        randDecline = utils.limitedRandNorm(config.playerConfig["growthSpeed"]["decline"])
-        self.growthSpeed = {"incline": randIncline, "decline": randDecline}
+    def set_growth_speed(self):
+        rand_incline = utils.limited_rand_norm(config.player_config["growth_speed"]["incline"])
+        rand_decline = utils.limited_rand_norm(config.player_config["growth_speed"]["decline"])
+        self.growth_speed = {"incline": rand_incline, "decline": rand_decline}
 
-    def setRetirementThreshold(self):
-        self.retirementThreshold = utils.limitedRandNorm(config.playerConfig["retirementThreshold"])
+    def set_retirement_threshold(self):
+        self.retirement_threshold = utils.limited_rand_norm(
+            config.player_config["retirement_threshold"]
+        )
 
-    def setPeakRating(self):
-        d = config.playerConfig["peakRating"]
-        self.peakRating = utils.limitedRandNorm(d)
+    def set_peak_rating(self):
+        d = config.player_config["peak_rating"]
+        self.peak_rating = utils.limited_rand_norm(d)
 
-    def adjustPeakRating(self):
+    def adjust_peak_rating(self):
         mn, mx = (
-            config.playerConfig["peakRating"]["min"],
-            config.playerConfig["peakRating"]["max"],
+            config.player_config["peak_rating"]["min"],
+            config.player_config["peak_rating"]["max"],
         )
-        self.peakRating = utils.limitedRandNorm(
-            {"mu": self.peakRating, "sigma": 50 / (self.age**2), "mn": mn, "mx": mx}
+        self.peak_rating = utils.limited_rand_norm(
+            {"mu": self.peak_rating, "sigma": 50 / (self.age**2), "mn": mn, "mx": mx}
         )
 
-    def getRating(self, age=None):
+    def get_rating(self, age=None):
         age = self.age if age is None else age
-        distanceFromPeakAge = abs(self.peakAge - age)
-        direction = "incline" if self.peakAge > age else "decline"
-        growthSpeedFactor = self.growthSpeed[direction]
-        peakRatingFulfillment = 1 - (distanceFromPeakAge**1.5 * 0.01 * growthSpeedFactor)
-        rating = self.peakRating * peakRatingFulfillment
+        distance_from_peak_age = abs(self.peak_age - age)
+        direction = "incline" if self.peak_age > age else "decline"
+        growth_speed_factor = self.growth_speed[direction]
+        peak_rating_fulfillment = 1 - (distance_from_peak_age**1.5 * 0.01 * growth_speed_factor)
+        rating = self.peak_rating * peak_rating_fulfillment
         return rating
 
-    def setRating(self):
-        self.rating = self.getRating()
-        direction = "incline" if self.peakAge > self.age else "decline"
+    def set_rating(self):
+        self.rating = self.get_rating()
+        direction = "incline" if self.peak_age > self.age else "decline"
         if (
             direction == "decline"
-            and self.rating < (self.peakRating * self.retirementThreshold)
+            and self.rating < (self.peak_rating * self.retirement_threshold)
             and self.retired is False
         ):
             self.retire()
 
-    def rebalanceSkillDistribution(self, distribution):
-        [skDiMn, skDiMx] = list(list(config.playerConfig["skill"]["distribution"].values())[2:4])
-        x = len(config.playerConfig["skill"]["skills"])
+    def rebalance_skill_distribution(self, distribution):
+        [skDiMn, skDiMx] = list(list(config.player_config["skill"]["distribution"].values())[2:4])
+        x = len(config.player_config["skill"]["skills"])
         while True:
-            skillsOutOfBounds = []
+            skills_out_of_bounds = []
             for value in distribution.values():
                 if value < skDiMn or value > skDiMx:
-                    skillsOutOfBounds.append(1)
+                    skills_out_of_bounds.append(1)
                 else:
-                    skillsOutOfBounds.append(0)
-            if not any(skillsOutOfBounds):
+                    skills_out_of_bounds.append(0)
+            if not any(skills_out_of_bounds):
                 break
             for key, value in distribution.items():
                 distribution[key] = ((value * x) + len(distribution) - x) / len(distribution)
             x -= 0.1
 
-    def setUnderlyingSkillDistribution(self):
-        skills = config.playerConfig["skill"]["skills"]
-        [skDiMu, skDiSg] = list(list(config.playerConfig["skill"]["distribution"].values())[0:2])
-        underlyingSkillDistribution = {skill: np.random.normal(skDiMu, skDiSg) for skill in skills}
+    def set_underlying_skill_distribution(self):
+        skills = config.player_config["skill"]["skills"]
+        [skDiMu, skDiSg] = list(list(config.player_config["skill"]["distribution"].values())[0:2])
+        underlying_skill_distribution = {
+            skill: np.random.normal(skDiMu, skDiSg) for skill in skills
+        }
 
         ### Centralise - set mean = 1
-        totalSkill = sum(underlyingSkillDistribution.values())
-        for key, value in underlyingSkillDistribution.items():
-            underlyingSkillDistribution[key] = value * len(skills) / totalSkill
+        total_skill = sum(underlying_skill_distribution.values())
+        for key, value in underlying_skill_distribution.items():
+            underlying_skill_distribution[key] = value * len(skills) / total_skill
 
         ### Rebalance - handle the passing of thresholds for minimum and maximum
-        self.rebalanceSkillDistribution(underlyingSkillDistribution)
+        self.rebalance_skill_distribution(underlying_skill_distribution)
 
-        self.underlyingSkillDistribution = underlyingSkillDistribution
+        self.underlying_skill_distribution = underlying_skill_distribution
 
-    def getSkillDistribution(self, age=None):
-        skillDistribution = copy.deepcopy(self.underlyingSkillDistribution)
+    def get_skill_distribution(self, age=None):
+        skill_distribution = copy.deepcopy(self.underlying_skill_distribution)
 
         ### Apply age-dependent modifications to distribution
         age = self.age if age is None else age
-        transitions = config.playerConfig["skill"]["transitions"]
-        distanceFromPeakAge = self.peakAge - age
+        transitions = config.player_config["skill"]["transitions"]
+        distance_from_peak_age = self.peak_age - age
         for transition in transitions:
-            direction = "incline" if self.peakAge > age else "decline"
+            direction = "incline" if self.peak_age > age else "decline"
             if (direction == "incline" and transition["when"]["incline"] is True) or (
                 direction == "decline" and transition["when"]["decline"] is True
             ):
                 if transition["from"] == "":
-                    toValue = skillDistribution[transition["to"]]
-                    toFactor = toValue / sum(skillDistribution.values())
-                    modifiedToFactor = toFactor - (distanceFromPeakAge * transition["gradient"])
-                    skillDistribution[transition["to"]] = (
-                        sum(skillDistribution.values()) * modifiedToFactor
+                    to_value = skill_distribution[transition["to"]]
+                    to_factor = to_value / sum(skill_distribution.values())
+                    modified_to_factor = to_factor - (
+                        distance_from_peak_age * transition["gradient"]
+                    )
+                    skill_distribution[transition["to"]] = (
+                        sum(skill_distribution.values()) * modified_to_factor
                     )
                 elif transition["to"] == "":
-                    fromValue = skillDistribution[transition["from"]]
-                    fromFactor = fromValue / sum(skillDistribution.values())
-                    modifiedFromFactor = fromFactor - (distanceFromPeakAge * transition["gradient"])
-                    skillDistribution[transition["from"]] = (
-                        sum(skillDistribution.values()) * modifiedFromFactor
+                    from_value = skill_distribution[transition["from"]]
+                    from_factor = from_value / sum(skill_distribution.values())
+                    modified_from_factor = from_factor - (
+                        distance_from_peak_age * transition["gradient"]
+                    )
+                    skill_distribution[transition["from"]] = (
+                        sum(skill_distribution.values()) * modified_from_factor
                     )
                 else:
-                    fromValue = skillDistribution[transition["from"]]
-                    toValue = skillDistribution[transition["to"]]
-                    fromToSum = fromValue + toValue
-                    fromFactor = fromValue / fromToSum
-                    modifiedFromFactor = fromFactor - (distanceFromPeakAge * transition["gradient"])
-                    skillDistribution[transition["from"]] = fromToSum * modifiedFromFactor
-                    skillDistribution[transition["to"]] = fromToSum * (1 - modifiedFromFactor)
-                self.rebalanceSkillDistribution(skillDistribution)
+                    from_value = skill_distribution[transition["from"]]
+                    to_value = skill_distribution[transition["to"]]
+                    from_to_sum = from_value + to_value
+                    from_factor = from_value / from_to_sum
+                    modified_from_factor = from_factor - (
+                        distance_from_peak_age * transition["gradient"]
+                    )
+                    skill_distribution[transition["from"]] = from_to_sum * modified_from_factor
+                    skill_distribution[transition["to"]] = from_to_sum * (1 - modified_from_factor)
+                self.rebalance_skill_distribution(skill_distribution)
 
         ### Identify player's best position and normalise player's skill distribution towards the
         ### optimum for that position, to curb excessive weirdness
-        bestPosition = self.getBestPosition(skillDistribution)
-        bestSkillDistribution = config.playerConfig["positions"][bestPosition]["skillDistribution"]
-        normalisingFactor = config.playerConfig["skill"]["normalisingFactor"]
-        for skill in skillDistribution.keys():
-            skillDistribution[skill] = skillDistribution[skill] + (
-                bestSkillDistribution[skill] - skillDistribution[skill]
-            ) * utils.limitedRandNorm(normalisingFactor)
+        best_position = self.get_best_position(skill_distribution)
+        best_skill_distribution = config.player_config["positions"][best_position][
+            "skill_distribution"
+        ]
+        normalising_factor = config.player_config["skill"]["normalising_factor"]
+        for skill in skill_distribution.keys():
+            skill_distribution[skill] = skill_distribution[skill] + (
+                best_skill_distribution[skill] - skill_distribution[skill]
+            ) * utils.limited_rand_norm(normalising_factor)
 
         ### Centralise - restore mean to 1
-        totalSkill = sum(skillDistribution.values())
-        for key, value in skillDistribution.items():
-            skillDistribution[key] = value * len(skillDistribution.values()) / totalSkill
+        total_skill = sum(skill_distribution.values())
+        for key, value in skill_distribution.items():
+            skill_distribution[key] = value * len(skill_distribution.values()) / total_skill
 
-        return skillDistribution
+        return skill_distribution
 
-    def setSkillDistribution(self):
-        self.skillDistribution = self.getSkillDistribution()
+    def set_skill_distribution(self):
+        self.skill_distribution = self.get_skill_distribution()
 
-    def getSkillValues(self, rating=None, skillDistribution=None):
+    def get_skill_values(self, rating=None, skill_distribution=None):
         rating = self.rating if rating is None else rating
-        skillDistribution = (
-            self.skillDistribution if skillDistribution is None else skillDistribution
+        skill_distribution = (
+            self.skill_distribution if skill_distribution is None else skill_distribution
         )
-        skillValues = {skill: rating * value for skill, value in skillDistribution.items()}
-        return skillValues
+        skill_values = {skill: rating * value for skill, value in skill_distribution.items()}
+        return skill_values
 
-    def setSkillValues(self):
-        self.skillValues = self.getSkillValues()
+    def set_skill_values(self):
+        self.skill_values = self.get_skill_values()
 
-    def getPositionSuitabilities(self, skillDistribution=None):
-        positions = config.playerConfig["positions"]
-        skillDistribution = (
-            self.skillDistribution if skillDistribution is None else skillDistribution
+    def get_position_suitabilities(self, skill_distribution=None):
+        positions = config.player_config["positions"]
+        skill_distribution = (
+            self.skill_distribution if skill_distribution is None else skill_distribution
         )
-        positionSuitabilities = {}
-        selfSkillDistribution = list(skillDistribution.values())
+        position_suitabilities = {}
+        self_skill_distribution = list(skill_distribution.values())
         for position, attributes in positions.items():
-            idealSkillDistributionForPosition = list(attributes["skillDistribution"].values())
-            positionSuitability = 1 - cosine_distance(
-                selfSkillDistribution, idealSkillDistributionForPosition
+            ideal_skill_distribution_for_position = list(attributes["skill_distribution"].values())
+            position_suitability = 1 - cosine_distance(
+                self_skill_distribution, ideal_skill_distribution_for_position
             )
-            positionSuitability = 1 - np.power(1 - positionSuitability, (2 / 3))
-            positionSuitabilities[position] = positionSuitability
-        maxPositionSuitability = max(positionSuitabilities.values())
-        for position in positionSuitabilities.keys():
-            positionSuitabilities[position] *= 1 / maxPositionSuitability
-        return positionSuitabilities
+            position_suitability = 1 - np.power(1 - position_suitability, (2 / 3))
+            position_suitabilities[position] = position_suitability
+        max_position_suitability = max(position_suitabilities.values())
+        for position in position_suitabilities.keys():
+            position_suitabilities[position] *= 1 / max_position_suitability
+        return position_suitabilities
 
-    def getBestPosition(self, skillDistribution=None):
-        positionSuitabilities = (
-            self.getPositionSuitabilities()
-            if skillDistribution is None
-            else self.getPositionSuitabilities(skillDistribution)
+    def get_best_position(self, skill_distribution=None):
+        position_suitabilities = (
+            self.get_position_suitabilities()
+            if skill_distribution is None
+            else self.get_position_suitabilities(skill_distribution)
         )
-        bestPosition = max(positionSuitabilities, key=positionSuitabilities.get)
-        return bestPosition
+        best_position = max(position_suitabilities, key=position_suitabilities.get)
+        return best_position
 
-    def setBestPosition(self):
-        self.bestPosition = self.getBestPosition()
+    def set_best_position(self):
+        self.best_position = self.get_best_position()
 
-    def getPositionRatings(self, rating=None, skillDistribution=None):
+    def get_position_ratings(self, rating=None, skill_distribution=None):
         rating = self.rating if rating is None else rating
-        skillDistribution = (
-            self.skillDistribution if skillDistribution is None else skillDistribution
+        skill_distribution = (
+            self.skill_distribution if skill_distribution is None else skill_distribution
         )
-        positionSuitabilities = self.getPositionSuitabilities(skillDistribution)
-        positionRatings = {
-            position: rating * value for position, value in positionSuitabilities.items()
+        position_suitabilities = self.get_position_suitabilities(skill_distribution)
+        position_ratings = {
+            position: rating * value for position, value in position_suitabilities.items()
         }
-        return positionRatings
+        return position_ratings
 
-    def setPositionRatings(self):
-        self.positionRatings = self.getPositionRatings()
+    def set_position_ratings(self):
+        self.position_ratings = self.get_position_ratings()
 
     def recover(self):
-        fatigueReduction = np.sqrt(self.skillValues["fitness"]) / 100
-        self.fatigue -= fatigueReduction
+        fatigue_reduction = np.sqrt(self.skill_values["fitness"]) / 100
+        self.fatigue -= fatigue_reduction
         self.fatigue = 0 if self.fatigue < 0 else self.fatigue
         if self.injured:
             self.injured -= 1
@@ -260,76 +272,76 @@ class Player:
         if self.club is not None and self.injured is False:
             injury = True if np.random.normal(self.fatigue, 0.25) > 0.75 else False
             if injury:
-                x, itemArray, probabilityArray = 1, [], []
+                x, item_array, probability_array = 1, [], []
                 for i in range(1, 366):
                     x /= 1.05
-                    itemArray.append(i)
-                    probabilityArray.append(x)
-                probabilityArray = [
-                    probability / sum(probabilityArray) for probability in probabilityArray
+                    item_array.append(i)
+                    probability_array.append(x)
+                probability_array = [
+                    probability / sum(probability_array) for probability in probability_array
                 ]
-                injuryLength = np.random.choice(itemArray, p=probabilityArray)
-                self.injured = injuryLength
-                self.injuries.append([self.club.league.system.universe.currentDate, injuryLength])
+                injury_length = np.random.choice(item_array, p=probability_array)
+                self.injured = injury_length
+                self.injuries.append([self.club.league.system.universe.current_date, injury_length])
 
     def advance(self):
         self.injure()
-        self.setAge()
+        self.set_age()
         self.recover()
-        self.adjustPeakRating()
-        self.setRating()
-        self.setSkillDistribution()
-        self.setSkillValues()
-        self.setPositionRatings()
-        self.storeRatingsAndForm()
+        self.adjust_peak_rating()
+        self.set_rating()
+        self.set_skill_distribution()
+        self.set_skill_values()
+        self.set_position_ratings()
+        self.store_ratings_and_form()
 
-    def handlePlayerReport(self, playerReport):
+    def handle_player_report(self, player_report):
         if (
-            playerReport not in self.playerReports
+            player_report not in self.player_reports
         ):  ### Prevent duplication from Universal Tournament group stage matches, which are handled
             ### by both the group and the wider tournament
-            self.playerReports.append(playerReport)
-            self.fatigue += playerReport["fatigueIncrease"]
-            self.form += playerReport["gravitatedMatchForm"]
+            self.player_reports.append(player_report)
+            self.fatigue += player_report["fatigue_increase"]
+            self.form += player_report["gravitated_match_form"]
 
-    def getPlayerReports(self, gameweek=None):
+    def get_player_reports(self, gameweek=None):
         if gameweek is None:
-            return self.playerReports
+            return self.player_reports
         return [
-            playerReport
-            for playerReport in self.playerReports
-            if playerReport["gameweek"] <= gameweek
+            player_report
+            for player_report in self.player_reports
+            if player_report["gameweek"] <= gameweek
         ]
 
-    def getProperName(self, forenameStyle="Whole", surnameStyle="Whole"):
-        ### Both forenameStyle and surnameStyle arguments can be set to either 'Empty', 'Shortened'
-        ### or 'Whole'
+    def get_proper_name(self, forename_style="Whole", surname_style="Whole"):
+        ### Both forename_style and surname_style arguments can be set to either 'Empty',
+        ### 'Shortened' or 'Whole'
         forename, surname = self.name[0], self.name[1]
-        properNameArray = []
-        for style, name in zip([forenameStyle, surnameStyle], [forename, surname]):
+        proper_name_array = []
+        for style, name in zip([forename_style, surname_style], [forename, surname]):
             if style == "Shortened":
-                properNameArray.append(name[0] + ".")
+                proper_name_array.append(name[0] + ".")
             elif style == "Whole":
-                properNameArray.append(name)
-        return " ".join(properNameArray)
+                proper_name_array.append(name)
+        return " ".join(proper_name_array)
 
-    def getClubSpecificName(self):
-        otherPlayersAtClub = [player for player in self.club.players if player != self]
-        uniqueSurname = (
-            len(list(filter(lambda x: self.name[1] == x.name[1], otherPlayersAtClub))) == 0
+    def get_club_specific_name(self):
+        other_players_at_club = [player for player in self.club.players if player != self]
+        unique_surname = (
+            len(list(filter(lambda x: self.name[1] == x.name[1], other_players_at_club))) == 0
         )
-        return self.getProperName("Shortened" if not uniqueSurname else "")
+        return self.get_proper_name("Shortened" if not unique_surname else "")
 
     def retire(self):
         self.retired = True
-        self.controller.retirePlayer(self)
+        self.controller.retire_player(self)
         if hasattr(self, "club") and self.club:
             self.club.players.remove(self)
             self.club = None
 
-    def storeRatingsAndForm(self):
-        currentDate = self.controller.universe.currentDate
-        self.ratings[currentDate] = {}
-        self.ratings[currentDate]["rating"] = self.rating
-        self.ratings[currentDate]["peakRating"] = self.peakRating
-        self.forms[currentDate] = self.form
+    def store_ratings_and_form(self):
+        current_date = self.controller.universe.current_date
+        self.ratings[current_date] = {}
+        self.ratings[current_date]["rating"] = self.rating
+        self.ratings[current_date]["peak_rating"] = self.peak_rating
+        self.forms[current_date] = self.form

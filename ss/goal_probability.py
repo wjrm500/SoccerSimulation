@@ -1,4 +1,4 @@
-goalProbability = {
+goal_probability = {
     -100: {"mu": -2.74, "sigma": 1.225},
     -99: {"mu": -2.49, "sigma": 1.225},
     -98: {"mu": -2.48, "sigma": 1.225},

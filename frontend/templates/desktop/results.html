@@ -9,23 +9,23 @@
             <td class="result-date" colspan="3">{{ key.strftime('%d %B %Y') }}</td>
         </tr>
         {% for result in value %}
-            <tr class="result clickable-row" data-fixture-id="{{ result['fixtureId'] }}">
-                <td class="result-home-club-name result-club-name {% if result['homeScore'] > result['awayScore'] %}winner{% endif %}" data-club-id="{{ result['homeClub'].id }}">
-                    {{ result['homeClub'].name }}
+            <tr class="result clickable-row" data-fixture-id="{{ result['fixture_id'] }}">
+                <td class="result-home-club-name result-club-name {% if result['home_score'] > result['away_score'] %}winner{% endif %}" data-club-id="{{ result['home_club'].id }}">
+                    {{ result['home_club'].name }}
                 </td>
                 <td class="middle-bit">
                     <div class="score-container">
-                        <span class="{% if result['homeScore'] > result['awayScore'] %}winner{% endif %}">
-                            {{ result['homeScore'] }}
+                        <span class="{% if result['home_score'] > result['away_score'] %}winner{% endif %}">
+                            {{ result['home_score'] }}
                         </span>
                         <span>-</span>
-                        <span class="{% if result['homeScore'] < result['awayScore'] %}winner{% endif %}">
-                            {{ result['awayScore'] }}
+                        <span class="{% if result['home_score'] < result['away_score'] %}winner{% endif %}">
+                            {{ result['away_score'] }}
                         </span>
                     </div>
                 </td>
-                <td class="result-away-club-name result-club-name {% if result['homeScore'] < result['awayScore'] %}winner{% endif %}" data-club-id="{{ result['awayClub'].id }}">
-                    {{ result['awayClub'].name }}
+                <td class="result-away-club-name result-club-name {% if result['home_score'] < result['away_score'] %}winner{% endif %}" data-club-id="{{ result['away_club'].id }}">
+                    {{ result['away_club'].name }}
                 </td>
             </tr>
         {% endfor %}

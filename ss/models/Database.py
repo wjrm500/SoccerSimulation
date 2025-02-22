@@ -12,19 +12,19 @@ class Database:
         else:
             raise Exception("You cannot create another Database class")
 
-    def universeKeyExists(self, universeKey):
+    def universe_key_exists(self, universe_key):
         fs = gridfs.GridFS(self.cnx.grid_file)
-        result = fs.find_one({"filename": universeKey})
+        result = fs.find_one({"filename": universe_key})
         return bool(result)
 
-    def getUniverseGridFile(self, universeKey):
+    def get_universe_grid_file(self, universe_key):
         fs = gridfs.GridFS(self.cnx.grid_file)
-        result = fs.find_one({"filename": universeKey})
+        result = fs.find_one({"filename": universe_key})
         if result:
             return result.read()
 
     @staticmethod
-    def getInstance():
+    def get_instance():
         if not Database.__instance__:
             Database()
         return Database.__instance__

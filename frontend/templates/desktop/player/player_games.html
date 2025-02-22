@@ -1,4 +1,4 @@
-{% if playerReports %}
+{% if player_reports %}
     <table id="player-game-table" class="full-table">
         <tr>
             <th>GW</th>
@@ -6,32 +6,32 @@
             <th>Actions</th>
             <th>Rating</th>
         </tr>
-        {% for playerReport in playerReports %}
-            <tr class="clickable-row" data-fixture-id="{{ playerReport['fixtureId'] }}">
-                <td>{{ playerReport['gameweek'] }}</td>
+        {% for player_report in player_reports %}
+            <tr class="clickable-row" data-fixture-id="{{ player_report['fixture_id'] }}">
+                <td>{{ player_report['gameweek'] }}</td>
                 <td>
-                    <span class="player-game-result {{ 'draw' if playerReport['extraData']['teamActualGoalsFor'] == playerReport['extraData']['teamActualGoalsAgainst'] else 'win' if playerReport['extraData']['teamActualGoalsFor'] > playerReport['extraData']['teamActualGoalsAgainst'] else 'loss' }}"> {{
+                    <span class="player-game-result {{ 'draw' if player_report['extra_data']['team_actual_goals_for'] == player_report['extra_data']['team_actual_goals_against'] else 'win' if player_report['extra_data']['team_actual_goals_for'] > player_report['extra_data']['team_actual_goals_against'] else 'loss' }}"> {{
                         '{} - {}'.format(
-                            playerReport['extraData']['teamActualGoalsFor'],
-                            playerReport['extraData']['teamActualGoalsAgainst'],
+                            player_report['extra_data']['team_actual_goals_for'],
+                            player_report['extra_data']['team_actual_goals_against'],
                         )
                     }}
                     </span>
-                    <span class="player-game-home-away">{{ '@' if playerReport['homeAway'] == 'A' else '' }}</span>
-                    <span class="player-game-opposition-name">{{ playerReport['oppositionClub'].name}}</span>
+                    <span class="player-game-home-away">{{ '@' if player_report['home_away'] == 'A' else '' }}</span>
+                    <span class="player-game-opposition-name">{{ player_report['opposition_club'].name}}</span>
                 </td>
                 <td>
-                    {% for _ in range(playerReport['goals']) %}
+                    {% for _ in range(player_report['goals']) %}
                         <i class="fas fa-futbol"></i><!-- <img class="match-icon" src="/static/images/goal_icon.png"> -->
                     {% endfor %}
-                    {% for _ in range(playerReport['assists']) %}
+                    {% for _ in range(player_report['assists']) %}
                         <i class="fab fa-angular" style="color: grey;"></i><!-- <img class="match-icon" src="/static/images/assist_icon.png"> -->
                     {% endfor %}
-                    {% if playerReport['manOfTheMatch'] %}
+                    {% if player_report['man_of_the_match'] %}
                         <i class="fas fa-star" style="color: green;"></i><!-- <img class="match-icon" src="/static/images/motm_icon.png"> -->
                     {% endif %}
                 </td>
-                <td>{{ '{0:.2f}'.format(playerReport['performanceIndex']) }}</td>
+                <td>{{ '{0:.2f}'.format(player_report['performance_index']) }}</td>
             </tr>
         {% endfor %}
     </table>
