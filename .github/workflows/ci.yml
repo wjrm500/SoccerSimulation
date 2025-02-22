@@ -21,10 +21,8 @@ jobs:
       - name: Install project dependencies
         run: "uv sync --all-extras --dev"
 
-      - name: Run Ruff lint and format checks
-        run: |
-          uv run ruff check --exit-non-zero-on-fix .
-          uv run ruff format --check .
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files
 
       - name: Run Pytest
         run: "uv run pytest"
