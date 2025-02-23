@@ -171,10 +171,10 @@ def show_player_development(player, date=None):
     plt.xlabel("Day", fontsize=12, labelpad=8)
     plt.ylabel("Rating", fontsize=12, labelpad=8)
     fade_range = 10
-    for plot, color_tuple in zip([y_r, y_pr], [[0, 0, 1], [0.68, 0.85, 0.90]]):
+    for plot, color_tuple in zip([y_r, y_pr], [[0, 0, 1], [0.68, 0.85, 0.90]], strict=False):
         for i in range(0, fade_range + 1):
             for y, strength in zip(
-                [plot[0], plot[-1]], [1 - (i / fade_range), 0 + (i / fade_range)]
+                [plot[0], plot[-1]], [1 - (i / fade_range), 0 + (i / fade_range)], strict=False
             ):
                 plt.gca().axhline(
                     y,

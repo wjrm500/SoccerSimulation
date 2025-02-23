@@ -21,13 +21,13 @@ from flask import (
     url_for,
 )
 from flask_mobility import Mobility
+from flask_session import Session
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from rq import Queue
 
 import ss.club_utils as club_utils
 import ss.player_utils as player_utils
 import ss.utils as utils
-from flask_session import Session
 from ss.config import player_config
 from ss.models.Database import Database
 from ss.simulate import simulate

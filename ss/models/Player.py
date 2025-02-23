@@ -315,7 +315,7 @@ class Player:
         ### 'Shortened' or 'Whole'
         forename, surname = self.name[0], self.name[1]
         proper_name_array = []
-        for style, name in zip([forename_style, surname_style], [forename, surname]):
+        for style, name in zip([forename_style, surname_style], [forename, surname], strict=False):
             if style == "Shortened":
                 proper_name_array.append(name[0] + ".")
             elif style == "Whole":

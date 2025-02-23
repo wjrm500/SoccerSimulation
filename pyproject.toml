@@ -49,7 +49,7 @@ dev = [
 ]
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py311"
 line-length = 100
 lint.select = [
     "E",
@@ -63,6 +63,9 @@ lint.select = [
 lint.ignore = [
     "C901", # function too complex
 ]
+
+[tool.ruff.lint.isort]
+known-third-party = ["flask_session"]
 
 [tool.vulture]
 exclude = [".venv/"]

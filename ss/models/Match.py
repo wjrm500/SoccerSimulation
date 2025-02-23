@@ -22,7 +22,7 @@ class Match:
         }
         report = self.match_report
         home_away_tuple = (None, None) if self.neutral_venue else ("home", "away")
-        for club, home_away in zip(self.clubs, home_away_tuple):
+        for club, home_away in zip(self.clubs, home_away_tuple, strict=False):
             report["clubs"][club]["team"] = club.select_team(home_away=home_away)
         report["clubs"][self.club_x]["potential"] = (
             report["clubs"][self.club_x]["team"].offence
