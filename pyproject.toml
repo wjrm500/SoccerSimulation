@@ -44,7 +44,8 @@ dependencies = [
 dev = [
   "ruff==0.9.6",
   "pytest==7.2.0",
-  "pre-commit==3.3.3"
+  "pre-commit==3.3.3",
+  "vulture>=2.14",
 ]
 
 [tool.ruff]
@@ -62,3 +63,10 @@ lint.select = [
 lint.ignore = [
     "C901", # function too complex
 ]
+
+[tool.vulture]
+exclude = [".venv/"]
+ignore_decorators = ["@app.*"]
+ignore_names = ["secret_key"]
+min_confidence = 50
+paths = ["app.py", "delete_12_hour_mongodb_data.py", "worker.py", "ss/"]
