@@ -241,9 +241,6 @@ class Player:
         best_position = max(position_suitabilities, key=position_suitabilities.get)
         return best_position
 
-    def set_best_position(self):
-        self.best_position = self.get_best_position()
-
     def get_position_ratings(self, rating=None, skill_distribution=None):
         rating = self.rating if rating is None else rating
         skill_distribution = (

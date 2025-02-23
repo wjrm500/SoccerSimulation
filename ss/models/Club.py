@@ -1,5 +1,4 @@
 import copy
-import re
 
 import numpy as np
 
@@ -46,39 +45,6 @@ class Club:
             player.set_rating()
             player.set_skill_values()
             player.set_position_ratings()
-
-    def get_provisional_short_name(self, precedence=0):
-        ### If precedence = 0, use all available consonants
-        ### If precedence = 1, ignore third consonant
-        ### If precedence = 2, ignore third and fourth consonants
-        ### Etc.
-        first_letter_and_consonants_only = self.name[0] + re.sub(
-            r"(?i)[aeiou -\.,]", "", self.name[1:]
-        )
-        provisional_short_name = (
-            first_letter_and_consonants_only[: precedence + 3]
-            if len(first_letter_and_consonants_only) >= precedence + 3
-            else self.name[:3]
-        ).upper()
-        provisional_short_name = provisional_short_name[:2] + provisional_short_name[-1:]
-        return provisional_short_name
-
-    def get_short_name(self):
-        ### Need to ensure no short name clashes with clubs in same league
-        ### Basic idea is that clubs with higher ratings receive higher precedence when it comes to
-        ### "naming rights". So we find all clubs in league whose provisional short names clash
-        ### initially. Then we see where this particular club ranks amongst this set of clashing
-        ### clubs. We then feed this rank as the argument to precedence in the
-        ### get_provisional_short_name method
-        short_name = self.get_provisional_short_name()
-        clashing_clubs = []
-        for club in self.league.clubs:
-            if short_name == club.get_provisional_short_name():
-                clashing_clubs.append(club)
-        self_rank_among_clashing_clubs = sorted(
-            clashing_clubs, key=lambda x: x.get_rating(), reverse=True
-        ).index(self)
-        return self.get_provisional_short_name(precedence=self_rank_among_clashing_clubs)
 
     def set_favourite_formation(self):
         formations, weights = [], []

@@ -7,14 +7,10 @@ class Fixture:
         self.tournament = tournament
         self.date = date
         self.add_clubs(club_x, club_y)
-        self.played = False
 
     def add_clubs(self, club_x, club_y):
         self.club_x, self.club_y = club_x, club_y
         self.clubs = [self.club_x, self.club_y]
-
-    def set_date(self, date):
-        self.date = date
 
     def set_gameweek(self, gameweek):
         self.gameweek = gameweek
@@ -23,7 +19,6 @@ class Fixture:
         self.match = Match(self, self.tournament, self.date, self.club_x, self.club_y)
         self.match.play()
         self.match.file_match_report()
-        self.played = True
 
     def handle_match_report(self, match_report):
         self.goals = {}

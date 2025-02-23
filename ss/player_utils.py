@@ -5,36 +5,6 @@ import numpy as np
 from matplotlib import dates as mdates
 
 
-def show_predicted_ratings(player):
-    age_list, predicted_rating_list = [], []
-    for age in range(15, 40):
-        age_list.append(age)
-        predicted_rating = player.calculate_rating(age)
-        predicted_rating_list.append(predicted_rating)
-    age_array = np.array(age_list)
-    predicted_rating_array = np.array(predicted_rating_list)
-    x, y = age_array, predicted_rating_array
-    plt.plot(x, y)
-    for xy in zip(x, y):
-        plt.text(
-            xy[0] - 0.5,
-            xy[1],
-            int(xy[1]),
-            {
-                "weight": "bold",
-                "size": 10,
-            },
-        )
-    plt.title(
-        f"Predicted Ratings for {player.name} over time",
-        fontdict={"weight": "bold"},
-    )
-    plt.xlabel("Age")
-    plt.ylabel("Predicted Rating")
-    plt.axvline(x[np.argmax(y)], color="lightgray", linestyle="--")
-    plt.show()
-
-
 def plot_player(player, axes, config, date=None):
     labels_on, _, projection_on, scale_for_overall_rating_on = list(config.values())
     blank = True if player is None else False

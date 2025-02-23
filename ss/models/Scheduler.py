@@ -17,24 +17,7 @@ class Scheduler:
         tournament.fixtures.append(fixture)
 
     @classmethod
-    def schedule_league_fixtures(cls, year, league, weekday=5):
-        schedule = cls.round_robin_scheduler(league, robin_type="double")
-        current_date = date(year, 1, 1)
-        gameweek = 1
-        while True:
-            if current_date.year > year or not schedule.get(
-                gameweek
-            ):  ### Exit loop when year changes / when fixtures have been exhausted
-                return
-            if current_date.weekday() == weekday:
-                for game in schedule[gameweek]:
-                    club_x, club_y = game["home"], game["away"]
-                    cls.schedule_fixture(current_date, gameweek, league, club_x, club_y)
-                gameweek += 1
-            current_date += timedelta(days=1)
-
-    @classmethod
-    def spread_schedule_league_fixtures(cls, year, league):
+    def schedule_league_fixtures(cls, year, league):
         schedule = cls.round_robin_scheduler(league, robin_type="double")
         gameweek = 1
         game_day_of_year = 1

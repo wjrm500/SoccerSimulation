@@ -44,7 +44,7 @@ class _Universe:
     def schedule_leagues(self):
         for system in self.systems:
             for league in system.leagues:
-                Scheduler.spread_schedule_league_fixtures(self.current_date.year, league)
+                Scheduler.schedule_league_fixtures(self.current_date.year, league)
 
     def get_club_by_id(self, club_id):
         for system in self.systems:

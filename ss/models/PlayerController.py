@@ -16,13 +16,6 @@ class PlayerController:
                 return player
         return None
 
-    def get_players_by_name(self, name):
-        players = []
-        for player in self.players:
-            if player.name == name:
-                players.append(player)
-        return players
-
     def advance(self):
         for player in self.players:
             player.advance()

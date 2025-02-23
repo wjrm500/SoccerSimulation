@@ -1,8 +1,5 @@
 import collections.abc
-import copy
-import glob
 import os
-import pickle
 import random
 import re
 import string
@@ -14,10 +11,6 @@ import numpy as np
 from dateutil.relativedelta import relativedelta
 
 from .models.Database import Database
-
-
-def generate_name(chars):
-    return "".join(random.choice(string.ascii_lowercase) for _ in range(chars))
 
 
 def load_player_names():
@@ -96,25 +89,6 @@ def get_birth_date(date_created, age):
     return random_date
 
 
-def type_agnostic_omit(dictionary, omitted_keys):
-    """Omits given keys from dictionary."""
-    output = copy.deepcopy(dictionary)
-    omitted_keys = omitted_keys if isinstance(omitted_keys, list) else [omitted_keys]
-    for omitted_key in omitted_keys:
-        try:
-            del output[omitted_key]
-        except KeyError:
-            continue
-    return output
-
-
-def pickle_object(obj):
-    obj_name = type(obj).__name__ + str(generate_random_digits(5))
-    outfile = open(obj_name, "wb")
-    pickle.dump(obj, outfile)
-    outfile.close()
-
-
 def pickle_large_object(obj):
     obj_name = type(obj).__name__ + str(generate_random_digits(5))
     outfile = open(obj_name, "wb")
@@ -129,32 +103,6 @@ def joblib_dumps(obj):
         obj = file.read()
     os.remove(filename)
     return obj
-
-
-def unpickle_most_recent(path):
-    files = glob.glob(path + "/*")
-    latest_pickle_file_name = max(files, key=os.path.getctime)
-    latest_pickle = open(latest_pickle_file_name, "rb")
-    latest_pickle_unpickled = pickle.load(latest_pickle)
-    latest_pickle.close()
-    return latest_pickle_unpickled
-
-
-def get_all_powers_of_two_less_than(n):
-    results = []
-    for i in range(n, 0, -1):
-        if (i & (i - 1)) == 0:
-            results.append(i)
-    return results
-
-
-def get_highest_power_of_two_less_than(n):
-    result = 0
-    for i in range(n, 0, -1):
-        if (i & (i - 1)) == 0:
-            result = i
-            break
-    return result
 
 
 def make_universe_key(length=10):
