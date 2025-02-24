@@ -3,7 +3,7 @@ repos:
     rev: v0.9.6
     hooks:
       - id: ruff
-        args: ["--diff"]
+        args: ["--fix"]
       - id: ruff-format
 
   - repo: https://github.com/jendrikseipp/vulture
