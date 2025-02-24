@@ -6,7 +6,6 @@ from datetime import timedelta
 from io import BytesIO
 
 import matplotlib.pyplot as plt
-import redis
 from flask import (
     Flask,
     Response,
@@ -23,20 +22,13 @@ from flask import (
 from flask_mobility import Mobility
 from flask_session import Session
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from rq import Queue
 
 import ss.club_utils as club_utils
 import ss.player_utils as player_utils
 import ss.utils as utils
 from ss.config import player_config
-from ss.models.Database import Database
 from ss.simulate import simulate
-from worker import conn
-
-db = Database.get_instance()  ### MongoDB
-q = Queue(connection=conn)
-r = redis.Redis(host="redis", port=6379)
-TTL_SECONDS = 3600  # store simulation data for one hour
+from utils.dependencies import TTL_SECONDS, db, q, r
 
 template_folder = os.path.abspath("frontend/templates")
 static_folder = os.path.abspath("frontend/static")
