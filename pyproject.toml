@@ -69,7 +69,7 @@ known-third-party = ["flask_session"]
 
 [tool.vulture]
 exclude = [".venv/"]
-ignore_decorators = ["@app.*"]
+ignore_decorators = ["@app.*", "@*bp.*"]
 ignore_names = ["secret_key"]
 min_confidence = 50
-paths = ["app.py", "delete_12_hour_mongodb_data.py", "worker.py", "ss/"]
+paths = ["app.py", "delete_12_hour_mongodb_data.py", "worker.py", "blueprints/", "ss/", "utils/"]

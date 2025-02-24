@@ -23,98 +23,19 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import ss.club_utils as club_utils
 import ss.player_utils as player_utils
 import ss.utils as utils
+from blueprints.home import home_bp
 from ss.config import player_config
-from ss.simulate import simulate
-from utils.dependencies import TTL_SECONDS, db, q, r
+from utils.dependencies import TTL_SECONDS, db, r
 from utils.helpers import get_search_gameweek, get_universe, show_simulation
 
 template_folder = os.path.abspath("frontend/templates")
 static_folder = os.path.abspath("frontend/static")
 app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+app.register_blueprint(home_bp)
 app.secret_key = os.urandom(12).hex()
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 Mobility(app)
-
-
-@app.route("/", methods=["GET"])
-def get_home():
-    return render_template(
-        "desktop/home-initial.html", css_files=["home.css"], js_files=["home.js"]
-    )
-
-
-@app.route("/", methods=["POST"])
-def post_home():
-    universe_key = request.form["universe_key"]
-    url = url_for("simulation", universe_key=universe_key)
-    return redirect(url)
-
-
-@app.route("/new-simulation", methods=["GET"])
-def get_new_simulation():
-    systems = db.cnx["soccersim"]["systems"].find().sort("system_name", 1)
-    return render_template(
-        "desktop/home-new.html",
-        css_files=["home.css"],
-        js_files=["home.js"],
-        systems=systems,
-    )
-
-
-@app.route("/new-simulation", methods=["POST"])
-def post_new_simulation():
-    system_id = int(request.form["system"])
-    custom_config = {
-        "num_leagues_per_system": None,
-        "num_clubs_per_league": int(request.form["num-clubs"]),
-        "num_players_per_club": int(request.form["num-players-per-club"]),
-        "custom_clubs": json.loads(request.form["custom-clubs"]),
-    }
-    universe_key = utils.make_universe_key()
-    r.set("simulation_progress_" + universe_key, 0)
-    q.enqueue(simulate, custom_config, system_id, universe_key, job_timeout=3600)
-    return render_template(
-        "desktop/waiting.html",
-        universe_key=universe_key,
-        css_files=["home.css"],
-        js_files=["waiting.js"],
-    )
-
-
-@app.route("/existing-simulation", methods=["GET"])
-def get_existing_simulation():
-    return render_template(
-        "desktop/home-existing.html", css_files=["home.css"], js_files=["home.js"]
-    )
-
-
-@app.route("/existing-simulation", methods=["POST"])
-def post_existing_simulation():
-    error = "ERROR: "
-    existing_how = request.form.get("existing-how")
-    if existing_how == "remote":
-        universe_key = request.form.get("universe-key")
-        if db.universe_key_exists(universe_key):
-            url = url_for("simulation", universe_key=universe_key)
-            return redirect(url)
-        error += f"Universe Key {universe_key} does not exist"
-    elif existing_how == "local":
-        file = request.files.get("upload-file")
-        universe = file.read()
-        new_key = utils.make_universe_key(9)
-        session["active_universe_key"] = new_key
-        r.setex("simulation_" + new_key, TTL_SECONDS, universe)
-        try:
-            return show_simulation()
-        except Exception as e:
-            error += "Invalid file upload: " + str(e)
-    return render_template(
-        "desktop/home-existing.html",
-        css_files=["home.css"],
-        js_files=["home.js"],
-        error=error,
-    )
 
 
 @app.route("/simulation/check-progress/<universe_key>", methods=["GET"])

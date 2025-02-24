@@ -6,8 +6,10 @@ WORKDIR /app
 
 # Copy the application files into the container
 COPY app.py worker.py delete_12_hour_mongodb_data.py pyproject.toml /app/
+COPY blueprints /app/blueprints/
 COPY frontend /app/frontend/
 COPY ss /app/ss/
+COPY utils /app/utils/
 
 # Install curl (required for the uv installer), then install uv using its standalone installer.
 RUN apt-get update && apt-get install -y curl && \
