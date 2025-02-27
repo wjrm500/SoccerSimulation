@@ -13,7 +13,7 @@ def create_app():
     template_folder = os.path.abspath("frontend/templates")
     static_folder = os.path.abspath("frontend/static")
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
-    app.secret_key = os.urandom(12).hex()
+    app.secret_key = os.environ.get("FLASK_SECRET_KEY", os.urandom(24).hex())
     app.config["SESSION_TYPE"] = "filesystem"
 
     # Initialise extensions
