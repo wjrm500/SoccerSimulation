@@ -1,5 +1,11 @@
+from __future__ import annotations
+
 from datetime import date
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .Club import Club
+    from .League import League
 
 
 class PlayerReport:
@@ -7,7 +13,7 @@ class PlayerReport:
         self,
         fixture_id: int,
         home_away: str,
-        tournament: Any,  # Tournament or Group
+        league: League,
         date: date,
         gameweek: int,
         position: str,
@@ -15,7 +21,7 @@ class PlayerReport:
         pre_match_form: float,
         goals: int,
         assists: int,
-        opposition_club: Any,  # Club
+        opposition_club: Club,
         performance_index: float,
         fatigue_increase: float,
         ungravitated_match_form: float,
@@ -25,7 +31,7 @@ class PlayerReport:
     ):
         self.fixture_id = fixture_id
         self.home_away = home_away
-        self.tournament = tournament
+        self.league = league
         self.date = date
         self.gameweek = gameweek
         self.position = position

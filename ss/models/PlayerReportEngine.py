@@ -169,11 +169,7 @@ class PlayerReportEngine:
         return PlayerReport(
             fixture_id=self.match.fixture.id,
             home_away="H" if self.match.club_x == player.club else "A",
-            tournament=(
-                self.match.tournament.tournament
-                if type(self.match.tournament).__name__ == "Group"
-                else self.match.tournament
-            ),
+            league=self.match.league,
             date=self.match.date,
             gameweek=self.match.fixture.gameweek,
             position=position,

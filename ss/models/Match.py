@@ -6,16 +6,16 @@ from .PlayerReportEngine import PlayerReportEngine
 
 
 class Match:
-    def __init__(self, fixture, tournament, date, club_x, club_y, neutral_venue=False):
+    def __init__(self, fixture, league, date, club_x, club_y, neutral_venue=False):
         self.fixture = fixture
-        self.tournament = tournament
+        self.league = league
         self.date = date
         self.club_x, self.club_y = club_x, club_y
         self.clubs = [self.club_x, self.club_y]
         self.neutral_venue = neutral_venue
         self.match_report = {
             "fixture_id": self.fixture.id,
-            "tournament": self.tournament,
+            "league": self.league,
             "gameweek": self.fixture.gameweek,
             "date": self.date,
             "clubs": {club: {} for club in self.clubs},
@@ -77,4 +77,4 @@ class Match:
 
     def file_match_report(self):
         self.fixture.handle_match_report(self.match_report)
-        self.tournament.handle_match_report(self.match_report)
+        self.league.handle_match_report(self.match_report)

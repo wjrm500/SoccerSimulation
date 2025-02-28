@@ -8,13 +8,13 @@ class Scheduler:
     fixtures_created = 0
 
     @classmethod
-    def schedule_fixture(cls, date, gameweek, tournament, club_x, club_y):
-        if not hasattr(tournament, "fixtures"):
-            tournament.fixtures = []
+    def schedule_fixture(cls, date, gameweek, league, club_x, club_y):
+        if not hasattr(league, "fixtures"):
+            league.fixtures = []
         cls.fixtures_created += 1
-        fixture = Fixture(copy.copy(cls.fixtures_created), tournament, date, club_x, club_y)
+        fixture = Fixture(copy.copy(cls.fixtures_created), league, date, club_x, club_y)
         fixture.set_gameweek(gameweek)
-        tournament.fixtures.append(fixture)
+        league.fixtures.append(fixture)
 
     @classmethod
     def schedule_league_fixtures(cls, year, league):
@@ -35,8 +35,8 @@ class Scheduler:
             game_day_of_year += game_interval
 
     @classmethod
-    def round_robin_scheduler(cls, tournament, robin_type="single", returned_object="dict"):
-        num_clubs = len(tournament.clubs)
+    def round_robin_scheduler(cls, league, robin_type="single"):
+        num_clubs = len(league.clubs)
         if num_clubs % 2 != 0:
             raise Exception("Number of clubs must be even")
         schedule = []
@@ -45,14 +45,14 @@ class Scheduler:
         for i in range(num_clubs - 1):
             new_gameweek = {}
             if i == 0:
-                clubs_for_popping = copy.copy(tournament.clubs)
+                clubs_for_popping = copy.copy(league.clubs)
                 for j in range(fixtures_per_week):
                     new_gameweek[j] = [clubs_for_popping.pop(0), clubs_for_popping.pop()]
             else:
                 last_gameweek = schedule[i - 1]
                 for j in range(fixtures_per_week):
                     if j == 0:
-                        club_one = tournament.clubs[0]
+                        club_one = league.clubs[0]
                     elif j == 1:
                         club_one = last_gameweek[0][1]
                     else:
@@ -85,12 +85,6 @@ class Scheduler:
 
         reformatted_schedule = {}
         for i, gameweek in enumerate(schedule):
-            if returned_object == "dict":
-                fixture_list = [{"home": value[0], "away": value[1]} for value in gameweek.values()]
-            elif returned_object == "fixture":
-                fixture_list = [
-                    Fixture(tournament, club_x=value[0], club_y=value[1])
-                    for value in gameweek.values()
-                ]
+            fixture_list = [{"home": value[0], "away": value[1]} for value in gameweek.values()]
             reformatted_schedule[i + 1] = fixture_list
         return reformatted_schedule

@@ -293,10 +293,7 @@ class Player:
         self.store_ratings_and_form()
 
     def handle_player_report(self, player_report):
-        if (
-            player_report not in self.player_reports
-        ):  ### Prevent duplication from Universal Tournament group stage matches, which are handled
-            ### by both the group and the wider tournament
+        if player_report not in self.player_reports:
             self.player_reports.append(player_report)
             self.fatigue += player_report.fatigue_increase
             self.form += player_report.gravitated_match_form
