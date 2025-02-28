@@ -298,8 +298,8 @@ class Player:
         ):  ### Prevent duplication from Universal Tournament group stage matches, which are handled
             ### by both the group and the wider tournament
             self.player_reports.append(player_report)
-            self.fatigue += player_report["fatigue_increase"]
-            self.form += player_report["gravitated_match_form"]
+            self.fatigue += player_report.fatigue_increase
+            self.form += player_report.gravitated_match_form
 
     def get_player_reports(self, gameweek=None):
         if gameweek is None:
@@ -307,7 +307,7 @@ class Player:
         return [
             player_report
             for player_report in self.player_reports
-            if player_report["gameweek"] <= gameweek
+            if player_report.gameweek <= gameweek
         ]
 
     def get_proper_name(self, forename_style="Whole", surname_style="Whole"):

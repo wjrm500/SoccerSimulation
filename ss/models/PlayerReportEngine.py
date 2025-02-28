@@ -1,6 +1,7 @@
 import numpy as np
 
 from .. import goal_probability, utils
+from .PlayerReport import PlayerReport
 
 
 class PlayerReportEngine:
@@ -31,45 +32,29 @@ class PlayerReportEngine:
             team = report["clubs"][club]["team"]
             for select in team.selection:
                 player = select.player
-                report["clubs"][club]["players"][player]["man_of_the_match"] = (
+                report["clubs"][club]["players"][player].man_of_the_match = (
                     player == man_of_the_match
                 )
 
     def get_player_report(self, club, team, select, mean_fitness):
         player = select.player
         position = select.position
-        player_report = {}
         player_goal_likelihood = team.goal_factors[player]
         player_assist_likelihood = team.assist_factors[player]
-        player_report["fixture_id"] = self.match.fixture.id
-        player_report["home_away"] = "H" if self.match.club_x == player.club else "A"
-        player_report["tournament"] = (
-            self.match.tournament.tournament
-            if type(self.match.tournament).__name__ == "Group"
-            else self.match.tournament
-        )
-        player_report["date"] = self.match.date
-        player_report["gameweek"] = self.match.fixture.gameweek
-        player_report["position"] = position
-        player_report["pre_match_fatigue"] = player.fatigue
-        player_report["pre_match_form"] = player.form
 
         club = player.club
         opposition_club = self.match.get_opposition_club(club)
-        club_report = self.match.match_report["clubs"][club]  ### TODO
+        club_report = self.match.match_report["clubs"][club]
         opposition_club_report = self.match.match_report["clubs"][opposition_club]
         goals = club_report["match"]["goals"]
-        player_report["goals"] = (
+        goals_scored = (
             sum([1 for goal in goals if goal["scorer"] == player]) if goals is not None else 0
         )
-        player_report["assists"] = (
+        assists = (
             sum([1 for goal in goals if goal["assister"] == player]) if goals is not None else 0
         )
 
-        player_report["opposition_club"] = opposition_club
-
         ### Get player performance index
-
         select = club_report["team"].get_select_from_player(player)
         select_rating = club_report["team"].get_select_rating(select)
         opposition_team_rating = opposition_club_report["team"].average_rating
@@ -84,7 +69,7 @@ class PlayerReportEngine:
         defensive_contribution = club_report["team"].selection_defensive_contributions[select]
         team_predicted_goals_for = utils.limit_value(
             goal_probability.goal_probability[int(club_report["potential"])]["mu"], mn=0
-        )  ### What if team predicted goals for was based on the individual's potential
+        )
         team_actual_goals_for = club_report["match"]["goals_for"]
         team_offensive_outperformance = team_actual_goals_for - team_predicted_goals_for
         team_predicted_goals_against = utils.limit_value(
@@ -103,23 +88,20 @@ class PlayerReportEngine:
         goal_difference = abs(
             club_report["match"]["goals_for"] - opposition_club_report["match"]["goals_for"]
         )
-        goals_scored = (
+        goals_scored_total = (
             club_report["match"]["goals_for"] + opposition_club_report["match"]["goals_for"]
         )
         rating_boost_for_goal, rating_boost_for_assist = (
-            self.get_rating_boosts_for_goals_and_assists(goal_difference, goals_scored)
+            self.get_rating_boosts_for_goals_and_assists(goal_difference, goals_scored_total)
         )
 
         player_predicted_goals = team_predicted_goals_for * player_goal_likelihood
-        goal_negative = (
-            player_predicted_goals * rating_boost_for_goal / 5
-        )  ### Dividing by 5 intended to boost goal involvements and help compensate for the
-        ### disproportionate effects of any potential 10-cap
-        goal_positive = player_report["goals"] * rating_boost_for_goal
+        goal_negative = player_predicted_goals * rating_boost_for_goal / 5
+        goal_positive = goals_scored * rating_boost_for_goal
 
         player_predicted_assists = team_predicted_goals_for * 0.9 * player_assist_likelihood
         assist_negative = player_predicted_assists * rating_boost_for_assist / 5
-        assist_positive = player_report["assists"] * rating_boost_for_assist
+        assist_positive = assists * rating_boost_for_assist
 
         performance_index = utils.limit_value(
             modulated_base_rating
@@ -132,7 +114,6 @@ class PlayerReportEngine:
             mn=0,
             mx=10,
         )
-        player_report["performance_index"] = performance_index
 
         if (
             self.man_of_the_match is None
@@ -144,7 +125,6 @@ class PlayerReportEngine:
             }
 
         ### Handle fatigue
-
         fitness_from_mean = utils.limit_value(
             player.skill_values["fitness"] - mean_fitness, mn=-35, mx=35
         )
@@ -155,42 +135,59 @@ class PlayerReportEngine:
         else:
             mu = 0.25 + a - b
         fatigue_increase = utils.limited_rand_norm({"mu": mu, "sg": 0.05, "mn": 0.05, "mx": 0.45})
-        player_report["fatigue_increase"] = fatigue_increase
 
         ### Handle form
-
-        outperformance = player_report["performance_index"] - base_rating
+        outperformance = performance_index - base_rating
         ungravitated_match_form = outperformance / 5
         gravity = player.form / 10
         gravitated_match_form = ungravitated_match_form - gravity
-        player_report["ungravitated_match_form"] = ungravitated_match_form
-        player_report["gravitated_match_form"] = gravitated_match_form
 
         ### Add extra data
+        extra_data = {
+            "select_rating": select_rating,
+            "opposition_team_rating": opposition_team_rating,
+            "base_rating": base_rating,
+            "modulated_base_rating": modulated_base_rating,
+            "offensive_contribution": offensive_contribution,
+            "defensive_contribution": defensive_contribution,
+            "team_predicted_goals_for": team_predicted_goals_for,
+            "team_actual_goals_for": team_actual_goals_for,
+            "team_offensive_outperformance": team_offensive_outperformance,
+            "team_predicted_goals_against": team_predicted_goals_against,
+            "team_actual_goals_against": team_actual_goals_against,
+            "team_defensive_outperformance": team_defensive_outperformance,
+            "offensive_boost": offensive_boost,
+            "defensive_boost": defensive_boost,
+            "predicted_goals": player_predicted_goals,
+            "goal_negative": goal_negative,
+            "goal_positive": goal_positive,
+            "predicted_assists": player_predicted_assists,
+            "assist_negative": assist_negative,
+            "assist_positive": assist_positive,
+        }
 
-        player_report["extra_data"] = {}
-        player_report["extra_data"]["select_rating"] = select_rating
-        player_report["extra_data"]["opposition_team_rating"] = opposition_team_rating
-        player_report["extra_data"]["base_rating"] = base_rating
-        player_report["extra_data"]["modulated_base_rating"] = modulated_base_rating
-        player_report["extra_data"]["offensive_contribution"] = offensive_contribution
-        player_report["extra_data"]["defensive_contribution"] = defensive_contribution
-        player_report["extra_data"]["team_predicted_goals_for"] = team_predicted_goals_for
-        player_report["extra_data"]["team_actual_goals_for"] = team_actual_goals_for
-        player_report["extra_data"]["team_offensive_outperformance"] = team_offensive_outperformance
-        player_report["extra_data"]["team_predicted_goals_against"] = team_predicted_goals_against
-        player_report["extra_data"]["team_actual_goals_against"] = team_actual_goals_against
-        player_report["extra_data"]["team_defensive_outperformance"] = team_defensive_outperformance
-        player_report["extra_data"]["offensive_boost"] = offensive_boost
-        player_report["extra_data"]["defensive_boost"] = defensive_boost
-        player_report["extra_data"]["predicted_goals"] = player_predicted_goals
-        player_report["extra_data"]["goal_negative"] = goal_negative
-        player_report["extra_data"]["goal_positive"] = goal_positive
-        player_report["extra_data"]["predicted_assists"] = player_predicted_assists
-        player_report["extra_data"]["assist_negative"] = assist_negative
-        player_report["extra_data"]["assist_positive"] = assist_positive
-
-        return player_report
+        return PlayerReport(
+            fixture_id=self.match.fixture.id,
+            home_away="H" if self.match.club_x == player.club else "A",
+            tournament=(
+                self.match.tournament.tournament
+                if type(self.match.tournament).__name__ == "Group"
+                else self.match.tournament
+            ),
+            date=self.match.date,
+            gameweek=self.match.fixture.gameweek,
+            position=position,
+            pre_match_fatigue=player.fatigue,
+            pre_match_form=player.form,
+            goals=goals_scored,
+            assists=assists,
+            opposition_club=opposition_club,
+            performance_index=performance_index,
+            fatigue_increase=fatigue_increase,
+            ungravitated_match_form=ungravitated_match_form,
+            gravitated_match_form=gravitated_match_form,
+            extra_data=extra_data,
+        )
 
     def get_rating_boosts_for_goals_and_assists(self, goal_difference, goals_scored):
         goal_difference_component_of_rating_boost_for_goal = (

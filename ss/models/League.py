@@ -111,8 +111,7 @@ class League:
                     [
                         1
                         for player_report in player.player_reports
-                        if player_report["tournament"] == self
-                        and player_report["gameweek"] <= gameweek
+                        if player_report.tournament == self and player_report.gameweek <= gameweek
                     ]
                 )
                 performance_indices[player] = {}
@@ -123,40 +122,40 @@ class League:
                 if "goals" in indices:
                     goals = np.sum(
                         [
-                            player_report["goals"]
+                            player_report.goals
                             for player_report in player.player_reports
-                            if player_report["tournament"] == self
-                            and player_report["gameweek"] <= gameweek
+                            if player_report.tournament == self
+                            and player_report.gameweek <= gameweek
                         ]
                     )
                     performance_indices[player]["goals"] = int(goals)
                 if "assists" in indices:
                     assists = np.sum(
                         [
-                            player_report["assists"]
+                            player_report.assists
                             for player_report in player.player_reports
-                            if player_report["tournament"] == self
-                            and player_report["gameweek"] <= gameweek
+                            if player_report.tournament == self
+                            and player_report.gameweek <= gameweek
                         ]
                     )
                     performance_indices[player]["assists"] = int(assists)
                 if "mvps" in indices:
                     mvps = np.sum(
                         [
-                            player_report["man_of_the_match"]
+                            player_report.man_of_the_match
                             for player_report in player.player_reports
-                            if player_report["tournament"] == self
-                            and player_report["gameweek"] <= gameweek
+                            if player_report.tournament == self
+                            and player_report.gameweek <= gameweek
                         ]
                     )
                     performance_indices[player]["mvps"] = int(mvps)
                 if "performance_index" in indices:
                     performance_index = np.mean(
                         [
-                            player_report["performance_index"]
+                            player_report.performance_index
                             for player_report in player.player_reports
-                            if player_report["tournament"] == self
-                            and player_report["gameweek"] <= gameweek
+                            if player_report.tournament == self
+                            and player_report.gameweek <= gameweek
                         ]
                     )
                     performance_indices[player]["performance_index"] = round(performance_index, 2)
@@ -169,16 +168,16 @@ class League:
                 if "positions" in indices:
                     performance_indices[player]["positions"] = {
                         position: [
-                            player_report["position"]
+                            player_report.position
                             for player_report in player.player_reports
-                            if player_report["tournament"] == self
-                            and player_report["gameweek"] <= gameweek
+                            if player_report.tournament == self
+                            and player_report.gameweek <= gameweek
                         ].count(position)
                         for position in {
-                            player_report["position"]
+                            player_report.position
                             for player_report in player.player_reports
-                            if player_report["tournament"] == self
-                            and player_report["gameweek"] <= gameweek
+                            if player_report.tournament == self
+                            and player_report.gameweek <= gameweek
                         }
                     }
         if sort_by is not None:
