@@ -1,7 +1,7 @@
 import numpy as np
 
 from .. import goal_probability, utils
-from .match_models import MatchReport, TeamMatchReport
+from .dataclasses import MatchReport, TeamMatchReport
 from .PlayerReportEngine import PlayerReportEngine
 
 

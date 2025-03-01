@@ -2,13 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from .Club import Club
     from .League import League
     from .Player import Player
-    from .PlayerReport import PlayerReport
     from .Team import Team
 
 
@@ -17,6 +16,26 @@ class Goal:
     minute: int
     scorer: Player
     assister: Player | None = None
+
+
+@dataclass
+class PlayerReport:
+    fixture_id: int
+    home_away: str
+    league: League
+    date: date
+    gameweek: int
+    position: str
+    pre_match_form: float
+    goals: int
+    assists: int
+    opposition_club: Club
+    performance_index: float
+    fatigue_increase: float
+    ungravitated_match_form: float
+    gravitated_match_form: float
+    man_of_the_match: bool = False
+    extra_data: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

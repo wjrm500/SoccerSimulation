@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 from .. import config
-from .match_models import Goal
+from .dataclasses import Goal
 
 
 class Team:

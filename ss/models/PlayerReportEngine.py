@@ -1,7 +1,7 @@
 import numpy as np
 
 from .. import goal_probability, utils
-from .PlayerReport import PlayerReport
+from .dataclasses import PlayerReport
 
 
 class PlayerReportEngine:
@@ -163,7 +163,6 @@ class PlayerReportEngine:
             date=self.match.date,
             gameweek=self.match.fixture.gameweek,
             position=position,
-            pre_match_fatigue=player.fatigue,
             pre_match_form=player.form,
             goals=goals_scored,
             assists=assists,
