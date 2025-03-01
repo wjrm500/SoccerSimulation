@@ -14,21 +14,21 @@
         <tr class="result clickable-row" data-fixture-id="{{ result['fixture_id'] }}" data-at-home="{{ result['at_home'] }}">
             <td>{{ result['gameweek'] }}</td>
             <td>{{ '' if result['at_home'] else '@' }}</td>
-            <td class="result-home-club-name result-club-name {% if result['result'] == 'win' %}winner{% endif %}" data-club-id="{{ result['club'].id }}">
+            <td class="result-home-club-name result-club-name {% if result['result'].value == 'win' %}winner{% endif %}" data-club-id="{{ result['club'].id }}">
                 {{ result['club'].name }}
             </td>
             <td class="middle-bit">
-                <div class="club-score-container" data-result="{{ result['result'] }}">
-                    <span class="{% if result['result'] == 'win' %}winner{% endif %}">
+                <div class="club-score-container" data-result="{{ result['result'].value }}">
+                    <span class="{% if result['result'].value == 'win' %}winner{% endif %}">
                         {{ result['club_score'] }}
                     </span>
                     <span>-</span>
-                    <span class="{% if result['result'] == 'loss' %}winner{% endif %}">
+                    <span class="{% if result['result'].value == 'loss' %}winner{% endif %}">
                         {{ result['opp_club_score'] }}
                     </span>
                 </div>
             </td>
-            <td class="result-away-club-name result-club-name {% if result['result'] == 'loss' %}winner{% endif %}" data-club-id="{{ result['opp_club'].id }}">
+            <td class="result-away-club-name result-club-name {% if result['result'].value == 'loss' %}winner{% endif %}" data-club-id="{{ result['opp_club'].id }}">
                 {{ result['opp_club'].name }}
             </td>
         </tr>

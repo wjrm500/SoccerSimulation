@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date
+from enum import Enum
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -9,6 +10,12 @@ if TYPE_CHECKING:
     from .League import League
     from .Player import Player
     from .Team import Team
+
+
+class MatchOutcome(Enum):
+    WIN = "win"
+    DRAW = "draw"
+    LOSS = "loss"
 
 
 @dataclass
@@ -44,7 +51,7 @@ class TeamMatchReport:
     potential: float
     goals_for: int = 0
     goals_against: int = 0
-    outcome: str = ""  # "win", "draw", or "loss"
+    outcome: MatchOutcome | None = None
     goals: list[Goal] = field(default_factory=list)
     players: dict[Player, PlayerReport] = field(default_factory=dict)
 

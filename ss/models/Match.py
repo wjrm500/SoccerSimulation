@@ -1,7 +1,7 @@
 import numpy as np
 
 from .. import goal_probability, utils
-from .dataclasses import MatchReport, TeamMatchReport
+from .dataclasses import MatchOutcome, MatchReport, TeamMatchReport
 from .PlayerReportEngine import PlayerReportEngine
 
 
@@ -63,11 +63,11 @@ class Match:
         # Determine match outcomes
         for team_report in report.clubs_reports.values():
             if team_report.goals_for > team_report.goals_against:
-                team_report.outcome = "win"
+                team_report.outcome = MatchOutcome.WIN
             elif team_report.goals_for == team_report.goals_against:
-                team_report.outcome = "draw"
+                team_report.outcome = MatchOutcome.DRAW
             else:
-                team_report.outcome = "loss"
+                team_report.outcome = MatchOutcome.LOSS
 
         # Generate player reports
         player_report_engine = PlayerReportEngine(self)

@@ -5,6 +5,7 @@ import numpy as np
 from ..config import system_config
 from .Club import Club
 from .Database import Database
+from .dataclasses import MatchOutcome
 
 
 class League:
@@ -80,13 +81,13 @@ class League:
             self.league_tables[current_gameweek][club]["GD"] += (
                 team_report.goals_for - team_report.goals_against
             )
-            if team_report.outcome == "win":
+            if team_report.outcome == MatchOutcome.WIN:
                 self.league_tables[current_gameweek][club]["W"] += 1
                 self.league_tables[current_gameweek][club]["Pts"] += 3
-            elif team_report.outcome == "draw":
+            elif team_report.outcome == MatchOutcome.DRAW:
                 self.league_tables[current_gameweek][club]["D"] += 1
                 self.league_tables[current_gameweek][club]["Pts"] += 1
-            elif team_report.outcome == "loss":
+            elif team_report.outcome == MatchOutcome.LOSS:
                 self.league_tables[current_gameweek][club]["L"] += 1
 
     def get_league_table(self, gameweek=None):
