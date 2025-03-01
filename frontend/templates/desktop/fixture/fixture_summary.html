@@ -1,36 +1,36 @@
 <div class="fixture-summary-header-container fixture-summary-container">
-    {{ '{} · Division {}'.format(fixture['match']['match_report'].tournament.system.name, 1)  }}
+    {{ '{} · Division {}'.format(fixture.league.system.name, 1) }}
 </div>
 <div class="fixture-summary-header-container fixture-summary-container">
-    {{ 'Gameweek {} · {}'.format(fixture['match']['match_report'].gameweek, fixture['match']['match_report'].date.strftime('%Y-%m-%d'))  }}
+    {{ 'Gameweek {} · {}'.format(match_report.gameweek, match_report.match_date.strftime('%Y-%m-%d')) }}
 </div>
 <div id="fixture-summary-result" class="fixture-summary-container">
     <div id="fixture-summary-result-headline">
         <div id="fixture-summary-home-team-name" class="fixture-summary-team-name">
-            <a data-url="/simulation/club/{{ home_club_data['id'] }}">{{ home_club_data['name'] }}</a>
+            <a data-url="/simulation/club/{{ home_club.id }}">{{ home_club.name }}</a>
         </div>
         <div id="fixture-summary-score">
-            {{ '{} - {}'.format(home_club_data['match']['goals_for'], away_club_data['match']['goals_for']) }}
+            {{ '{} - {}'.format(match_report.clubs_reports[home_club].goals_for, match_report.clubs_reports[away_club].goals_for) }}
         </div>
         <div id="fixture-summary-away-team-name" class="fixture-summary-team-name">
-            <a data-url="/simulation/club/{{ away_club_data['id'] }}">{{ away_club_data['name'] }}</a>
+            <a data-url="/simulation/club/{{ away_club.id }}">{{ away_club.name }}</a>
         </div>
     </div>
     <div id="fixture-summary-goals">
         <div id="fixture-summary-home-team-goals" class="fixture-summary-team-goals">
-            {% if home_club_data['match']['goals'] is not none %}
-                {% for goal in home_club_data['match']['goals'] %}
+            {% if match_report.clubs_reports[home_club].goals %}
+                {% for goal in match_report.clubs_reports[home_club].goals %}
                     <div class="fixture-summary-goal">
                         <div class="fixture-summary-goal-minute">
-                            {{ goal['minute'] }}'
+                            {{ goal.minute }}'
                         </div>
                         <div class="fixture-summary-goal-players">
-                            <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal['scorer'].id }}">
-                                {{ goal['scorer'].get_proper_name() }}
+                            <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal.scorer.id }}">
+                                {{ goal.scorer.get_proper_name() }}
                             </div>
-                            {% if goal['assister'] is not none %}
-                                <div class="fixture-summary-goal-assister fixture-summary-goal-player" data-player-id="{{ goal['assister'].id }}">
-                                        {{ goal['assister'].get_proper_name() }}
+                            {% if goal.assister is not none %}
+                                <div class="fixture-summary-goal-assister fixture-summary-goal-player" data-player-id="{{ goal.assister.id }}">
+                                    {{ goal.assister.get_proper_name() }}
                                 </div>
                             {% endif %}
                         </div>
@@ -40,21 +40,21 @@
         </div>
         <div id="fixture-summary-goals-divider"></div>
         <div id="fixture-summary-away-team-goals" class="fixture-summary-team-goals">
-            {% if away_club_data['match']['goals'] is not none %}
-                {% for goal in away_club_data['match']['goals'] %}
+            {% if match_report.clubs_reports[away_club].goals %}
+                {% for goal in match_report.clubs_reports[away_club].goals %}
                     <div class="fixture-summary-goal">
                         <div class="fixture-summary-goal-players">
-                            <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal['scorer'].id }}">
-                                {{ goal['scorer'].get_proper_name() }}
+                            <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal.scorer.id }}">
+                                {{ goal.scorer.get_proper_name() }}
                             </div>
-                            {% if goal['assister'] is not none %}
-                                <div class="fixture-summary-goal-assister fixture-summary-goal-player" data-player-id="{{ goal['assister'].id }}">
-                                        {{ goal['assister'].get_proper_name() }}
+                            {% if goal.assister is not none %}
+                                <div class="fixture-summary-goal-assister fixture-summary-goal-player" data-player-id="{{ goal.assister.id }}">
+                                    {{ goal.assister.get_proper_name() }}
                                 </div>
                             {% endif %}
                         </div>
                         <div class="fixture-summary-goal-minute">
-                            {{ goal['minute'] }}'
+                            {{ goal.minute }}'
                         </div>
                     </div>
                 {% endfor %}
@@ -62,6 +62,11 @@
         </div>
     </div>
 </div>
-<a href="#" id="fixture-summary-footer-container" data-url="/simulation/fixture/{{ reverse_fixture.fixture_id }}">
-    {{ 'Reverse fixture: {} {} - {} {}'.format(reverse_fixture['homeTeam'], reverse_fixture['homeGoals'], reverse_fixture['awayGoals'], reverse_fixture['awayTeam']) }}
+<a href="#" id="fixture-summary-footer-container" data-url="/simulation/fixture/{{ reverse_fixture.id }}">
+    {{ 'Reverse fixture: {} {} - {} {}'.format(
+        reverse_fixture.club_x.name, 
+        reverse_fixture.match.match_report.clubs_reports[reverse_fixture.club_x].goals_for,
+        reverse_fixture.match.match_report.clubs_reports[reverse_fixture.club_y].goals_for,
+        reverse_fixture.club_y.name
+    ) }}
 </a>

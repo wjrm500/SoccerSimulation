@@ -1,9 +1,9 @@
 <div id="fixture-players-main">
-    {% for club_data in [home_club_data, away_club_data] %}
+    {% for club in [home_club, away_club] %}
         <div class="fixture-players-club">
             <div class="fixture-players-club-title">
-                <a data-url="/simulation/club/{{ club_data['team']['club'].id }}">
-                    {{ club_data['team']['club'].name }}
+                <a data-url="/simulation/club/{{ club.id }}">
+                    {{ club.name }}
                 </a>
             </div>
             <table class="full-table">
@@ -58,15 +58,16 @@
                         </div>
                     </th>
                 </tr>
-                {% for player, data in club_data['players'].items() %}
-                    <tr data-man-of-the-match="{{ data['man_of_the_match'] }}">
-                        <td data-player-id="{{ player.id }}">{{ player.get_proper_name() }}</td>
-                        <td>{{ data['position'] }}</td>
-                        <td>{{ data['extra_data']['select_rating'] }}</td>
-                        <td class="pre-match-form">{{ data['extra_data']['pre_match_form'] }}</td>
-                        <td>{{ data['goals'] }}</td>
-                        <td>{{ data['assists'] }}</td>
-                        <td class="performance-index">{{ data['performance_index'] }}</td>
+                {% set player_list = home_players if club == home_club else away_players %}
+                {% for player_data in player_list %}
+                    <tr data-man-of-the-match="{{ player_data['report'].man_of_the_match }}">
+                        <td data-player-id="{{ player_data['player'].id }}">{{ player_data['player'].get_proper_name() }}</td>
+                        <td>{{ player_data['report'].position }}</td>
+                        <td>{{ player_data['formatted_select_rating'] }}</td>
+                        <td class="pre-match-form">{{ player_data['formatted_pre_match_form'] }}</td>
+                        <td>{{ player_data['report'].goals }}</td>
+                        <td>{{ player_data['report'].assists }}</td>
+                        <td class="performance-index">{{ player_data['formatted_performance_index'] }}</td>
                     </tr>
                 {% endfor %}
             </table>

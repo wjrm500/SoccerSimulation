@@ -52,9 +52,13 @@ class League:
 
     def handle_match_report(self, match_report):
         self.match_reports.append(match_report)
-        for club_report in match_report["clubs"].values():
-            for player, player_report in club_report["players"].items():
+
+        # Process player reports
+        for team_report in match_report.clubs_reports.values():
+            for player, player_report in team_report.players.items():
                 player.handle_player_report(player_report)
+
+        # Handle league table updates
         max_games_played = max(self.league_tables.keys())
         gameweek_progression = (
             len({value["GP"] for value in self.league_tables[max_games_played].values()}) == 1
@@ -67,22 +71,22 @@ class League:
             }
         else:
             current_gameweek = max_games_played
-        for club, club_report in match_report["clubs"].items():
+
+        # Update stats for each club
+        for club, team_report in match_report.clubs_reports.items():
             self.league_tables[current_gameweek][club]["GP"] += 1
-            self.league_tables[current_gameweek][club]["GF"] += club_report["match"]["goals_for"]
-            self.league_tables[current_gameweek][club]["GA"] += club_report["match"][
-                "goals_against"
-            ]
+            self.league_tables[current_gameweek][club]["GF"] += team_report.goals_for
+            self.league_tables[current_gameweek][club]["GA"] += team_report.goals_against
             self.league_tables[current_gameweek][club]["GD"] += (
-                club_report["match"]["goals_for"] - club_report["match"]["goals_against"]
+                team_report.goals_for - team_report.goals_against
             )
-            if club_report["match"]["outcome"] == "win":
+            if team_report.outcome == "win":
                 self.league_tables[current_gameweek][club]["W"] += 1
                 self.league_tables[current_gameweek][club]["Pts"] += 3
-            elif club_report["match"]["outcome"] == "draw":
+            elif team_report.outcome == "draw":
                 self.league_tables[current_gameweek][club]["D"] += 1
                 self.league_tables[current_gameweek][club]["Pts"] += 1
-            elif club_report["match"]["outcome"] == "loss":
+            elif team_report.outcome == "loss":
                 self.league_tables[current_gameweek][club]["L"] += 1
 
     def get_league_table(self, gameweek=None):

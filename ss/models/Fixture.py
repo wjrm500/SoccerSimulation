@@ -22,7 +22,5 @@ class Fixture:
 
     def handle_match_report(self, match_report):
         self.goals = {}
-        club_x = list(match_report["clubs"].keys())[0]
-        club_y = list(match_report["clubs"].keys())[1]
-        self.goals[club_x] = match_report["clubs"][club_x]["match"]["goals_for"]
-        self.goals[club_y] = match_report["clubs"][club_y]["match"]["goals_for"]
+        self.goals[match_report.home_club] = match_report.home_report.goals_for
+        self.goals[match_report.away_club] = match_report.away_report.goals_for

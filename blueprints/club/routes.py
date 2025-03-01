@@ -36,27 +36,33 @@ def club(club_id):
         sort_by="performance_index", gameweek=search_gameweek, clubs=club
     )
 
+    # Get match reports filtered by club and gameweek
+    match_reports = [
+        report
+        for report in club.league.match_reports
+        if (club == report.home_club or club == report.away_club)
+        and (search_gameweek is None or report.gameweek <= search_gameweek)
+    ]
+
     results = []
-    for match_report in club.get_match_reports(search_gameweek):
-        at_home = club == list(match_report["clubs"].keys())[0]
-        opp_club = [x for x in list(match_report["clubs"].keys()) if x != club][0]
-        club_score = match_report["clubs"][club]["match"]["goals_for"]
-        opp_club_score = match_report["clubs"][opp_club]["match"]["goals_for"]
+    for match_report in match_reports:
+        at_home = club == match_report.home_club
+        opp_club = match_report.away_club if at_home else match_report.home_club
+        club_report = match_report.clubs_reports[club]
+        opp_club_report = match_report.clubs_reports[opp_club]
+
         result = {
             "at_home": at_home,
-            "fixture_id": match_report["fixture_id"],
-            "gameweek": match_report["gameweek"],
+            "fixture_id": match_report.fixture_id,
+            "gameweek": match_report.gameweek,
             "club": club,
             "opp_club": opp_club,
-            "club_score": club_score,
-            "opp_club_score": opp_club_score,
-            "result": "win"
-            if club_score > opp_club_score
-            else "loss"
-            if opp_club_score > club_score
-            else "draw",
+            "club_score": club_report.goals_for,
+            "opp_club_score": opp_club_report.goals_for,
+            "result": club_report.outcome,
         }
         results.append(result)
+
     return render_template(
         "desktop/club/club.html",
         css_files=["rest_of_website.css", "iframe.css"],

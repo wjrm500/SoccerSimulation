@@ -14,27 +14,25 @@ class PlayerReportEngine:
             [
                 select.player.skill_values["fitness"]
                 for club in self.match.clubs
-                for select in report["clubs"][club]["team"].selection
+                for select in report.clubs_reports[club].team.selection
             ]
         )
-        for club in self.match.clubs:
-            team = report["clubs"][club]["team"]
-            report["clubs"][club]["players"] = {}
+
+        # Generate player reports for each club
+        for club, team_report in report.clubs_reports.items():
+            team = team_report.team
             for select in team.selection:
                 player = select.player
-                report["clubs"][club]["players"][player] = self.get_player_report(
+                team_report.players[player] = self.get_player_report(
                     club, team, select, mean_fitness
                 )
 
-        ### Tag man of the match
+        # Tag man of the match
         man_of_the_match = self.man_of_the_match["player"]
-        for club in self.match.clubs:
-            team = report["clubs"][club]["team"]
-            for select in team.selection:
+        for team_report in report.clubs_reports.values():
+            for select in team_report.team.selection:
                 player = select.player
-                report["clubs"][club]["players"][player].man_of_the_match = (
-                    player == man_of_the_match
-                )
+                team_report.players[player].man_of_the_match = player == man_of_the_match
 
     def get_player_report(self, club, team, select, mean_fitness):
         player = select.player
@@ -44,20 +42,16 @@ class PlayerReportEngine:
 
         club = player.club
         opposition_club = self.match.get_opposition_club(club)
-        club_report = self.match.match_report["clubs"][club]
-        opposition_club_report = self.match.match_report["clubs"][opposition_club]
-        goals = club_report["match"]["goals"]
-        goals_scored = (
-            sum([1 for goal in goals if goal["scorer"] == player]) if goals is not None else 0
-        )
-        assists = (
-            sum([1 for goal in goals if goal["assister"] == player]) if goals is not None else 0
-        )
+        club_report = self.match.match_report.clubs_reports[club]
+        opposition_club_report = self.match.match_report.clubs_reports[opposition_club]
+        goals = club_report.goals
+        goals_scored = sum([1 for goal in goals if goal.scorer == player]) if goals else 0
+        assists = sum([1 for goal in goals if goal.assister == player]) if goals else 0
 
         ### Get player performance index
-        select = club_report["team"].get_select_from_player(player)
-        select_rating = club_report["team"].get_select_rating(select)
-        opposition_team_rating = opposition_club_report["team"].average_rating
+        select = club_report.team.get_select_from_player(player)
+        select_rating = club_report.team.get_select_rating(select)
+        opposition_team_rating = opposition_club_report.team.average_rating
         rating_advantage = select_rating - opposition_team_rating
         x = rating_advantage
         base_rating = ((1 / (1 + np.power(np.e, (-x / 12.5)))) + 0.5) * 5
@@ -65,18 +59,18 @@ class PlayerReportEngine:
             {"mu": base_rating, "sg": 0.5, "mn": 2.5, "mx": 7.5}
         )
 
-        offensive_contribution = club_report["team"].selection_offensive_contributions[select]
-        defensive_contribution = club_report["team"].selection_defensive_contributions[select]
+        offensive_contribution = club_report.team.selection_offensive_contributions[select]
+        defensive_contribution = club_report.team.selection_defensive_contributions[select]
         team_predicted_goals_for = utils.limit_value(
-            goal_probability.goal_probability[int(club_report["potential"])]["mu"], mn=0
+            goal_probability.goal_probability[int(club_report.potential)]["mu"], mn=0
         )
-        team_actual_goals_for = club_report["match"]["goals_for"]
+        team_actual_goals_for = club_report.goals_for
         team_offensive_outperformance = team_actual_goals_for - team_predicted_goals_for
         team_predicted_goals_against = utils.limit_value(
-            goal_probability.goal_probability[int(opposition_club_report["potential"])]["mu"],
+            goal_probability.goal_probability[int(opposition_club_report.potential)]["mu"],
             mn=0,
         )
-        team_actual_goals_against = opposition_club_report["match"]["goals_for"]
+        team_actual_goals_against = opposition_club_report.goals_for
         team_defensive_outperformance = team_predicted_goals_against - team_actual_goals_against
         offensive_boost = utils.limit_value(
             offensive_contribution * team_offensive_outperformance * 5, mn=-1.5, mx=1.5
@@ -85,12 +79,8 @@ class PlayerReportEngine:
             defensive_contribution * team_defensive_outperformance * 5, mn=-1.5, mx=1.5
         )
 
-        goal_difference = abs(
-            club_report["match"]["goals_for"] - opposition_club_report["match"]["goals_for"]
-        )
-        goals_scored_total = (
-            club_report["match"]["goals_for"] + opposition_club_report["match"]["goals_for"]
-        )
+        goal_difference = abs(club_report.goals_for - opposition_club_report.goals_for)
+        goals_scored_total = club_report.goals_for + opposition_club_report.goals_for
         rating_boost_for_goal, rating_boost_for_assist = (
             self.get_rating_boosts_for_goals_and_assists(goal_difference, goals_scored_total)
         )

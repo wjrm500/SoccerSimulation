@@ -3,6 +3,7 @@ import random
 import numpy as np
 
 from .. import config
+from .match_models import Goal
 
 
 class Team:
@@ -114,7 +115,7 @@ class Team:
     def get_goals(self, num_goals):
         if num_goals == 0:
             return
-        return sorted([self.get_goal() for i in range(num_goals)], key=lambda x: x["minute"])
+        return sorted([self.get_goal() for i in range(num_goals)], key=lambda x: x.minute)
 
     def set_goal_and_assist_factors(self):
         self.set_goal_factors()
@@ -171,15 +172,13 @@ class Team:
         }
 
     def get_goal(self):
-        goal = {}
-        goal["scorer"] = self.get_goal_scorer()
+        scorer = self.get_goal_scorer()
         while True:
             assister = self.get_goal_assister()
-            if assister != goal["scorer"]:
+            if assister != scorer:
                 break
-        goal["assister"] = assister
-        goal["minute"] = self.get_goal_minute()
-        return goal
+        minute = self.get_goal_minute()
+        return Goal(scorer=scorer, assister=assister, minute=minute)
 
     def get_goal_scorer(self):
         goalscorer = np.random.choice(

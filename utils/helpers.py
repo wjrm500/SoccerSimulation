@@ -49,29 +49,31 @@ def show_simulation():
         sort_by="performance_index", gameweek=search_gameweek
     )
 
-    # Get results
+    # Get results using the object-oriented model
     dates = {}
     for match_report in league.match_reports:
-        if match_report["gameweek"] > search_gameweek:
+        # Skip reports for games after our search gameweek
+        if match_report.gameweek > search_gameweek:
             break
-        clubs = list(match_report["clubs"].keys())
-        if len(clubs) >= 2:
-            club_a, club_b = clubs[0], clubs[1]
-        else:
-            club_a = clubs[0]
-            club_b = None
-        match = list(match_report["clubs"].values())[0]["match"]
-        score_a, score_b = match["goals_for"], match["goals_against"]
+
+        # Extract data from the match report
+        club_a = match_report.home_club
+        club_b = match_report.away_club
+        score_a = match_report.home_report.goals_for
+        score_b = match_report.away_report.goals_for
+        fixture_id = match_report.fixture_id
+        match_date = match_report.match_date
+
         result = {
-            "fixture_id": match_report["fixture_id"],
+            "fixture_id": fixture_id,
             "home_club": club_a,
             "away_club": club_b,
             "home_score": score_a,
             "away_score": score_b,
         }
-        if match_report["date"] not in dates:
-            dates[match_report["date"]] = []
-        dates[match_report["date"]].append(result)
+        if match_date not in dates:
+            dates[match_date] = []
+        dates[match_date].append(result)
 
     if request.MOBILE:
         return render_template(
