@@ -10,7 +10,7 @@
             <a data-url="/simulation/club/{{ home_club.id }}">{{ home_club.name }}</a>
         </div>
         <div id="fixture-summary-score">
-            {{ '{} - {}'.format(match_report.clubs_reports[home_club].goals_for, match_report.clubs_reports[away_club].goals_for) }}
+            {{ '{} - {}'.format(match_report.home_report.goals_for, match_report.away_report.goals_for) }}
         </div>
         <div id="fixture-summary-away-team-name" class="fixture-summary-team-name">
             <a data-url="/simulation/club/{{ away_club.id }}">{{ away_club.name }}</a>
@@ -18,8 +18,8 @@
     </div>
     <div id="fixture-summary-goals">
         <div id="fixture-summary-home-team-goals" class="fixture-summary-team-goals">
-            {% if match_report.clubs_reports[home_club].goals %}
-                {% for goal in match_report.clubs_reports[home_club].goals %}
+            {% if match_report.home_report.goals %}
+                {% for goal in match_report.home_report.goals %}
                     <div class="fixture-summary-goal">
                         <div class="fixture-summary-goal-minute">
                             {{ goal.minute }}'
@@ -40,8 +40,8 @@
         </div>
         <div id="fixture-summary-goals-divider"></div>
         <div id="fixture-summary-away-team-goals" class="fixture-summary-team-goals">
-            {% if match_report.clubs_reports[away_club].goals %}
-                {% for goal in match_report.clubs_reports[away_club].goals %}
+            {% if match_report.away_report.goals %}
+                {% for goal in match_report.away_report.goals %}
                     <div class="fixture-summary-goal">
                         <div class="fixture-summary-goal-players">
                             <div class="fixture-summary-goal-scorer fixture-summary-goal-player" data-player-id="{{ goal.scorer.id }}">
