@@ -25,11 +25,6 @@ class Team:
         self.set_selection_offensive_defensive_contributions()
         self.set_goal_and_assist_factors()
 
-    def get_select_from_player(self, player):
-        for select in self.selection:
-            if select.player == player:
-                return select
-
     def get_select_rating(self, select):
         return select.rating
 
