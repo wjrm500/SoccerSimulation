@@ -47,7 +47,7 @@ class PlayerReport:
 
 
 @dataclass
-class TeamMatchReport:
+class TeamReport:
     team: Team
     potential: float
     goals_for: int = 0
@@ -65,10 +65,10 @@ class MatchReport:
     match_date: date
     home_club: Club
     away_club: Club
-    home_report: TeamMatchReport
-    away_report: TeamMatchReport
+    home_report: TeamReport
+    away_report: TeamReport
     neutral_venue: bool = False
 
     @property
-    def clubs_reports(self) -> dict[Club, TeamMatchReport]:
+    def clubs_reports(self) -> dict[Club, TeamReport]:
         return {self.home_club: self.home_report, self.away_club: self.away_report}

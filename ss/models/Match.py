@@ -1,7 +1,7 @@
 import numpy as np
 
 from .. import goal_probability, utils
-from .dataclasses import MatchOutcome, MatchReport, TeamMatchReport
+from .dataclasses import MatchOutcome, MatchReport, TeamReport
 from .PlayerReportEngine import PlayerReportEngine
 
 
@@ -23,8 +23,8 @@ class Match:
         x_potential = x_team.offence - y_team.defence if x_team and y_team else 0
         y_potential = y_team.offence - x_team.defence if x_team and y_team else 0
 
-        x_report = TeamMatchReport(team=x_team, potential=x_potential)
-        y_report = TeamMatchReport(team=y_team, potential=y_potential)
+        x_report = TeamReport(team=x_team, potential=x_potential)
+        y_report = TeamReport(team=y_team, potential=y_potential)
 
         # Create match report
         self.match_report = MatchReport(

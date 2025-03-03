@@ -1,7 +1,19 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 
 from .. import goal_probability, utils
 from .dataclasses import PlayerReport
+
+if TYPE_CHECKING:
+    from .Club import Club
+    from .dataclasses import MatchReport, TeamReport
+    from .Match import Match
+    from .Player import Player
+    from .Select import Select
+    from .Team import Team
 
 
 class PlayerReportEngine:
@@ -36,12 +48,12 @@ class PlayerReportEngine:
     # Form calculation
     FORM_GRAVITY_FACTOR = 0.1  # Player's form impact on new form (1/10)
 
-    def __init__(self, match):
+    def __init__(self, match: Match) -> None:
         """Initialise the engine with the match being processed."""
         self.match = match
         self.man_of_the_match = None
 
-    def generate_player_reports(self, report):
+    def generate_player_reports(self, report: MatchReport) -> None:
         """Generate performance reports for all players in the match."""
         # Calculate mean fitness of all players in the match
         mean_fitness = self._calculate_mean_fitness(report)
@@ -58,7 +70,7 @@ class PlayerReportEngine:
         # Designate man of the match
         self._assign_man_of_the_match(report)
 
-    def _calculate_mean_fitness(self, report):
+    def _calculate_mean_fitness(self, report: MatchReport) -> float:
         """Calculate the average fitness of all players in the match."""
         all_fitness_values = [
             select.player.skill_values["fitness"]
@@ -67,7 +79,7 @@ class PlayerReportEngine:
         ]
         return np.mean(all_fitness_values)
 
-    def _assign_man_of_the_match(self, report):
+    def _assign_man_of_the_match(self, report: MatchReport) -> None:
         """Designate the best performer as man of the match."""
         if not self.man_of_the_match:
             return
@@ -78,7 +90,9 @@ class PlayerReportEngine:
                 player = select.player
                 team_report.players[player].man_of_the_match = player == best_player
 
-    def _generate_player_report(self, club, team, select, mean_fitness):
+    def _generate_player_report(
+        self, club: Club, team: Team, select: Select, mean_fitness: float
+    ) -> PlayerReport:
         """Generate a comprehensive performance report for a player."""
         player = select.player
         position = select.position
@@ -138,7 +152,9 @@ class PlayerReportEngine:
             team_actual_goals_against=opposition_report.goals_for,
         )
 
-    def _calculate_player_rating(self, select, club_report, opposition_report):
+    def _calculate_player_rating(
+        self, select: Select, club_report: TeamReport, opposition_report: TeamReport
+    ) -> dict[str, float]:
         """Calculate the player's base rating based on skill differential."""
         # Get player and opposition ratings
         select_rating = club_report.team.get_select_rating(select)
@@ -164,7 +180,9 @@ class PlayerReportEngine:
             "modulated_base_rating": modulated_rating,
         }
 
-    def _calculate_team_performance(self, club_report, opposition_report):
+    def _calculate_team_performance(
+        self, club_report: TeamReport, opposition_report: TeamReport
+    ) -> dict[str, float]:
         """Calculate how the team performed relative to expectations."""
         # Offensive performance (goals scored vs expected)
         predicted_goals_for = utils.limit_value(
@@ -187,7 +205,9 @@ class PlayerReportEngine:
             "defensive_outperformance": defensive_outperformance,
         }
 
-    def _calculate_player_contribution(self, select, team, team_perf):
+    def _calculate_player_contribution(
+        self, select: Select, team: Team, team_perf: dict[str, float]
+    ) -> dict[str, float]:
         """Calculate how much the player contributed to team performance."""
         offensive_contribution = team.selection_offensive_contributions[select]
         defensive_contribution = team.selection_defensive_contributions[select]
@@ -217,7 +237,9 @@ class PlayerReportEngine:
             "defensive_boost": defensive_boost,
         }
 
-    def _calculate_goal_assist_impact(self, player, team, club_report, opposition_report):
+    def _calculate_goal_assist_impact(
+        self, player: Player, team: Team, club_report: TeamReport, opposition_report: TeamReport
+    ) -> dict[str, float]:
         """Calculate the impact of goals and assists on player rating."""
         # Count actual goals and assists
         goals = club_report.goals or []
@@ -261,7 +283,12 @@ class PlayerReportEngine:
             "assist_positive": assist_positive,
         }
 
-    def _calculate_performance_index(self, rating_data, player_contrib, goal_assist_data):
+    def _calculate_performance_index(
+        self,
+        rating_data: dict[str, float],
+        player_contrib: dict[str, float],
+        goal_assist_data: dict[str, float],
+    ) -> float:
         """Calculate the overall performance index for the player."""
         # Combine all performance factors into a single index
         performance_index = utils.limit_value(
@@ -278,7 +305,7 @@ class PlayerReportEngine:
 
         return performance_index
 
-    def _calculate_fatigue_increase(self, player, mean_fitness):
+    def _calculate_fatigue_increase(self, player: Player, mean_fitness: float) -> float:
         """Calculate fatigue increase based on player's fitness relative to match average."""
         # How different is this player's fitness from the average?
         fitness_difference = utils.limit_value(
@@ -312,7 +339,9 @@ class PlayerReportEngine:
 
         return fatigue_increase
 
-    def _calculate_form_change(self, player, performance_index, base_rating):
+    def _calculate_form_change(
+        self, player: Player, performance_index: float, base_rating: float
+    ) -> float:
         """Calculate the change on player's form from this match."""
         # Calculate how much better/worse player performed than expected
         outperformance = performance_index - base_rating
@@ -325,7 +354,9 @@ class PlayerReportEngine:
         gravity = player.form * self.FORM_GRAVITY_FACTOR
         return ungravitated_form_change - gravity
 
-    def get_rating_boosts_for_goals_and_assists(self, goal_difference, goals_scored):
+    def get_rating_boosts_for_goals_and_assists(
+        self, goal_difference: int, goals_scored: int
+    ) -> tuple[float]:
         """Calculate how valuable goals and assists are in this specific match context."""
         # Goal difference component: goals more valuable in close games
         if goal_difference == 0:
@@ -345,4 +376,4 @@ class PlayerReportEngine:
         # Assists worth 75% of goals
         assist_boost = goal_boost * self.ASSIST_VALUE_FACTOR
 
-        return [goal_boost, assist_boost]
+        return goal_boost, assist_boost
