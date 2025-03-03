@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import date
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .Club import Club
@@ -40,8 +40,10 @@ class PlayerReport:
     performance_index: float
     fatigue_increase: float
     form_change: float
+    select_rating: float
+    team_actual_goals_for: int
+    team_actual_goals_against: int
     man_of_the_match: bool = False
-    extra_data: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

@@ -118,9 +118,6 @@ class PlayerReportEngine:
             player, performance_index, rating_data["base_rating"]
         )
 
-        # Compile extra data for detailed analysis
-        extra_data = self._create_extra_data_dict(rating_data, team_perf)
-
         # Create the final player report
         return PlayerReport(
             fixture_id=self.match.fixture.id,
@@ -136,7 +133,9 @@ class PlayerReportEngine:
             performance_index=performance_index,
             fatigue_increase=fatigue_increase,
             form_change=form_change,
-            extra_data=extra_data,
+            select_rating=club_report.team.get_select_rating(select),
+            team_actual_goals_for=club_report.goals_for,
+            team_actual_goals_against=opposition_report.goals_for,
         )
 
     def _calculate_player_rating(self, select, club_report, opposition_report):
@@ -161,8 +160,6 @@ class PlayerReportEngine:
         )
 
         return {
-            "select_rating": select_rating,
-            "opposition_team_rating": opposition_rating,
             "base_rating": base_rating,
             "modulated_base_rating": modulated_rating,
         }
@@ -327,14 +324,6 @@ class PlayerReportEngine:
         # High form pulls form down, low form pulls it up
         gravity = player.form * self.FORM_GRAVITY_FACTOR
         return ungravitated_form_change - gravity
-
-    def _create_extra_data_dict(self, rating_data, team_perf):
-        """Create a dictionary of extra data for detailed analysis."""
-        return {
-            "select_rating": rating_data["select_rating"],
-            "team_actual_goals_for": team_perf["actual_goals_for"],
-            "team_actual_goals_against": team_perf["actual_goals_against"],
-        }
 
     def get_rating_boosts_for_goals_and_assists(self, goal_difference, goals_scored):
         """Calculate how valuable goals and assists are in this specific match context."""

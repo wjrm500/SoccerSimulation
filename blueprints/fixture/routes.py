@@ -31,7 +31,7 @@ def fixture(fixture_id):
             player_data = {
                 "player": player,
                 "report": player_report,
-                "formatted_select_rating": f"{player_report.extra_data['select_rating']:.2f}",
+                "formatted_select_rating": f"{player_report.select_rating:.2f}",
                 "formatted_performance_index": f"{player_report.performance_index:.2f}",
                 "formatted_pre_match_form": pre_match_form_text,
             }

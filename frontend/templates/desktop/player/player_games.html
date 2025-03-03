@@ -10,10 +10,10 @@
             <tr class="clickable-row" data-fixture-id="{{ player_report['fixture_id'] }}">
                 <td>{{ player_report['gameweek'] }}</td>
                 <td>
-                    <span class="player-game-result {{ 'draw' if player_report['extra_data']['team_actual_goals_for'] == player_report['extra_data']['team_actual_goals_against'] else 'win' if player_report['extra_data']['team_actual_goals_for'] > player_report['extra_data']['team_actual_goals_against'] else 'loss' }}"> {{
+                    <span class="player-game-result {{ 'draw' if player_report.team_actual_goals_for == player_report.team_actual_goals_against else 'win' if player_report.team_actual_goals_for > player_report.team_actual_goals_against else 'loss' }}"> {{
                         '{} - {}'.format(
-                            player_report['extra_data']['team_actual_goals_for'],
-                            player_report['extra_data']['team_actual_goals_against'],
+                            player_report.team_actual_goals_for,
+                            player_report.team_actual_goals_against,
                         )
                     }}
                     </span>
