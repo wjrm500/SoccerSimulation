@@ -39,7 +39,7 @@ class PlayerReport:
     opposition_club: Club
     performance_index: float
     fatigue_increase: float
-    gravitated_match_form: float
+    form_change: float
     man_of_the_match: bool = False
     extra_data: dict[str, Any] = field(default_factory=dict)
 

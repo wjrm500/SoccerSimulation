@@ -296,7 +296,7 @@ class Player:
         if player_report not in self.player_reports:
             self.player_reports.append(player_report)
             self.fatigue += player_report.fatigue_increase
-            self.form += player_report.gravitated_match_form
+            self.form += player_report.form_change
 
     def get_player_reports(self, gameweek=None):
         if gameweek is None:

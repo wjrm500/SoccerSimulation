@@ -114,7 +114,7 @@ class PlayerReportEngine:
 
         # Calculate fatigue and form impact
         fatigue_increase = self._calculate_fatigue_increase(player, mean_fitness)
-        form_impact = self._calculate_form_impact(
+        form_change = self._calculate_form_change(
             player, performance_index, rating_data["base_rating"]
         )
 
@@ -135,7 +135,7 @@ class PlayerReportEngine:
             opposition_club=opposition_club,
             performance_index=performance_index,
             fatigue_increase=fatigue_increase,
-            gravitated_match_form=form_impact["gravitated"],
+            form_change=form_change,
             extra_data=extra_data,
         )
 
@@ -315,20 +315,18 @@ class PlayerReportEngine:
 
         return fatigue_increase
 
-    def _calculate_form_impact(self, player, performance_index, base_rating):
-        """Calculate the impact on player's form from this match."""
+    def _calculate_form_change(self, player, performance_index, base_rating):
+        """Calculate the change on player's form from this match."""
         # Calculate how much better/worse player performed than expected
         outperformance = performance_index - base_rating
 
         # Convert to form scale
-        ungravitated_form = outperformance / self.RATING_SCALE
+        ungravitated_form_change = outperformance / self.RATING_SCALE
 
         # Apply gravitational pull based on current form
         # High form pulls form down, low form pulls it up
         gravity = player.form * self.FORM_GRAVITY_FACTOR
-        gravitated_form = ungravitated_form - gravity
-
-        return {"ungravitated": ungravitated_form, "gravitated": gravitated_form}
+        return ungravitated_form_change - gravity
 
     def _create_extra_data_dict(self, rating_data, team_perf):
         """Create a dictionary of extra data for detailed analysis."""
