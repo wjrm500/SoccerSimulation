@@ -9,10 +9,9 @@ from .dataclasses import PlayerReport
 
 if TYPE_CHECKING:
     from .Club import Club
-    from .dataclasses import MatchReport, TeamReport
+    from .dataclasses import MatchReport, Select, TeamReport
     from .Match import Match
     from .Player import Player
-    from .Select import Select
     from .Team import Team
 
 

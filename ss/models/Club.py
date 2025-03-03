@@ -3,7 +3,7 @@ import copy
 import numpy as np
 
 from .. import config
-from .Select import Select
+from .dataclasses import Select
 from .Team import Team
 
 

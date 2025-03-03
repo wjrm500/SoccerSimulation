@@ -25,6 +25,13 @@ class Goal:
     assister: Player | None = None
 
 
+@dataclass(frozen=True)
+class Select:
+    player: Player
+    position: str
+    rating: float
+
+
 @dataclass
 class PlayerReport:
     fixture_id: int
