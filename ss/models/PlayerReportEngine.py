@@ -119,9 +119,7 @@ class PlayerReportEngine:
         )
 
         # Compile extra data for detailed analysis
-        extra_data = self._create_extra_data_dict(
-            rating_data, team_perf, player_contrib, goal_assist_data
-        )
+        extra_data = self._create_extra_data_dict(rating_data, team_perf)
 
         # Create the final player report
         return PlayerReport(
@@ -186,10 +184,8 @@ class PlayerReportEngine:
         defensive_outperformance = predicted_goals_against - actual_goals_against
 
         return {
-            "predicted_goals_for": predicted_goals_for,
             "actual_goals_for": actual_goals_for,
             "offensive_outperformance": offensive_outperformance,
-            "predicted_goals_against": predicted_goals_against,
             "actual_goals_against": actual_goals_against,
             "defensive_outperformance": defensive_outperformance,
         }
@@ -334,29 +330,12 @@ class PlayerReportEngine:
 
         return {"ungravitated": ungravitated_form, "gravitated": gravitated_form}
 
-    def _create_extra_data_dict(self, rating_data, team_perf, player_contrib, goal_assist_data):
+    def _create_extra_data_dict(self, rating_data, team_perf):
         """Create a dictionary of extra data for detailed analysis."""
         return {
             "select_rating": rating_data["select_rating"],
-            "opposition_team_rating": rating_data["opposition_team_rating"],
-            "base_rating": rating_data["base_rating"],
-            "modulated_base_rating": rating_data["modulated_base_rating"],
-            "offensive_contribution": player_contrib["offensive_contribution"],
-            "defensive_contribution": player_contrib["defensive_contribution"],
-            "team_predicted_goals_for": team_perf["predicted_goals_for"],
             "team_actual_goals_for": team_perf["actual_goals_for"],
-            "team_offensive_outperformance": team_perf["offensive_outperformance"],
-            "team_predicted_goals_against": team_perf["predicted_goals_against"],
             "team_actual_goals_against": team_perf["actual_goals_against"],
-            "team_defensive_outperformance": team_perf["defensive_outperformance"],
-            "offensive_boost": player_contrib["offensive_boost"],
-            "defensive_boost": player_contrib["defensive_boost"],
-            "predicted_goals": goal_assist_data["predicted_goals"],
-            "goal_negative": goal_assist_data["goal_negative"],
-            "goal_positive": goal_assist_data["goal_positive"],
-            "predicted_assists": goal_assist_data["predicted_assists"],
-            "assist_negative": goal_assist_data["assist_negative"],
-            "assist_positive": goal_assist_data["assist_positive"],
         }
 
     def get_rating_boosts_for_goals_and_assists(self, goal_difference, goals_scored):
