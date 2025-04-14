@@ -1,8 +1,7 @@
 import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
+import brevo_python
+from brevo_python.rest import ApiException
 from dotenv import load_dotenv
 
 
@@ -11,28 +10,44 @@ class EmailService:
         load_dotenv()
         self.sender_email = os.environ.get("SENDER_EMAIL")
         self.simulation_url = os.environ.get("SIMULATION_URL")
-        self.enabled = self.sender_email is not None and self.simulation_url is not None
+        self.api_key = os.environ.get("BREVO_API_KEY")
+        self.enabled = all([self.sender_email, self.simulation_url, self.api_key])
+        self.api_instance = None
+        if not self.enabled:
+            print(
+                "Email service disabled. Check SENDER_EMAIL, SIMULATION_URL, and BREVO_API_KEY environment variables."
+            )
+        else:
+            try:
+                configuration = brevo_python.Configuration()
+                configuration.api_key["api-key"] = self.api_key
+                api_client = brevo_python.ApiClient(configuration)
+                self.api_instance = brevo_python.TransactionalEmailsApi(api_client)
+                print("Brevo Email Service Initialized.")
+            except Exception as e:
+                print(f"Error configuring Brevo client: {e}. Email service disabled.")
+                self.enabled = False
 
     def send_email(self, recipient, subject, html_content):
         """
-        Generic method to send any email if email service is enabled.
+        Generic method to send any email using Brevo if enabled.
         """
-        if not self.enabled:
-            print("Email service disabled. EMAIL environment variable not set.")
+        if not self.enabled or not self.api_instance:
+            print("Skipping email send: Brevo service is disabled or configuration failed.")
             return
 
-        msg = MIMEMultipart("alternative")
-        msg["From"] = self.sender_email
-        msg["To"] = recipient
-        msg["Subject"] = subject
-        msg.attach(MIMEText(html_content, "html"))
+        send_smtp_email = brevo_python.SendSmtpEmail(
+            sender={"email": self.sender_email},
+            to=[{"email": recipient}],
+            subject=subject,
+            html_content=html_content,
+        )
 
         try:
-            with smtplib.SMTP("host.docker.internal") as server:
-                server.send_message(msg)
-                print(f"Email sent successfully to {recipient}")
-        except Exception as e:
-            print(f"Failed to send email: {str(e)}")
+            api_response = self.api_instance.send_transac_email(send_smtp_email)
+            print(f"Email sent successfully via Brevo. Message ID: {api_response.message_id}")
+        except ApiException as e:
+            print(f"Error sending email via Brevo: {e}")
 
     def send_simulation_complete_email(self, recipient, universe_key):
         """
