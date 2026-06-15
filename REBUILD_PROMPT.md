@@ -35,7 +35,9 @@ Our ambition is to extend that honest generative process across **five new axes*
 - **Economy (resources):** transfers, valuations, wages, contracts, budgets, scouting, loans, agents — a market that moves players between clubs for plausible reasons.
 - **Agency (people & the user):** managers with identities and tactics; a user who can spectate, manage a club, or act as commissioner of the whole world, with meaningful decision points during the simulation rather than fire-and-forget batch runs.
 
-And one axis of **identity**: players, clubs, and managers should feel like *characters* — names, nationalities, avatars/visual identities, personalities, traits, career narratives, and persistent histories.
+And one axis of **identity**: players, clubs, and managers should feel like *characters* — names, nationalities, avatars/visual identities, personalities, traits, career narratives, and persistent histories. **Names are central to the fascination here, not a cosmetic afterthought.** Nations may be real (England, Uruguay, Japan), but *every* city name, club name, and person name in the world must be **invented** — never copied from a real place or person — and yet feel utterly *place-accurate*: a generated Uruguayan should read as plausibly Uruguayan, a Japanese name as Japanese, an English club as English. This demands real, serious **procedural name generation grounded in the statistical and morphological character of real naming** (Section 10.5), so a user can scroll a fourth-tier squad list and feel, viscerally, *where in the world they are*.
+
+And underpinning all exploration: a **beautiful, fast, data-rich user interface** (Section 21). The simulation is the engine, but the UI is how the user falls in love with the world it produces — every entity clickable, every number a story, every chart alive. Treat the UI as a first-class deliverable, not a thin viewer bolted on at the end.
 
 **Design pillars (in priority order):**
 
@@ -43,7 +45,7 @@ And one axis of **identity**: players, clubs, and managers should feel like *cha
 2. **Emergent plausibility** — realism comes from calibrated generative processes, not scripted outcomes.
 3. **Extensibility** — every dimension (positions, competitions, countries, eras) is data-driven and open to extension without rewrites.
 4. **Performance at scale** — tens of thousands of players across dozens of countries over decades must remain tractable.
-5. **Explorability & narrative** — the world must be richly queryable and tell stories about itself.
+5. **Explorability, beauty & narrative** — the world must be richly queryable, *beautifully presented*, and able to tell stories about itself. A stunning, fast, exploratory UI (Section 21) and authentic, invented-but-place-accurate nomenclature (Section 10.5) are part of this pillar, not optional polish.
 6. **Engineering excellence** — clean architecture, exhaustive tests, full reproducibility, observability, and tooling for balancing.
 
 ---
@@ -59,7 +61,7 @@ The predecessor was a Flask app with an RQ/Redis worker that built a `Universe` 
 - **A calibrated goal-probability table.** Match scorelines are not ad hoc; an offence-minus-defence "potential" integer indexes a hand-tuned table of `(mean, sigma)` for a Gaussian goal count, calibrated so an even matchup yields ~1.5 goals. **Keep the table-driven, empirically-calibrated approach.** [INHERITED]
 - **The fatigue → form → injury → selection loop.** Players accumulate fatigue per match, recover daily as a function of fitness, can get injured when fatigued, gain/lose form relative to expectation, and that form+fatigue feeds back into who gets selected and how well they rate. **This feedback loop is the engine of week-to-week narrative. Keep and deepen it.** [INHERITED]
 - **Performance index & Man of the Match.** A per-player, per-match 0–10 rating built from rating-advantage (sigmoid), contribution-weighted team over/under-performance, and context-weighted goal/assist credit (goals worth more in close, low-scoring games). **Keep this multi-factor, context-aware rating.** [INHERITED]
-- **Real-world weighting everywhere.** Formation popularity weights (4-4-2 ~22%, 4-2-3-1 ~21%, 4-3-3 ~13% …), name frequencies from real data, real cities per country. **Realism-by-frequency is cheap and powerful. Keep it.** [INHERITED]
+- **Real-world weighting everywhere.** Formation popularity weights (4-4-2 ~22%, 4-2-3-1 ~21%, 4-3-3 ~13% …), and naming driven by real frequency *distributions*. **Realism-by-frequency is cheap and powerful. Keep it — but elevate it.** The predecessor drew player names directly from real frequency-weighted name lists. We go further and harder: we use real naming data only to *learn the statistical and morphological character* of each place, then **generate wholly invented names** that fit it (Section 10.5). Same fascination, more integrity, infinite variety. [INHERITED → NEW]
 - **"Club DNA" easter eggs.** The author nudged certain clubs' player ratings up/down (±10 peak rating). Generalise this into a principled **club reputation/strength prior** that biases generated player quality — and keep room for affectionate hand-tuned exceptions. [INHERITED → NEW]
 - **A universe-global player pool.** Players were owned by a universe-level `PlayerController`, not by clubs. This is exactly the right foundation for transfers, free agency, and cross-border movement. **Keep player identity independent of club membership.** [INHERITED]
 - **Time-series capture per player.** Ratings, peak ratings, and form were stored per date for graphing. **Keep first-class historical time series — and make them cheap (Section 17.6).** [INHERITED]
@@ -232,14 +234,14 @@ Nation {
   geography: { regions:[Region], cities:[City] },
   pyramid: PyramidId,
   nationalTeam: ClubId-like NationalTeam reference,
-  nameDistributions: { forenames: WeightedList, surnames: WeightedList },  // for player name generation
+  nameModel: NameModel,             // generative model for INVENTED but place-accurate names (§10.5)
   currency, calendarProfile        // when its season runs, winter break, etc.
 }
-Region { id, name, nationId, cities:[CityId] }
-City { id, name, regionId, nationId, geo:GeoPoint, population, footballReputation }
+Region { id, name (invented), nationId, namingProfile, cities:[CityId] }   // regions may bias local naming
+City { id, name (invented, place-accurate), regionId, nationId, geo:GeoPoint, population, footballReputation }
 ```
 
-Cities, names, and reputations are reference data seeded at world creation (Section 10), analogous to the predecessor's MongoDB `cities`/`systems`/`forenames`/`surnames` collections — but first-class, versioned, and per-nation.
+Nations and their `NameModel`s are seeded reference data (Section 10.2/10.5); cities, regions, club names, and person names are all **generated** (invented, deterministic, place-accurate) at world creation from those models — *not* drawn from real-place lists. This is the deliberate evolution of the predecessor's MongoDB `cities`/`systems`/`forenames`/`surnames` collections: real data informs the *generator*, the world contains only invented names.
 
 ### 5.4 Competition structure
 
@@ -589,7 +591,7 @@ Conceptually (the predecessor's `advance()`), each player each tick: maybe gets 
 
 ### 7.10 Identity & avatars [NEW]
 
-- **Names** [INHERITED mechanism]: forename + surname drawn from **nation-specific frequency-weighted distributions** (the predecessor used real frequency counts and even handled "Mc"/"O'" capitalisation). Generalise per nation so Brazilian, English, Spanish, Japanese players have culturally plausible names. Handle apostrophes, accents, particles ("van", "de"), and mononyms.
+- **Names** [INHERITED fascination → NEW engine]: every player's forename + surname is **invented yet place-accurate**, produced by the nation's `NameModel` (Section 10.5) — *not* sampled from a list of real names. The predecessor sampled real frequency-weighted name lists (and handled "Mc"/"O'" capitalisation); we keep that fascination but replace list-sampling with genuine generation so names are both authentic *and* original. A player's name is a deterministic function of `(nationModel, regionNamingProfile, playerId, birthEra)`. **This is a headline feature, specified in full in Section 10.5 — treat it with the seriousness the user demands.**
 - **Avatars** [NEW]: a deterministic, procedurally-generated visual identity per player — a parametric face/kit spec derived from the player's seed (skin tone, hair, features, etc.), rendered client-side. No external assets required; the spec is data, the rendering is presentation. Same player → same avatar forever.
 - **Histories** [NEW]: every player carries a queryable career — clubs, seasons, appearances, goals, assists, average ratings, honours, transfers, injuries, and the rating/form time series the predecessor already captured (Section 17.6). This is the narrative payload that makes the world worth exploring across decades.
 
@@ -598,7 +600,7 @@ Conceptually (the predecessor's `advance()`), each player each tick: maybe gets 
 ## 8. THE CLUB MODEL [mostly NEW; foundations INHERITED]
 
 ### 8.1 Identity & geography
-Clubs are seeded from real **cities** within nations (the predecessor's city-per-system mechanism), one or more clubs per significant city, with names, nicknames, founding years, colours, crest specs, and stadiums. Custom/user-named clubs supported (the predecessor allowed custom club names that displaced random cities).
+Clubs are anchored to **invented cities** within nations (the predecessor's city-per-system mechanism, but with generated city names — Section 10.5), one or more clubs per significant city. **Club names are invented and place-accurate**: generated from the city/region name plus the nation's club-naming conventions (e.g. an English-style "<Place> United / City / Town / Rovers / Albion / Wanderers", a Spanish-style "Real / Atlético / Deportivo / CD <Place>", an Italian-style "<Place> Calcio / AC / FC", a Brazilian-style "<Place> EC / SC / Atlético <Place>") — see Section 10.5.4. Each club also gets a nickname, founding year, colours, crest spec, and stadium. User-supplied custom club/city names remain supported (the predecessor allowed custom club names that displaced random cities), and an *optional* opt-in pack of affectionate real-name overrides may exist for personal play — but the **default world contains only invented names.**
 
 ### 8.2 Reputation
 A bounded scalar (or tier) that drives: quality of generated/attracted players, seeding in competitions, fan size, finances, and transfer attractiveness. Reputation updates over chronology based on results and trophies — *this is how dynasties and fallen giants emerge*. The predecessor's ±10 club easter egg becomes a principled **reputation→generation prior**: high-reputation clubs generate/sign stronger squads. Keep affectionate hand-tuned overrides possible for specific named clubs.
@@ -638,16 +640,66 @@ A deterministic, seeded decision policy that, given a club's state and the world
 ## 10. WORLD GENERATION & GEOGRAPHY [NEW scope; INHERITED seeds]
 
 ### 10.1 Generation is deterministic and layered
-From the master seed, generate in a fixed order: confederations → nations → geography (regions/cities with populations and reputations) → name distributions per nation → pyramids/divisions → clubs (from cities, with reputations, stadiums, finances, philosophies, boards) → managers → players (squads, biased by club/nation reputation) → initial contracts → initial calendar/competitions. Each layer draws from its own RNG sub-stream so changing one layer's logic doesn't reshuffle others.
+From the master seed, generate in a fixed order: confederations → nations (with their `NameModel`s loaded from reference data) → geography (regions and **invented cities** with generated names, populations, reputations) → pyramids/divisions → clubs (anchored to cities, with **invented names**, reputations, stadiums, finances, philosophies, boards) → managers (invented names) → players (invented names; squads biased by club/nation reputation) → initial contracts → initial calendar/competitions. Each layer draws from its own RNG sub-stream so changing one layer's logic doesn't reshuffle others. **All names are generated deterministically by the nomenclature engine (Section 10.5).**
 
 ### 10.2 Reference data
-Ship curated, versioned reference datasets: nations, real cities (with rough geo + population), per-nation name frequency lists, and confederation memberships — the first-class evolution of the predecessor's MongoDB `cities`/`forenames`/`surnames`. Make scale configurable: a *small* world (a few nations, a couple of tiers) for fast iteration; a *large* world (dozens of nations, deep pyramids, continental competitions) for ambition. Tests run on small worlds; calibration runs on large.
+Ship curated, versioned reference datasets: **nations** (real, with confederation membership, currency, calendar profile, culture profile, and reputation tier), a rough **geography prior** per nation (how many cities/regions, coastal vs inland, population distribution), and — crucially — a per-nation **`NameModel`** (Section 10.5): the statistical+morphological model from which all invented person, city, and club names are generated. The `NameModel` is *derived from* real naming data (frequency distributions, phonotactics, morphology) but ships as a generator, **not** as lists of real names to copy. This is the principled evolution of the predecessor's MongoDB `cities`/`forenames`/`surnames` collections. Make scale configurable: a *small* world (a few nations, a couple of tiers) for fast iteration; a *large* world (dozens of nations, deep pyramids, continental competitions) for ambition. Tests run on small worlds; calibration runs on large.
 
 ### 10.3 Reputation gradients & generation priors
 Nation reputation tiers and club reputations form a gradient that biases player generation (peak-rating mean shift), squad depth, finances, and seeding. This makes stronger nations/clubs genuinely stronger *and* makes movement up/down the gradient (transfers, promotion) meaningful.
 
 ### 10.4 Footballing culture profiles [NEW]
 Each nation carries a culture profile (formation preferences, technical/physical/pace bias, youth-development strength, average reputation) so that nations *feel* different — a technical-passing nation vs a physical-direct one — expressed through generation priors and AI tactical preferences. Calibrate lightly; keep it data-driven.
+
+### 10.5 NOMENCLATURE — invented but place-accurate names [NEW — a headline feature, specified in full]
+
+> *The user's words: "while countries can be real, all city names, club names, person names must be invented, but crucially must feel real and place-accurate. Names were always an important part of the fascination of this for me — I remember looking at lists of the most popular surnames in Uruguay. Modelling name distributions is important — so put some real emphasis on name generation."*
+
+This is a **first-class subsystem**, not a string helper. It must be engineered, calibrated, and tested with the same rigour as the match engine. Build it in the `generation/` module as a self-contained, deterministic, data-driven **nomenclature engine** with its own test suite and its own inspection/calibration tool.
+
+#### 10.5.0 The hard requirement
+- **Nations may be real. Everything more granular must be invented.** No city name, region name, club name, person name, or stadium name in a default world may be a real-world name. Yet each must be *immediately recognisable as belonging to its place.* A Uruguayan back four should read as Uruguayan; an English non-league squad should read as English; a Japanese midfield as Japanese.
+- The engine never *copies*; it *generates*. Real naming data is training/reference material for the **statistical and morphological character** of a place — never a pool to sample verbatim.
+
+#### 10.5.1 The `NameModel` (per nation, possibly per region/ethnicity)
+A versioned reference-data artefact per nation, composed of:
+
+1. **Orthographic/phonotactic generators** — character- or syllable-level **n-gram / Markov models** (and/or learned grammars) capturing how names are *spelled and sound* in that language: which letter clusters, onsets/codas, vowel patterns, and endings are characteristic. These are *derived from* real forename/surname corpora but emit novel strings. (E.g. a Spanish surname model readily emits plausible "-ez/-ales/-illo" forms; a Polish one "-ski/-czyk"; a Japanese one plausible kanji-romanisation patterns.) Tune model order so output is *recognisable but not memorised* (too-high order regurgitates real names — forbidden; see the novelty filter).
+2. **Morphological rules** — explicit, data-driven formation rules layered over the phonotactic core:
+   - **Surname formation patterns**: patronymic (e.g. Nordic "-son/-sen/-dóttir", Icelandic patronymics resolved per generation, Slavic "-ov/-ova / -ić"), occupational, toponymic, descriptive; **gendered surname endings** where the language uses them (e.g. "-ová", "-ska"); **compound/double surnames** (Iberian paternal+maternal); **particles and nobiliary prefixes** ("van", "van der", "de", "da", "di", "del", "von", "Mc/Mac", "O'") with correct casing and sorting; **mononyms** and **nicknames-as-names** where culturally apt (e.g. Brazilian football naming: short forms, diminutives "-inho", playful monikers).
+   - **Forename conventions**: given-name inventories per culture and era; multiple given names where common; diminutive/hypocoristic forms.
+3. **Frequency distributions (the "Uruguay surnames list" insight)** — model the *shape* of name popularity, which is strongly **Zipfian/long-tailed**: a handful of very common surnames borne by many, a long tail of rare ones. Generate a nation's surname *pool* so that commonness is realistic — many players share the local equivalent of "Smith/González/Sato", while uncommon names appear rarely. **This distributional realism is the soul of the feature**: a squad list should show believable repetition and clustering of surnames, not uniform randomness. Forename popularity likewise follows realistic frequencies (and shifts by era — 10.5.5).
+4. **Region/ethnicity mixture** — many nations are not monocultural. A `NameModel` can be a **weighted mixture** of sub-models (regional dialects, historical immigration, diaspora communities) so that, e.g., a nation's pool plausibly includes minority-origin names at realistic proportions, and regional naming biases show through (a player from one region leans toward that region's sub-model).
+5. **Place-name conventions** — generators and morphology for **city/region names** (10.5.3) and **club names/nicknames/stadiums** (10.5.4), expressed in the same place's character.
+
+#### 10.5.2 Person-name generation
+`generatePersonName(nationModel, regionProfile, entityId, birthEra, secondaryNationality?) -> Name`:
+- Deterministic from the entity's id + seed (same player ⇒ same name forever).
+- Draw a forename (era- and region-aware) and a surname (from the Zipfian pool with morphology applied), apply particle/casing/compound rules, and assemble a `Name` value object with display variants (full, "F. Surname", surname-only, club-specific disambiguation when two squad-mates share a surname — the predecessor's `get_club_specific_name` behaviour [INHERITED]).
+- Handle **secondary nationality / heritage**: dual-eligible players may carry a forename from one culture and surname from another (a rich source of plausible "diaspora" players and international-eligibility intrigue, Section 18.7).
+- Correctly handle accents/diacritics, apostrophes, hyphenation, mononyms, and sort keys.
+
+#### 10.5.3 City & region name generation
+Invented but morphologically plausible per nation: combine characteristic roots/affixes (e.g. English "-ton/-ham/-ford/-bury/-mouth/-cester", Spanish "San/Santa/-ares", Germanic "-burg/-dorf/-heim", Japanese place morphology) with geography awareness (coastal vs inland affixes, river/hill roots). Deduplicate within a nation; assign plausible populations and a `footballReputation`. Region names follow the same approach at coarser grain.
+
+#### 10.5.4 Club & stadium name generation
+From a city/region name + the nation's **club-naming grammar** (a data-driven template set per footballing culture): English "<Place> United/City/Town/Rovers/Albion/Wanderers/Athletic", Iberian "Real/Atlético/Deportivo/CD/Sporting <Place>", Italian "<Place> Calcio / AC/FC <Place>", Brazilian "<Place> EC/SC / Atlético/Grêmio-style <Place>", etc. Generate matching **nicknames** (often derived from colours, local industry, or animals), **founding years**, **colours**, **crest specs**, and **stadium names** (commonly toponymic or honorific, also invented). Ensure intra-nation uniqueness.
+
+#### 10.5.5 Era awareness (chronology)
+Because the world runs for decades (Section 18), **naming drifts with time**: forename fashions change generation to generation (a player born in sim-year 2050 should carry era-appropriate given names relative to one born in 2000). Model forename-popularity as a slowly-evolving distribution keyed to birth era; surnames are far more stable. This keeps multi-decade histories feeling authentic rather than frozen.
+
+#### 10.5.6 The novelty & safety filter (non-negotiable)
+- **Originality guarantee**: every generated name is checked against a blocklist of real-world referents (a curated set of famous real footballers, clubs, and notable places) and rejected/resampled on collision, so the world never accidentally contains a real star or a real club. Tune n-gram order and add a near-duplicate check to avoid memorising training names.
+- **Decency filter**: reject offensive or slur-adjacent strings via a maintained blocklist and heuristic checks. This must run on *all* generated names (person, city, club, stadium).
+- Both filters are deterministic (resampling uses the next value in the entity's RNG sub-stream) so reproducibility holds.
+
+#### 10.5.7 Determinism, performance & data-driven extensibility
+- Names are pure deterministic functions of `(seed, entityId, model)`; no global state; same seed ⇒ same names across machines and reloads.
+- Generation must be cheap enough to name tens of thousands of players plus thousands of cities/clubs at world creation, and each youth-intake season thereafter (Section 17.1), within the world-creation performance budget.
+- Every `NameModel` ships as **versioned data** and is community-extendable: adding a new nation = adding a `NameModel`, no engine code changes. Provide a documented authoring format and a script to *derive* a `NameModel` from a real frequency corpus (offline tooling), emitting only the generator, never the source names.
+
+#### 10.5.8 Calibration & inspection tooling (recapture the original fascination)
+Build a **name-inspection tool** (part of the balancing dashboard, Section 25) that, for any nation/region/era, generates large sample lists of forenames, surnames, full names, cities, and clubs, with their frequency curves — so a human can *eyeball them and judge whether they "feel right"*, exactly as the user once pored over real Uruguay surname lists. Tuning a nation's `NameModel` until its invented output is indistinguishable-in-flavour from the real place is an explicit, valued part of the work. Add automated checks too: novelty rate = 100% (no real-name collisions), Zipfian fit of the surname distribution within tolerance, character-set/morphology validity, and decency-filter coverage (Section 23).
 
 ---
 
@@ -904,9 +956,20 @@ Keep the predecessor's pragmatic touches generalised: progress tracking for long
 
 ---
 
-## 21. PRESENTATION & API LAYER [NEW scope; INHERITED views as inspiration]
+## 21. THE USER INTERFACE & PRESENTATION LAYER [NEW — a first-class deliverable]
 
-Keep all rendering and I/O out of the engine. Expose the read model via a clean API; render client-side.
+> *The user's words: "we need a UI for this — yes the main thing is the simulation itself, but I also want a beautiful UI to explore all this lovely data."*
+
+The engine produces a vast, living dataset; the UI is how a human **falls in love with it**. It is not a thin admin viewer — it is a designed product. Build it as a modern, component-based web application against the API, with a coherent design system, first-rate data visualisation, and an exploration model that makes the whole world feel like one interlinked, navigable encyclopedia. Keep all rendering and I/O out of the engine (Section 4.1); the UI consumes the read model over the API and renders client-side.
+
+### 21.0 Design vision & principles
+- **Beautiful and calm under density.** Football generates enormous data; the craft is presenting it legibly. Take cues from the best sports-data and financial dashboards: clear typographic hierarchy, generous-but-purposeful whitespace, tables that are scannable, numbers that are aligned and formatted, colour used for meaning (form, results, deltas) not decoration.
+- **Everything is a clickable entity.** Player, club, manager, nation, competition, season, city, match — every reference anywhere in the UI links to that entity's page. Exploration is *wiki-like*: you start at a title race and three clicks later you're reading the youth-career page of a 17-year-old in the fourth tier of another country. This interlinked drill-down/drill-up is the core interaction and must be effortless.
+- **Universal search & command palette.** Instant fuzzy search across all named entities (made delightful by the authentic names of Section 10.5), plus a keyboard command palette for power users (jump to entity, change season, run sim, open comparisons).
+- **Narrative-forward.** Surface the stories the world is telling (Section 19.4): title races, relegation fights, breakout youngsters, transfer sagas, record chases, managerial sackings — as a living feed and as highlights on dashboards, all generated from events, never scripted.
+- **Fast and responsive.** Virtualise large lists (squads, league-wide player tables of thousands), paginate/stream from the API, cache aggressively client-side, and keep interactions snappy even on a decades-deep world. Responsive from phone to wide desktop (the predecessor already had mobile detection — make it genuinely mobile-first). Accessible to **WCAG 2.1 AA**: keyboard navigation, semantic markup, sufficient contrast, screen-reader support, reduced-motion respect.
+- **Themeable & identity-rich.** A design system with light/dark themes; club identity (colours/crests) and player **avatars** (Section 7.10, rendered client-side from the parametric spec) bring colour and character to every page. Crests and avatars are generated data, drawn in the browser — no external assets.
+- **Delightful, not gratuitous.** Smooth transitions, tasteful micro-interactions, animated chart reveals, live-updating match views — used to aid comprehension, never to slow the user down.
 
 ### 21.1 API
 A versioned HTTP/JSON (or GraphQL) API over the read model: worlds, nations, competitions, seasons, standings, brackets, clubs, squads, players (with histories/time series), managers, fixtures/matches (with reports and lineups), the transfer market, leaderboards, records, and the notification feed. Plus control endpoints for the interactive engine (Section 19): create world, step/fast-forward, submit decisions, snapshot/restore. Stable, documented, paginated, and fast.
@@ -922,10 +985,27 @@ The predecessor's pages map directly onto richer ones:
 - **Fixture/match page**: lineups by position, performance ratings, scorers/assisters with minutes, MOTM, pre/post-match standings, recent form of both clubs [INHERITED — keep all of it], plus NEW: minute-by-minute timeline (Level 1), cards, subs.
 - **NEW chronology views**: season archives, all-time records, halls of fame, transfer histories, head-to-heads, era summaries.
 
-Charts are **data over the API**, rendered client-side (the predecessor server-rendered matplotlib PNGs — we expose the series and let the client draw, keeping the engine and server lean).
+Charts are **data over the API**, rendered client-side as **interactive** visualisations (the predecessor server-rendered static matplotlib PNGs — we expose the series and let the client draw live, hoverable, zoomable charts, keeping the engine and server lean).
 
-### 21.3 Mobile & accessibility
-The predecessor had mobile detection; build responsive, accessible UI from the start.
+### 21.3 The signature experiences (build these to delight)
+Beyond carrying the predecessor's pages forward, design these flagship experiences:
+
+- **World dashboard / home.** The "state of the world" at a glance: current date, live title races and relegation battles across followed competitions, top performers, biggest recent transfers, breaking narrative feed, and quick entry to any nation/competition.
+- **Exploration & entity pages (wiki-like).** Rich, interlinked pages for every entity. The **player page** is the jewel: avatar, identity, current ability and **best-position**, an **interactive skill radar with the projection-to-peak overlay** [INHERITED idea — made interactive], the **rating/peak-rating development graph over a career** [INHERITED], the **form graph** [INHERITED], **injury history** [INHERITED], plus full career history (clubs, season-by-season stat lines, honours, transfers), contract, valuation, and scouted-vs-true attribute uncertainty (Section 16.7). Like a footballer's encyclopedia entry, but alive.
+- **Competition hub.** Standings (with an interactive **league-position-over-time** chart [INHERITED]), brackets for knockouts, fixtures/results across the whole season, leaderboards (scorers, assists, ratings, MOTMs), qualification/relegation picture, and the competition's history and roll of honour across seasons.
+- **The match experience.** A beautiful match page: lineups laid out on a pitch by formation, scorers/assisters with minutes, performance ratings, MOTM, pre/post-match tables, both clubs' recent form [INHERITED — keep all of it]; and for watched matches, the **Level 1 minute-by-minute live timeline** (Section 14.2) — animated clock, momentum, chances, goals, cards, subs, and a generated commentary feed.
+- **Manager mode UI** (Section 19.1): a squad/tactics board (drag players into formation, set roles/instructions/set-piece takers/captain), a transfer centre (scouting, shortlists, the negotiation state machine as a clear flow, budgets), contracts, finances, an inbox/news feed, and board-confidence/expectations. This is where the user *plays*; make it tactile and clear.
+- **The simulation "train" controls** (Section 19.2): a persistent, elegant control bar to **play / pause / step (day, match, decision) / fast-forward / scrub** the timeline, with clear progress for long background runs and the ability to stop at decision points. The act of *driving time* should feel good.
+- **Chronology & history browser.** Season archives, all-time and per-competition records, halls of fame, dynasty/era summaries, head-to-head records, and transfer histories — the reward for deep, long worlds.
+- **Comparison & analysis tools.** Side-by-side player/club/season comparison; filterable, sortable world-wide player tables (virtualised) — the natural home for *browsing squad lists and savouring the authentic names* (Section 10.5), which is much of the fascination.
+
+### 21.4 Frontend technology & architecture [DECISION]
+- A modern component-based framework (e.g. a current React/Vue/Svelte-class stack) with a typed language (TypeScript) and a real **design system / component library** (tokens for colour/spacing/type; reusable table, card, chart, badge, pitch components).
+- A capable **data-visualisation** layer (e.g. a D3-backed or equivalent charting library) for the radar, development, form, position-over-time, transfer-flow, and timeline charts — all interactive and themable.
+- Robust client **state/data management** with caching, pagination, and optimistic updates; **real-time updates** (web-sockets/SSE) for the live match view and long-sim progress.
+- **Avatar & crest rendering**: deterministic SVG/canvas drawing from the parametric specs (Sections 7.10, 10.5.4) — generated, not asset-bundled.
+- Performance budgets and accessibility are enforced in CI (Section 23): bundle size, interaction latency, Lighthouse/axe checks, and visual-regression tests on key pages.
+- Keep the UI a pure consumer of the API: it contains **no simulation logic** (that lives only in the engine core).
 
 ---
 
@@ -1025,6 +1105,12 @@ Benchmark tick throughput, season-simulation time, and memory at defined world s
 ### 23.10 Fuzz & chaos
 Feed malformed decisions, extreme configs (1 club, 1000 clubs, all-injured squads), and adversarial inputs; the engine must fail gracefully or reject invalid input explicitly, never corrupt state.
 
+### 23.11 Nomenclature tests (Section 10.5)
+For every nation `NameModel`: **100% novelty** (no generated person/city/club/stadium name collides with the real-world blocklist or memorises a training name); **decency-filter coverage** (no offensive output across large samples); **morphology/character-set validity** (outputs conform to the language's allowed forms, particles, casing, diacritics); **distributional realism** (surname pools fit a Zipfian/long-tailed shape within tolerance; forename popularity shifts plausibly by era); **determinism** (same `(seed, entityId)` ⇒ same name across runs and reloads); and a maintained **golden sample set** per nation so flavour changes are reviewed deliberately. Pair automated checks with the human "feels right" review via the inspection tool.
+
+### 23.12 UI tests (Section 21)
+Component/unit tests for the design-system and chart components; **visual-regression** snapshots on key pages (dashboard, player, club, competition, match); **accessibility** checks (axe/WCAG AA: keyboard nav, contrast, semantics, screen-reader labels, reduced-motion); **frontend performance budgets** (bundle size, interaction latency, virtualised large-list rendering, Lighthouse thresholds) enforced in CI; API-contract tests so UI and backend never drift; and e2e journeys (explore a world, follow links across entities, manage a club for a season, watch a live match) in a headless browser.
+
 ---
 
 ## 24. PERFORMANCE & SCALABILITY
@@ -1078,16 +1164,16 @@ Make world scale a first-class config: *tiny* (tests), *small* (interactive sing
 Build in vertical, fully-tested slices. Do **not** proceed to the next milestone until the current one is complete, green, deterministic, and invariant-clean. Each milestone is a working simulation.
 
 - **M0 — Foundations.** Project scaffold, strict typing, lint/format/CI, the RNG model (Section 6.4), value objects & IDs (Section 5.1), the event/reducer skeleton, the CalibrationSet (Section 26), and the testing/determinism harness (Section 23.1/23.5). *Exit:* an empty world ticks deterministically; determinism gate green.
-- **M1 — Player & development core.** Player generation, skill profiles, positions (incl. GK), suitability math, age/rating curves, potential resolution, skill transitions, condition (fatigue/form/injury). *Exit:* property + golden + statistical tests on player generation/development pass; closed-form aging verified equivalent to daily model.
-- **M2 — One league season (parity with the predecessor, done right).** Clubs from one nation's cities, lineup selection, team aggregates, Level 0 match engine, the calibrated goal table, player reports/performance index/MOTM, double round-robin scheduling, standings, leaderboards, season completion. *Exit:* reproduces the predecessor's statistical behaviour; full calibration tests pass; one season runs deterministically with all invariants holding.
-- **M3 — Persistence & API & basic UI.** Event store + read model + snapshots + migrations (Section 20); API over the read model; a spectator UI carrying forward the predecessor's views (tables, results, player/club/fixture pages, the graphs as data). *Exit:* save/load/migrate round-trips; e2e create-and-browse works.
+- **M1 — Player & development core, and the nomenclature engine.** Player generation, skill profiles, positions (incl. GK), suitability math, age/rating curves, potential resolution, skill transitions, condition (fatigue/form/injury). **Plus the nomenclature engine (Section 10.5) for person names** — at least one fully-tuned nation `NameModel` end-to-end (phonotactics + morphology + Zipfian frequencies + novelty/decency filters + era awareness + inspection tool). *Exit:* player generation/development property+golden+statistical tests pass; closed-form aging verified equivalent to daily model; generated names pass the name-authenticity tests (100% novelty, Zipfian fit, decency coverage) and a human "feels right" review of sample lists.
+- **M2 — One league season (parity with the predecessor, done right).** Clubs anchored to **invented, place-accurate cities** with **invented club names** (Section 10.5.3/10.5.4), lineup selection, team aggregates, Level 0 match engine, the calibrated goal table, player reports/performance index/MOTM, double round-robin scheduling, standings, leaderboards, season completion. *Exit:* reproduces the predecessor's statistical behaviour; full calibration tests pass; one season runs deterministically with all invariants holding; city/club names pass authenticity + novelty tests.
+- **M3 — Persistence, API & the UI foundation.** Event store + read model + snapshots + migrations (Section 20); API over the read model; and the **UI foundation per Section 21** — the design system, the interlinked entity-exploration model (clickable everything, universal search), and the core pages (world dashboard, competition hub with standings + position-over-time chart, the rich player page with interactive radar/development/form charts, club page, match page) carrying forward and elevating the predecessor's views as *interactive* visualisations. *Exit:* save/load/migrate round-trips; e2e create-and-browse works; the core pages are responsive, accessible (WCAG AA), and pass visual-regression + a11y checks.
 - **M4 — Chronology.** Multi-season rollover, youth intake/regeneration, retirement, age pyramid maintenance, records/awards/halls of fame, reputation updates. *Exit:* 50-season soak test passes (Section 23.7): stable talent/economy/balance, all invariants hold across rollovers.
 - **M5 — Competition framework.** The general Competition abstraction, pyramids with promotion/relegation, domestic cups, the competition graph & qualification, multi-competition congestion-aware scheduling. *Exit:* a full domestic pyramid runs for many seasons with correct promotion/relegation and cups; brackets/standings invariant-clean.
 - **M6 — Economy & transfers.** Valuations, wages, contracts, budgets, the negotiation state machine, AI market policy, loans, free transfers, scouting fog-of-war. *Exit:* multi-season market is plausible and stable (no runaway inflation/fire-sales); emergent transfer stories appear; economy soak test passes.
 - **M7 — Managers & AI agency.** Manager identities/abilities/tactics, AI manager policy (selection/tactics/transfers/contracts), board hire/fire, the merry-go-round. *Exit:* managerial careers emerge; AI runs the whole world plausibly; results unchanged determinism gate green.
-- **M8 — Geography & continental/international.** Multiple nations, confederations, continental club competitions, national teams & international tournaments, coefficients/seeding, culture profiles. *Exit:* a multi-nation world runs for decades with cross-border transfers and continental/international competitions; large-scale performance budgets met.
+- **M8 — Geography & continental/international.** Multiple nations (each with a tuned `NameModel`, so every nation's names feel distinctively *theirs* — Section 10.5), confederations, continental club competitions, national teams & international tournaments (incl. dual-nationality eligibility from heritage names, Section 10.5.2), coefficients/seeding, culture profiles. *Exit:* a multi-nation world runs for decades with cross-border transfers and continental/international competitions; each nation's name authenticity reviewed and tested; large-scale performance budgets met.
 - **M9 — Interactivity & fidelity.** The steppable simulation train (pause/step/fast-forward/snapshot-rewind), decisions-as-inputs, the manager play mode, the Level 1 minute-by-minute match engine (calibrated to Level 0), the notification/news feed. *Exit:* a user can manage a club through seasons against the AI world; Level 0/Level 1 agree in aggregate; interactive determinism (replay decisions) verified.
-- **M10 — Polish, scale, balance.** Avatars, traits/personality depth, sub-attributes for presentation, the balancing dashboard, performance hardening at the largest scale tier, accessibility, full documentation. *Exit:* huge-scale world runs within budget; calibration dashboard green on all realism metrics; everything documented.
+- **M10 — Polish, scale, balance & UI delight.** Avatars and crests (client-rendered from parametric specs), traits/personality depth, sub-attributes for presentation, the manager-mode UI and live Level 1 match view, the narrative/news feed, the balancing dashboard (incl. the name-inspection tool), performance hardening at the largest scale tier, full accessibility pass, and full documentation. *Exit:* huge-scale world runs within budget; the UI is genuinely beautiful, fast, accessible, and delightful across devices (visual-regression, a11y, and performance budgets green); calibration dashboard green on all realism metrics; everything documented.
 
 At every milestone: full test suite green, determinism gate green, invariants clean, performance budgets met, ADRs and docs updated.
 
@@ -1104,7 +1190,9 @@ A milestone (and the project) is "done" only when:
 5. **Performant**: meets the scale tier's performance/memory budgets (Section 23.9, 24).
 6. **Typed, linted, documented**: strict types, clean lints, ADRs, and docstrings on calibrated constants — all green in CI.
 7. **Reproducible & persistent**: worlds save/load/migrate via the explicit schema (never pickled objects); reproducible from `(seed, config, decisions)`.
-8. **Tested at every level**: unit, property, golden, statistical, determinism, invariant, integration, e2e, performance, fuzz — all green.
+8. **Authentically named**: every city/club/person/stadium name is invented (100% novelty vs the real-world blocklist), decent, and place- and era-accurate; each nation's `NameModel` passes its nomenclature tests (Section 23.11) and a human flavour review.
+9. **Beautifully presented**: the UI meets the Section 21 design bar — interlinked entity exploration, interactive data-viz, responsive, WCAG AA accessible, within frontend performance budgets, and passing visual-regression + a11y + e2e UI tests (Section 23.12).
+10. **Tested at every level**: unit, property, golden, statistical, determinism, invariant, nomenclature, UI, integration, e2e, performance, fuzz — all green.
 
 ---
 
@@ -1122,6 +1210,7 @@ Tune toward these (data-driven, adjustable per profile; inherited values are the
 - **Competitive balance**: strong clubs win more but no permanent monopoly; promotion/relegation churn; occasional upsets and cinderella cup runs.
 - **Talent stability**: youth intake balances retirement; average global quality flat over decades.
 - **Transfers**: plausible volume and net flows per window; stars gravitate to bigger clubs; bargains and flops both exist.
+- **Name authenticity (Section 10.5)**: surname pools fit a Zipfian/long-tailed distribution within tolerance; 100% novelty (no real-name collisions); per-nation samples pass a human "feels right as <nation>" review; forename fashions shift believably across eras. *This is a calibration target, judged with the same seriousness as goals-per-match.*
 
 If a metric drifts out of band, treat it as a calibration bug and fix the constant — with evidence from the balancing dashboard (Section 25).
 
@@ -1161,6 +1250,7 @@ Implement these exactly as CalibrationSet defaults (Section 26). They are the pr
 - **Form**: change `(performanceIndex − baseRating)/5 − form·0.1`; daily decay `form −= form/25`.
 - **Team select-rating normalisation**: `(2·self + 1·teamAvg)/3`.
 - **Club DNA prior** (generalising the ±10 easter egg): reputation-driven shift on generated peak ratings, with room for named overrides.
+- **Names** [INHERITED fascination → NEW engine]: the predecessor sampled forename+surname from real, frequency-weighted lists (with "Mc"/"O'" casing) and used real city names. v1 here **replaces list-sampling with generation**: per-nation `NameModel`s (phonotactics + morphology + Zipfian frequency + era drift + novelty/decency filters) produce **invented but place-accurate** person, city, club, and stadium names (Section 10.5). Keep the frequency-distribution realism (the "Uruguay surnames" long tail); keep club-specific surname disambiguation [INHERITED `get_club_specific_name`]; default worlds contain *no* real city/club/person names.
 
 ---
 
